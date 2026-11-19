@@ -109,8 +109,7 @@ void downloadServiceOnStart(ServiceInstance service) async {
     final sharedSubDir = job['sharedSubDir'] as String? ?? DownloadService.sharedDir;
     final connections = job['connections'] as int?;
 
-    await setNotif('Downloading $showTitle', '$label · 0%');
-    service.invoke('progress', {'id': id, 'progress': 0.0});
+    await setNotif('Downloading $showTitle', label);
 
     var lastPct = -1;
     final failReason = await hls.download(
@@ -120,6 +119,7 @@ void downloadServiceOnStart(ServiceInstance service) async {
       preferredQuality: quality,
       connections: connections,
       onProgress: (p) {
+        if (paused.contains(id) || canceled.contains(id)) return;
         final pct = (p * 100).floor();
         if (pct != lastPct) {
           lastPct = pct;
@@ -133,6 +133,7 @@ void downloadServiceOnStart(ServiceInstance service) async {
         speedBps,
         timeRemaining,
       ) {
+        if (paused.contains(id) || canceled.contains(id)) return;
         service.invoke('progress', {
           'id': id,
           'progress': p,
@@ -216,6 +217,11 @@ void downloadServiceOnStart(ServiceInstance service) async {
 
   service.on('download').listen((data) {
     if (data == null) return;
+    final id = data['id'] as String?;
+    if (id != null) {
+      paused.remove(id);
+      canceled.remove(id);
+    }
     final p = data['parallel'];
     if (p is int) parallelLimit = p;
     queue.add(data);
@@ -233,7 +239,10 @@ void downloadServiceOnStart(ServiceInstance service) async {
   });
   service.on('pause').listen((data) {
     final id = data?['id'] as String?;
-    if (id != null) paused.add(id);
+    if (id != null) {
+      paused.add(id);
+      service.invoke('paused', {'id': id});
+    }
   });
   service.on('cancel').listen((data) {
     final id = data?['id'] as String?;

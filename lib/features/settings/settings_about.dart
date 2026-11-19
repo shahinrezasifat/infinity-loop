@@ -178,66 +178,72 @@ class _DeveloperRow extends StatelessWidget {
               color: AppColors.settingsCard,
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Row(
-              children: [
-                ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: 'https://github.com/shahinrezasifat1999.png',
-                    width: 46,
-                    height: 46,
-                    fit: BoxFit.cover,
-                    placeholder: (_, _) => Container(
-                      width: 46,
-                      height: 46,
-                      color: AppColors.surface2,
-                      child: const Icon(
-                        Icons.person_rounded,
-                        color: AppColors.textTertiary,
+            child: ValueListenableBuilder<GitHubDevProfile>(
+              valueListenable: DeveloperProfileService.current,
+              builder: (context, devProfile, _) {
+                return Row(
+                  children: [
+                    ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl: devProfile.dynamicAvatarUrl,
+                        cacheKey: devProfile.cacheKey,
+                        width: 46,
+                        height: 46,
+                        fit: BoxFit.cover,
+                        placeholder: (_, _) => Container(
+                          width: 46,
+                          height: 46,
+                          color: AppColors.surface2,
+                          child: const Icon(
+                            Icons.person_rounded,
+                            color: AppColors.textTertiary,
+                          ),
+                        ),
+                        errorWidget: (_, _, _) => Container(
+                          width: 46,
+                          height: 46,
+                          color: AppColors.surface2,
+                          child: Icon(
+                            Icons.person_rounded,
+                            color: AppColors.accent,
+                          ),
+                        ),
                       ),
                     ),
-                    errorWidget: (_, _, _) => Container(
-                      width: 46,
-                      height: 46,
-                      color: AppColors.surface2,
-                      child: Icon(
-                        Icons.person_rounded,
-                        color: AppColors.accent,
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            devProfile.name,
+                            style: AppText.headline.copyWith(
+                              color: AppColors.textPrimary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            devProfile.bio,
+                            style: AppText.caption.copyWith(
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'S. M. Shahin Reza Sifat',
-                        style: AppText.headline.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        'Software Developer & Founder of Motion Work',
-                        style: AppText.caption.copyWith(
-                          color: AppColors.textSecondary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                const Icon(
-                  Icons.chevron_right_rounded,
-                  color: AppColors.textTertiary,
-                ),
-              ],
+                    const Icon(
+                      Icons.chevron_right_rounded,
+                      color: AppColors.textTertiary,
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),

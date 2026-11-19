@@ -96,6 +96,9 @@ class DownloadManager extends ChangeNotifier {
   // Remaining fallback mirrors per record (CloudStream-style try-next): when a
   // download fails or saves a web page, we advance to the next candidate.
   final Map<String, List<VideoSource>> _candidates = {};
+  // Record IDs explicitly paused by the user, so trailing background updates
+  // never unpause them.
+  final Set<String> _pausedIds = <String>{};
   StreamSubscription<TaskUpdate>? _sub;
 
   /// Wire notifications + the update streams. Call once at app start.
@@ -180,8 +183,13 @@ class DownloadManager extends ChangeNotifier {
       svc.on('progress').listen((d) {
         final id = d?['id'] as String?;
         if (id == null) return;
+        if (_pausedIds.contains(id)) return;
         final rec = _records[id];
-        if (rec == null || rec.status == DownloadStatus.canceled) return;
+        if (rec == null ||
+            rec.status == DownloadStatus.canceled ||
+            rec.status == DownloadStatus.paused) {
+          return;
+        }
         final p = (d?['progress'] as num?)?.toDouble() ?? rec.progress;
         final bytesDownloaded = (d?['bytesDownloaded'] as num?)?.toInt() ?? 0;
         final bytesTotal = (d?['bytesTotal'] as num?)?.toInt() ?? rec.bytesTotal;
@@ -213,6 +221,7 @@ class DownloadManager extends ChangeNotifier {
       svc.on('paused').listen((d) {
         final id = d?['id'] as String?;
         if (id == null) return;
+        _pausedIds.add(id);
         _trackers.remove(id);
         liveStats.remove(id);
         final rec = _records[id];
@@ -224,6 +233,7 @@ class DownloadManager extends ChangeNotifier {
       svc.on('done').listen((d) async {
         final id = d?['id'] as String?;
         if (id == null) return;
+        _pausedIds.remove(id);
         _trackers.remove(id);
         _tempFilePaths.remove(id);
         liveStats.remove(id);
@@ -252,6 +262,7 @@ class DownloadManager extends ChangeNotifier {
       svc.on('failed').listen((d) async {
         final id = d?['id'] as String?;
         if (id == null) return;
+        _pausedIds.remove(id);
         _trackers.remove(id);
         _tempFilePaths.remove(id);
         liveStats.remove(id);
@@ -283,12 +294,14 @@ class DownloadManager extends ChangeNotifier {
       torrentProgress[p.id] = p;
       switch (p.status) {
         case 'done':
+          _pausedIds.remove(p.id);
           _trackers.remove(p.id);
           _tempFilePaths.remove(p.id);
           liveStats.remove(p.id);
           _candidates.remove(p.id);
           await _markDone(rec, p.filePath);
         case 'failed':
+          _pausedIds.remove(p.id);
           _trackers.remove(p.id);
           _tempFilePaths.remove(p.id);
           liveStats.remove(p.id);
@@ -299,10 +312,12 @@ class DownloadManager extends ChangeNotifier {
             ),
           );
         case 'paused':
+          _pausedIds.add(p.id);
           _trackers.remove(p.id);
           liveStats.remove(p.id);
           _put(rec.copyWith(status: DownloadStatus.paused));
         default: // queued | downloading | copying — keep it "downloading"
+          if (_pausedIds.contains(p.id) || rec.status == DownloadStatus.paused) return;
           final totalBytes = rec.bytesTotal;
           final dlBytes =
               totalBytes > 0 ? (totalBytes * p.progress).round() : 0;
@@ -715,7 +730,12 @@ class DownloadManager extends ChangeNotifier {
     // Mark it waiting ("Queued"); the queue enqueues it when a parallel slot is
     // free (→ enqueued/running in _onUpdate). Start failures come back via
     // _mp4Queue.enqueueErrors + _onUpdate's failed case.
-    _put(rec.copyWith(status: DownloadStatus.queued, progress: 0));
+    _put(
+      rec.copyWith(
+        status: DownloadStatus.queued,
+        progress: rec.progress > 0 ? rec.progress : 0,
+      ),
+    );
     notifyListeners();
     _mp4Queue.add(task);
   }
@@ -725,7 +745,12 @@ class DownloadManager extends ChangeNotifier {
   /// start the service, and dispatch the job; progress/done/failed come back via
   /// [_listenBackgroundService].
   Future<void> _startHlsDownload(DownloadRecord rec, VideoSource source) async {
-    _put(rec.copyWith(status: DownloadStatus.downloading, progress: 0));
+    _put(
+      rec.copyWith(
+        status: DownloadStatus.downloading,
+        progress: rec.progress > 0 ? rec.progress : 0,
+      ),
+    );
     notifyListeners();
     try {
       final docs = await getApplicationDocumentsDirectory();
@@ -1059,14 +1084,16 @@ class DownloadManager extends ChangeNotifier {
   // ── Controls ───────────────────────────────────────────────────────────────
 
   Future<void> pause(DownloadRecord rec) async {
+    _pausedIds.add(rec.id);
     _trackers.remove(rec.id);
     liveStats.remove(rec.id);
+    _put(rec.copyWith(status: DownloadStatus.paused));
+    notifyListeners();
+
     if (rec.isTorrent) {
       try {
         await _torrentSvc.pause(rec.id);
       } catch (_) {}
-      _put(rec.copyWith(status: DownloadStatus.paused));
-      notifyListeners();
       return;
     }
     if (!isAppleTv) {
@@ -1080,11 +1107,10 @@ class DownloadManager extends ChangeNotifier {
         await _fileDownloader.pause(t);
       } catch (_) {}
     }
-    _put(rec.copyWith(status: DownloadStatus.paused));
-    notifyListeners();
   }
 
   Future<void> resume(DownloadRecord rec) async {
+    _pausedIds.remove(rec.id);
     _startSpeedPollTimerIfNeeded();
     if (rec.isTorrent) {
       try {
@@ -1107,6 +1133,14 @@ class DownloadManager extends ChangeNotifier {
     }
     _put(rec.copyWith(status: DownloadStatus.downloading));
     notifyListeners();
+
+    // Fast-path: if we already have candidate sources cached, immediately re-enqueue without re-resolving
+    final cands = _candidates[rec.id];
+    if (cands != null && cands.isNotEmpty) {
+      await _enqueueTaskFor(rec, cands.first);
+      return;
+    }
+
     // Re-enqueue (resumes from checkpoint for HLS via .meta file)
     await _resolveAndEnqueue(rec.copyWith(status: DownloadStatus.queued));
   }
@@ -1118,6 +1152,7 @@ class DownloadManager extends ChangeNotifier {
     if (rec.isTorrent || rec.status == DownloadStatus.done || rec.isActive) {
       return;
     }
+    _pausedIds.remove(rec.id);
     _candidates.remove(rec.id); // resolve fresh mirrors
     await _resolveAndEnqueue(
       rec.copyWith(status: DownloadStatus.queued, error: () => null),
@@ -1125,6 +1160,7 @@ class DownloadManager extends ChangeNotifier {
   }
 
   Future<void> cancel(DownloadRecord rec) async {
+    _pausedIds.remove(rec.id);
     _candidates.remove(rec.id); // user stopped it — don't auto-advance mirrors
     _trackers.remove(rec.id);
     _tempFilePaths.remove(rec.id);
@@ -1173,6 +1209,7 @@ class DownloadManager extends ChangeNotifier {
 
   /// Cancel (if active) and forget the record + delete the saved file.
   Future<void> delete(DownloadRecord rec) async {
+    _pausedIds.remove(rec.id);
     _candidates.remove(rec.id);
     _trackers.remove(rec.id);
     _tempFilePaths.remove(rec.id);
@@ -1357,9 +1394,16 @@ class DownloadManager extends ChangeNotifier {
     final id = update.task.taskId;
     final rec = _records[id];
     if (rec == null) return;
-    // Ignore late updates for a download the user canceled/deleted, so a
+    // Ignore late updates for a download the user canceled/deleted or paused, so a
     // trailing progress/running event can't flip it back to "downloading".
     if (rec.status == DownloadStatus.canceled) return;
+    if (_pausedIds.contains(id) || rec.status == DownloadStatus.paused) {
+      if (update is TaskStatusUpdate && update.status == TaskStatus.paused) {
+        _put(rec.copyWith(status: DownloadStatus.paused));
+        notifyListeners();
+      }
+      return;
+    }
 
     if (update is TaskProgressUpdate) {
       if (update.progress >= 0) {
@@ -1416,13 +1460,17 @@ class DownloadManager extends ChangeNotifier {
           _put(rec.copyWith(status: DownloadStatus.downloading));
           _startSpeedPollTimerIfNeeded();
         case TaskStatus.paused:
+          _pausedIds.add(id);
           _put(rec.copyWith(status: DownloadStatus.paused));
         case TaskStatus.complete:
+          _pausedIds.remove(id);
           await _finish(rec, update.task as DownloadTask, update.mimeType);
         case TaskStatus.canceled:
+          _pausedIds.remove(id);
           _put(rec.copyWith(status: DownloadStatus.canceled));
         case TaskStatus.notFound:
         case TaskStatus.failed:
+          _pausedIds.remove(id);
           AppLogger.instance.log(
             '[download] MP4 ${update.status.name} — ${rec.showTitle} · '
             '${rec.episodeTitle} [${rec.quality}]: '
@@ -1758,7 +1806,9 @@ class DownloadManager extends ChangeNotifier {
     if (_speedPollTimer != null && _speedPollTimer!.isActive) return;
     _speedPollTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       final active = _records.values
-          .where((r) => r.status == DownloadStatus.downloading)
+          .where((r) =>
+              r.status == DownloadStatus.downloading &&
+              !_pausedIds.contains(r.id))
           .toList();
       if (active.isEmpty) {
         timer.cancel();
@@ -1888,6 +1938,11 @@ class DownloadManager extends ChangeNotifier {
 
   Future<void> _pollActiveRecord(DownloadRecord rec) async {
     final id = rec.id;
+    if (_pausedIds.contains(id) ||
+        rec.status == DownloadStatus.paused ||
+        rec.status == DownloadStatus.canceled) {
+      return;
+    }
     final tracker = _trackers.putIfAbsent(id, () => _LiveTracker());
     final now = DateTime.now();
 

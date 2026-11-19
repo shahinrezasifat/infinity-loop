@@ -83,13 +83,6 @@ class DownloadStorage {
 
   /// Decode JSON string to DownloadItem.
   static DownloadItem _decodeDownload(String json) {
-    // Parse JSON string manually for Hive storage
-    // This is a simplified implementation - in production, use proper JSON parsing
-    final map = <String, dynamic>{};
-    
-    // Extract key-value pairs from toString output
-    // For a proper implementation, store as JSON using a TypeAdapter
-    
     throw UnimplementedError('Use TypeAdapter for Hive serialization');
   }
 

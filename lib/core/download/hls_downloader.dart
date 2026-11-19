@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -99,6 +100,22 @@ class HlsDownloader {
     var bytesWritten = resumeSegment > 0 && await file.exists()
         ? await file.length()
         : 0;
+
+    // Immediately report existing progress when resuming from a checkpoint
+    if (resumeSegment > 0 && total > 0) {
+      final initialProgress = resumeSegment / total;
+      onProgress(initialProgress);
+      final estTotal = (bytesWritten / resumeSegment * total).round();
+      onDetailedProgress?.call(
+        initialProgress,
+        bytesWritten,
+        estTotal,
+        0.0,
+        null,
+      );
+    }
+
+    final cancelToken = CancelToken();
     final stopwatch = Stopwatch()..start();
     var lastSpeedTime = 0;
     var lastSpeedBytes = bytesWritten;
@@ -108,7 +125,11 @@ class HlsDownloader {
 
     Future<void> worker() async {
       while (true) {
-        if (failed || canceled() || (paused?.call() ?? false)) return;
+        if (canceled() || (paused?.call() ?? false)) {
+          if (!cancelToken.isCancelled) cancelToken.cancel('stopped');
+          return;
+        }
+        if (failed) return;
         // Throttle so a slow early segment can't blow up the pending buffer.
         while (nextIndex - nextWrite > _maxAhead &&
             !failed &&
@@ -116,12 +137,25 @@ class HlsDownloader {
             !(paused?.call() ?? false)) {
           await Future<void>.delayed(const Duration(milliseconds: 40));
         }
-        if (failed || canceled() || (paused?.call() ?? false)) return;
+        if (canceled() || (paused?.call() ?? false)) {
+          if (!cancelToken.isCancelled) cancelToken.cancel('stopped');
+          return;
+        }
+        if (failed) return;
         final i = nextIndex++;
         if (i >= total) return;
 
-        Uint8List? bytes = await _fetchBytes(pl.segments[i], headers);
+        Uint8List? bytes = await _fetchBytes(
+          pl.segments[i],
+          headers,
+          cancelToken: cancelToken,
+        );
+        if (canceled() || (paused?.call() ?? false)) {
+          if (!cancelToken.isCancelled) cancelToken.cancel('stopped');
+          return;
+        }
         if (bytes == null) {
+          if (canceled() || (paused?.call() ?? false)) return;
           failed = true;
           failReason ??= 'segment ${i + 1}/$total unreachable';
           return;
@@ -155,6 +189,11 @@ class HlsDownloader {
           bytesWritten += segBytes.length;
           nextWrite++;
           done++;
+
+          // Checkpoint progress every 2 segments or on completion so work is never lost!
+          if (nextWrite % 2 == 0 || nextWrite == total) {
+            unawaited(metaFile.writeAsString('$nextWrite'));
+          }
 
           final elapsedMs = stopwatch.elapsedMilliseconds;
           if (elapsedMs - lastSpeedTime >= 500) {
@@ -199,7 +238,11 @@ class HlsDownloader {
     // playlists have no `#EXT-X-MAP`, so initUrl is null and this is skipped
     // (TS downloads are unchanged). The init segment is never encrypted.
     if (pl.initUrl != null) {
-      final init = await _fetchBytes(pl.initUrl!, headers);
+      final init = await _fetchBytes(
+        pl.initUrl!,
+        headers,
+        cancelToken: cancelToken,
+      );
       if (init == null) {
         await sink.close();
         try {
@@ -230,14 +273,16 @@ class HlsDownloader {
       return 'canceled';
     }
 
+    // Always preserve checkpoint on incomplete/interrupted download!
+    try {
+      await metaFile.writeAsString('$nextWrite');
+    } catch (_) {}
+
     if (failed || nextWrite < total) {
-      try {
-        if (await file.exists()) await file.delete();
-        if (await metaFile.exists()) await metaFile.delete();
-      } catch (_) {}
       return failReason ?? 'incomplete ($nextWrite/$total segments)';
     }
 
+    // Only clean up metaFile upon 100% completion
     try {
       if (await metaFile.exists()) await metaFile.delete();
     } catch (_) {}
@@ -442,11 +487,17 @@ class HlsDownloader {
   ///
   /// A 4xx is not retried: the segment is gone or forbidden, and asking three
   /// times only makes the failure slower.
-  Future<Uint8List?> _fetchBytes(String url, Map<String, String> headers) async {
+  Future<Uint8List?> _fetchBytes(
+    String url,
+    Map<String, String> headers, {
+    CancelToken? cancelToken,
+  }) async {
     for (var attempt = 1; attempt <= _segmentAttempts; attempt++) {
+      if (cancelToken?.isCancelled ?? false) return null;
       try {
         final r = await _dio.getUri<List<int>>(
           Uri.parse(url),
+          cancelToken: cancelToken,
           options: Options(
             responseType: ResponseType.bytes,
             headers: headers,
@@ -459,8 +510,10 @@ class HlsDownloader {
         // Answered, but not with the segment. 4xx won't change on a retry.
         if (r.statusCode != null && r.statusCode! >= 400) return null;
       } catch (_) {
+        if (cancelToken?.isCancelled ?? false) return null;
         // Timeout, reset connection, DNS — exactly what a retry is for.
       }
+      if (cancelToken?.isCancelled ?? false) return null;
       if (attempt < _segmentAttempts) {
         await Future<void>.delayed(_segmentRetryDelay * attempt);
       }

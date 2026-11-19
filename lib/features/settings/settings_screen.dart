@@ -60,6 +60,7 @@ import '../../core/tv/tv_list_focusable.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/ui/dock_visibility.dart';
 import 'developer_screen.dart';
+import 'developer_service.dart';
 import 'donate_screen.dart';
 import '../onboarding/how_it_works.dart';
 import '../notify/subscriptions_screen.dart';
