@@ -77,7 +77,7 @@ class _ZPhoneViewState extends State<_ZPhoneView> {
             onPressed: () => _showAddRepoDialog(context),
             icon: const Icon(Icons.add),
             label: Text(
-              context.l10n.addZangetsuRepo,
+              context.l10n.addRepo,
               style: AppText.button.copyWith(color: Colors.white),
             ),
           ),
@@ -952,6 +952,45 @@ class _ZAddRepoDialogState extends State<_ZAddRepoDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Text(
+              'Popular repositories',
+              style: AppText.caption.copyWith(
+                color: AppColors.textTertiary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ActionChip(
+                  avatar: const Icon(Icons.verified_rounded, size: 17),
+                  label: const Text('Official'),
+                  onPressed: _loading
+                      ? null
+                      : () {
+                          _nameCtrl.text = 'Official Providers';
+                          _urlCtrl.text =
+                              'https://raw.githubusercontent.com/Spyou/zangetsu-providers/main/index.json';
+                          setState(() {});
+                        },
+                ),
+                ActionChip(
+                  avatar: const Icon(Icons.groups_rounded, size: 17),
+                  label: const Text('Mewtwo Community'),
+                  onPressed: _loading
+                      ? null
+                      : () {
+                          _nameCtrl.text = 'Mewtwo Community';
+                          _urlCtrl.text =
+                              'https://raw.githubusercontent.com/MewtwoOP1/Zangetsu-repo/main/index.json';
+                          setState(() {});
+                        },
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
             TextField(
               controller: _nameCtrl,
               enabled: !_loading,

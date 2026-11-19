@@ -75,10 +75,9 @@ class _FakeTracker implements Tracker {
   _FakeTracker({
     this.name = 'AniList',
     this.connected = true,
-    this.reading = true,
     List<TrackerListItem>? library,
     this.error,
-  }) : library = library ?? const [];
+  }) : reading = true, library = library ?? const [];
 
   final String name;
   bool connected;

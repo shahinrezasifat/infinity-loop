@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/mode/content_mode.dart';
 import 'package:watch_app/core/tv/tv_load_error_dialog.dart';

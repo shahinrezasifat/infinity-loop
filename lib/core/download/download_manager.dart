@@ -34,10 +34,12 @@ import 'video_destination.dart';
 /// `downloads` box so the library survives restarts. A [ChangeNotifier] so the
 /// UI can rebuild live. See docs/downloads-feature.md.
 class DownloadManager extends ChangeNotifier {
-  DownloadManager(this._repo,
-      [DownloadPrefs? downloadPrefs, TorrentDownloadService? torrentSvc])
-      : _downloadPrefs = downloadPrefs ?? DownloadPrefs(),
-        _torrentSvc = torrentSvc ?? TorrentDownloadService();
+  DownloadManager(
+    this._repo, [
+    DownloadPrefs? downloadPrefs,
+    TorrentDownloadService? torrentSvc,
+  ]) : _downloadPrefs = downloadPrefs ?? DownloadPrefs(),
+       _torrentSvc = torrentSvc ?? TorrentDownloadService();
 
   /// The ROUTER, not the source repository.
   ///
@@ -53,6 +55,14 @@ class DownloadManager extends ChangeNotifier {
   /// Latest torrent-download progress per id (peers/speed for the UI), kept
   /// out of [DownloadRecord] so it isn't persisted every tick.
   final Map<String, TorrentDownloadProgress> torrentProgress = {};
+
+  /// Live real-time statistics (speed, bytes downloaded, total, ETA) for active downloads.
+  final Map<String, LiveDownloadStats> liveStats = {};
+
+  /// Trackers for calculating real-time speed, bytes downloaded, total size, and ETA.
+  final Map<String, _LiveTracker> _trackers = {};
+  final Map<String, String> _tempFilePaths = {};
+  Timer? _speedPollTimer;
 
   static const String boxName = 'downloads';
   static const String _sharedDir = 'Zangetsu';
@@ -122,23 +132,31 @@ class DownloadManager extends ChangeNotifier {
         level: 'E',
       );
       if (await _tryNext(rec)) return;
-      _put(rec.copyWith(
-        status: DownloadStatus.failed,
-        error: () => "Couldn't start download",
-      ));
+      _put(
+        rec.copyWith(
+          status: DownloadStatus.failed,
+          error: () => "Couldn't start download",
+        ),
+      );
       notifyListeners();
     });
     _listenBackgroundService();
     _listenTorrentDownloads();
     _reconcileServiceResults(); // apply HLS downloads finished while killed
+    if (_records.values.any((r) => r.status == DownloadStatus.downloading)) {
+      _startSpeedPollTimerIfNeeded();
+    }
   }
 
   /// Apply a new "Parallel downloads" limit live to BOTH paths — the MP4 queue
   /// here and the HLS service — so a change takes effect on the current batch.
   /// Raising it starts queued episodes right away; lowering it only stops new
   /// ones spawning (running downloads are never interrupted).
-  void setParallel(int n) {
+  int get parallelDownloads => _downloadPrefs.parallelDownloads;
+
+  Future<void> setParallel(int n) async {
     final v = n.clamp(DownloadPrefs.parallelMin, DownloadPrefs.parallelMax);
+    await _downloadPrefs.setParallelDownloads(v);
     _mp4Queue.maxConcurrent = v;
     // The queue only re-checks on add/finish, not when maxConcurrent changes —
     // so nudge it, otherwise raising the limit wouldn't start queued downloads
@@ -165,12 +183,50 @@ class DownloadManager extends ChangeNotifier {
         final rec = _records[id];
         if (rec == null || rec.status == DownloadStatus.canceled) return;
         final p = (d?['progress'] as num?)?.toDouble() ?? rec.progress;
-        _put(rec.copyWith(status: DownloadStatus.downloading, progress: p));
+        final bytesDownloaded = (d?['bytesDownloaded'] as num?)?.toInt() ?? 0;
+        final bytesTotal = (d?['bytesTotal'] as num?)?.toInt() ?? rec.bytesTotal;
+        final speedBps = (d?['speedBps'] as num?)?.toDouble() ?? 0.0;
+        final remainingSec = (d?['remainingSec'] as num?)?.toInt();
+        final timeRemaining = remainingSec != null && remainingSec > 0
+            ? Duration(seconds: remainingSec)
+            : null;
+
+        _updateLiveProgress(
+          id: id,
+          progress: p,
+          bytesDownloaded: bytesDownloaded > 0 ? bytesDownloaded : null,
+          bytesTotal: bytesTotal > 0 ? bytesTotal : null,
+          speedBps: speedBps > 0 ? speedBps : null,
+          timeRemaining: timeRemaining,
+        );
+
+        _put(
+          rec.copyWith(
+            status: DownloadStatus.downloading,
+            progress: p,
+            bytesTotal: bytesTotal > 0 ? bytesTotal : null,
+          ),
+        );
+        _startSpeedPollTimerIfNeeded();
         notifyListeners();
+      });
+      svc.on('paused').listen((d) {
+        final id = d?['id'] as String?;
+        if (id == null) return;
+        _trackers.remove(id);
+        liveStats.remove(id);
+        final rec = _records[id];
+        if (rec != null) {
+          _put(rec.copyWith(status: DownloadStatus.paused));
+          notifyListeners();
+        }
       });
       svc.on('done').listen((d) async {
         final id = d?['id'] as String?;
         if (id == null) return;
+        _trackers.remove(id);
+        _tempFilePaths.remove(id);
+        liveStats.remove(id);
         final rec = _records[id];
         if (rec == null) return;
         _candidates.remove(id);
@@ -196,6 +252,9 @@ class DownloadManager extends ChangeNotifier {
       svc.on('failed').listen((d) async {
         final id = d?['id'] as String?;
         if (id == null) return;
+        _trackers.remove(id);
+        _tempFilePaths.remove(id);
+        liveStats.remove(id);
         final rec = _records[id];
         if (rec == null || d?['canceled'] == true) return;
         final err = d?['error'] as String? ?? 'Download failed';
@@ -205,10 +264,7 @@ class DownloadManager extends ChangeNotifier {
           level: 'E',
         );
         if (await _tryNext(rec)) return; // fell back to another mirror
-        _put(rec.copyWith(
-          status: DownloadStatus.failed,
-          error: () => err,
-        ));
+        _put(rec.copyWith(status: DownloadStatus.failed, error: () => err));
         notifyListeners();
       });
     } catch (_) {
@@ -227,20 +283,50 @@ class DownloadManager extends ChangeNotifier {
       torrentProgress[p.id] = p;
       switch (p.status) {
         case 'done':
+          _trackers.remove(p.id);
+          _tempFilePaths.remove(p.id);
+          liveStats.remove(p.id);
           _candidates.remove(p.id);
           await _markDone(rec, p.filePath);
         case 'failed':
-          _put(rec.copyWith(
-            status: DownloadStatus.failed,
-            error: () => p.error ?? 'Torrent download failed',
-          ));
+          _trackers.remove(p.id);
+          _tempFilePaths.remove(p.id);
+          liveStats.remove(p.id);
+          _put(
+            rec.copyWith(
+              status: DownloadStatus.failed,
+              error: () => p.error ?? 'Torrent download failed',
+            ),
+          );
         case 'paused':
+          _trackers.remove(p.id);
+          liveStats.remove(p.id);
           _put(rec.copyWith(status: DownloadStatus.paused));
         default: // queued | downloading | copying — keep it "downloading"
-          _put(rec.copyWith(
-            status: DownloadStatus.downloading,
+          final totalBytes = rec.bytesTotal;
+          final dlBytes =
+              totalBytes > 0 ? (totalBytes * p.progress).round() : 0;
+          final remainingBytes =
+              totalBytes > dlBytes ? totalBytes - dlBytes : 0;
+          final remainingSec = (remainingBytes > 0 && p.downSpeedBps > 0)
+              ? (remainingBytes / p.downSpeedBps).round()
+              : 0;
+          _updateLiveProgress(
+            id: p.id,
             progress: p.progress,
-          ));
+            bytesDownloaded: dlBytes > 0 ? dlBytes : null,
+            bytesTotal: totalBytes > 0 ? totalBytes : null,
+            speedBps: p.downSpeedBps > 0 ? p.downSpeedBps.toDouble() : null,
+            timeRemaining:
+                remainingSec > 0 ? Duration(seconds: remainingSec) : null,
+          );
+          _put(
+            rec.copyWith(
+              status: DownloadStatus.downloading,
+              progress: p.progress,
+            ),
+          );
+          _startSpeedPollTimerIfNeeded();
       }
       notifyListeners();
     });
@@ -282,10 +368,9 @@ class DownloadManager extends ChangeNotifier {
                 '${rec.showTitle} · ${rec.episodeTitle}: $err',
                 level: 'E',
               );
-              _put(rec.copyWith(
-                status: DownloadStatus.failed,
-                error: () => err,
-              ));
+              _put(
+                rec.copyWith(status: DownloadStatus.failed, error: () => err),
+              );
             }
           }
         } catch (_) {}
@@ -299,6 +384,8 @@ class DownloadManager extends ChangeNotifier {
 
   @override
   void dispose() {
+    _speedPollTimer?.cancel();
+    _speedPollTimer = null;
     _sub?.cancel();
     super.dispose();
   }
@@ -306,7 +393,8 @@ class DownloadManager extends ChangeNotifier {
   // ── Reads ────────────────────────────────────────────────────────────────
 
   List<DownloadRecord> get all =>
-      _records.values.toList()..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      _records.values.toList()
+        ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
   /// Records grouped by show, newest show first.
   Map<String, List<DownloadRecord>> get byShow {
@@ -336,6 +424,7 @@ class DownloadManager extends ChangeNotifier {
     required List<Episode> episodes,
     required int nowMs,
     int? malId,
+    bool isMovie = false,
   }) async {
     // Best-effort notification permission so the progress notification shows.
     try {
@@ -366,6 +455,7 @@ class DownloadManager extends ChangeNotifier {
         category: category,
         quality: quality,
         malId: malId,
+        isMovie: isMovie,
         createdAt: nowMs,
       );
       _put(rec);
@@ -395,6 +485,7 @@ class DownloadManager extends ChangeNotifier {
     required int nowMs,
     int? malId,
     List<VideoSource> fallbacks = const [],
+    bool isMovie = false,
   }) async {
     try {
       await Permission.notification.request();
@@ -422,6 +513,7 @@ class DownloadManager extends ChangeNotifier {
       category: category,
       quality: qualityLabel,
       malId: malId,
+      isMovie: isMovie,
       supersededPath: outgoing,
       createdAt: nowMs,
     );
@@ -442,7 +534,10 @@ class DownloadManager extends ChangeNotifier {
     _put(rec.copyWith(status: DownloadStatus.resolving));
     notifyListeners();
     try {
-      final sources = await _repo.sources(rec.episodeUrl, sourceId: rec.sourceId);
+      final sources = await _repo.sources(
+        rec.episodeUrl,
+        sourceId: rec.sourceId,
+      );
       if (_isCanceled(rec.id)) return; // canceled while resolving
       final ranked = _ranked(sources, rec.quality);
       if (ranked.isEmpty) {
@@ -466,10 +561,15 @@ class DownloadManager extends ChangeNotifier {
       _candidates[rec.id] = ranked;
       await _enqueueTaskFor(rec, ranked.first);
     } catch (e) {
-      AppLogger.instance
-          .log('download resolve failed (${rec.showTitle}): $e', level: 'E');
+      AppLogger.instance.log(
+        'download resolve failed (${rec.showTitle}): $e',
+        level: 'E',
+      );
       _put(
-        rec.copyWith(status: DownloadStatus.failed, error: () => 'Resolve failed'),
+        rec.copyWith(
+          status: DownloadStatus.failed,
+          error: () => 'Resolve failed',
+        ),
       );
       notifyListeners();
     }
@@ -506,9 +606,13 @@ class DownloadManager extends ChangeNotifier {
   /// whose streams are all manifests instead of settling on it. One sweep, not
   /// one sweep per rejected source — that was quadratic and froze the app.
   Future<bool> _tryAnotherSource(DownloadRecord rec) async {
-    if (!ZmodeIds.isZ(rec.episodeUrl)) return false; // only the catalogue sweeps
+    if (!ZmodeIds.isZ(rec.episodeUrl)) {
+      return false; // only the catalogue sweeps
+    }
     if (!GetIt.I.isRegistered<MetadataRepository>()) return false;
-    if (_sweeping.contains(rec.id)) return false; // already looking for this one
+    if (_sweeping.contains(rec.id)) {
+      return false; // already looking for this one
+    }
     _sweeping.add(rec.id);
     try {
       final next = await GetIt.I<MetadataRepository>().sourcesWhere(
@@ -569,10 +673,12 @@ class DownloadManager extends ChangeNotifier {
     // A picked SAF folder (content://) streams straight into that tree, which
     // would put the file in public storage. keepPrivate overrides that: stream
     // to app-docs like the default, and never move it out.
-    final safUri = videoDestination(
-      keepPrivate: _downloadPrefs.keepPrivate,
-      locationUri: _downloadPrefs.locationUri,
-    ) == VideoDestination.safTree
+    final safUri =
+        videoDestination(
+              keepPrivate: _downloadPrefs.keepPrivate,
+              locationUri: _downloadPrefs.locationUri,
+            ) ==
+            VideoDestination.safTree
         ? _downloadPrefs.locationUri
         : null;
     final DownloadTask task = safUri != null
@@ -602,6 +708,10 @@ class DownloadManager extends ChangeNotifier {
             displayName: displayName,
           );
     _tasks[rec.id] = task;
+    getApplicationDocumentsDirectory().then((docs) {
+      _tempFilePaths[rec.id] =
+          '${docs.path}/$_sharedDir/${_safe(rec.showTitle)}/$filename';
+    }).catchError((_) {});
     // Mark it waiting ("Queued"); the queue enqueues it when a parallel slot is
     // free (→ enqueued/running in _onUpdate). Start failures come back via
     // _mp4Queue.enqueueErrors + _onUpdate's failed case.
@@ -628,10 +738,14 @@ class DownloadManager extends ChangeNotifier {
       final outputPath =
           '${dir.path}/${safeShow}_E${rec.episodeNumber?.toInt() ?? ''}'
           '_${_safe(rec.quality)}.ts';
+      _tempFilePaths[rec.id] = outputPath;
+      _startSpeedPollTimerIfNeeded();
 
       // Background HLS isolate needs flutter_background_service (Android/iOS only).
       if (isAppleTv) {
-        throw UnsupportedError('Background HLS downloads are not available on Apple TV');
+        throw UnsupportedError(
+          'Background HLS downloads are not available on Apple TV',
+        );
       }
 
       if (!await DownloadService.instance.isRunning()) {
@@ -667,8 +781,9 @@ class DownloadManager extends ChangeNotifier {
   }
 
   /// Native TS→MP4 remux channel (Android only). See MainActivity + TsRemuxer.
-  static const MethodChannel _downloadChannel =
-      MethodChannel('zangetsu/download');
+  static const MethodChannel _downloadChannel = MethodChannel(
+    'zangetsu/download',
+  );
 
   /// Remux the concatenated-TS file at [input] into a real MP4 at [output] via
   /// the native MediaMuxer (stream-copy). Returns true on success; false on
@@ -677,10 +792,10 @@ class DownloadManager extends ChangeNotifier {
     if (!Platform.isAndroid) return false;
     try {
       final ok = await _downloadChannel
-          .invokeMethod<bool>(
-            'remuxTsToMp4',
-            {'input': input, 'output': output},
-          )
+          .invokeMethod<bool>('remuxTsToMp4', {
+            'input': input,
+            'output': output,
+          })
           // MediaMuxer can sit forever on a stream it cannot parse, and a
           // native call that never returns is not an error — nothing throws,
           // the await simply never completes and the download is stuck at
@@ -702,11 +817,12 @@ class DownloadManager extends ChangeNotifier {
   /// app-specific external path stored as the download location. Android only;
   /// empty elsewhere.
   Future<List<({String path, String label, bool removable})>>
-      listDownloadVolumes() async {
+  listDownloadVolumes() async {
     if (!Platform.isAndroid) return const [];
     try {
-      final raw = await _downloadChannel
-          .invokeMethod<List<dynamic>>('listDownloadVolumes');
+      final raw = await _downloadChannel.invokeMethod<List<dynamic>>(
+        'listDownloadVolumes',
+      );
       if (raw == null) return const [];
       return raw.map((e) {
         final m = (e as Map).cast<String, dynamic>();
@@ -748,7 +864,8 @@ class DownloadManager extends ChangeNotifier {
       try {
         final destDir = Directory('$customUri/$dir');
         await destDir.create(recursive: true);
-        final mp4 = '${destDir.path}/${_withExt(tsPath.split('/').last, 'mp4')}';
+        final mp4 =
+            '${destDir.path}/${_withExt(tsPath.split('/').last, 'mp4')}';
         if (await _remuxToMp4(tsPath, mp4)) {
           try {
             await File(tsPath).delete();
@@ -771,7 +888,9 @@ class DownloadManager extends ChangeNotifier {
     if (Platform.isAndroid) {
       final mp4 = _withExt(tsPath, 'mp4');
       final remuxed = mp4 != tsPath && await _remuxToMp4(tsPath, mp4);
-      debugPrint('[dl] HLS finalize: ${remuxed ? 'remuxed to mp4' : 'kept .ts'}');
+      debugPrint(
+        '[dl] HLS finalize: ${remuxed ? 'remuxed to mp4' : 'kept .ts'}',
+      );
       if (remuxed) {
         publish = mp4;
         try {
@@ -781,8 +900,11 @@ class DownloadManager extends ChangeNotifier {
       // Remux failed on an odd stream → keep the honestly-labelled .ts.
     }
     if (dest == VideoDestination.safTree) {
-      final moved =
-          await _moveIntoTree(publish, customUri!, publish.split('/').last);
+      final moved = await _moveIntoTree(
+        publish,
+        customUri!,
+        publish.split('/').last,
+      );
       return moved ?? publish;
     }
     if (dest != VideoDestination.publicDownloads) {
@@ -849,7 +971,9 @@ class DownloadManager extends ChangeNotifier {
     if (source.subtitles.isEmpty && !fromHls) return;
     final live = _records[rec.id];
     if (live == null || live.status == DownloadStatus.canceled) return;
-    if (live.subtitles.isNotEmpty) return; // already saved (e.g. a retry mirror)
+    if (live.subtitles.isNotEmpty) {
+      return; // already saved (e.g. a retry mirror)
+    }
     try {
       final docs = await getApplicationDocumentsDirectory();
       final safeShow = _safe(rec.showTitle);
@@ -882,7 +1006,9 @@ class DownloadManager extends ChangeNotifier {
               isDefault: sub.isDefault,
             ),
           );
-        } catch (_) {/* skip this track */}
+        } catch (_) {
+          /* skip this track */
+        }
       }
       // HLS renditions, merged into one .vtt each. After the sidecars so an
       // explicitly advertised track wins when a stream offers both.
@@ -907,7 +1033,9 @@ class DownloadManager extends ChangeNotifier {
                 isDefault: t.isDefault,
               ),
             );
-          } catch (_) {/* skip this track */}
+          } catch (_) {
+            /* skip this track */
+          }
         }
       }
       if (saved.isEmpty) return;
@@ -923,12 +1051,16 @@ class DownloadManager extends ChangeNotifier {
       }
       _put(cur.copyWith(subtitles: saved));
       notifyListeners();
-    } catch (_) {/* no subtitles offline — non-fatal */}
+    } catch (_) {
+      /* no subtitles offline — non-fatal */
+    }
   }
 
   // ── Controls ───────────────────────────────────────────────────────────────
 
   Future<void> pause(DownloadRecord rec) async {
+    _trackers.remove(rec.id);
+    liveStats.remove(rec.id);
     if (rec.isTorrent) {
       try {
         await _torrentSvc.pause(rec.id);
@@ -937,11 +1069,23 @@ class DownloadManager extends ChangeNotifier {
       notifyListeners();
       return;
     }
+    if (!isAppleTv) {
+      try {
+        DownloadService.instance.invoke('pause', {'id': rec.id});
+      } catch (_) {}
+    }
     final t = _tasks[rec.id];
-    if (t != null) await _fileDownloader.pause(t);
+    if (t != null) {
+      try {
+        await _fileDownloader.pause(t);
+      } catch (_) {}
+    }
+    _put(rec.copyWith(status: DownloadStatus.paused));
+    notifyListeners();
   }
 
   Future<void> resume(DownloadRecord rec) async {
+    _startSpeedPollTimerIfNeeded();
     if (rec.isTorrent) {
       try {
         await _torrentSvc.resume(rec.id);
@@ -952,11 +1096,19 @@ class DownloadManager extends ChangeNotifier {
     }
     final t = _tasks[rec.id];
     if (t != null) {
-      await _fileDownloader.resume(t);
-    } else {
-      // Task object lost (e.g. after restart) — re-resolve and enqueue.
-      await _resolveAndEnqueue(rec.copyWith(status: DownloadStatus.queued));
+      try {
+        final ok = await _fileDownloader.resume(t);
+        if (ok) {
+          _put(rec.copyWith(status: DownloadStatus.downloading));
+          notifyListeners();
+          return;
+        }
+      } catch (_) {}
     }
+    _put(rec.copyWith(status: DownloadStatus.downloading));
+    notifyListeners();
+    // Re-enqueue (resumes from checkpoint for HLS via .meta file)
+    await _resolveAndEnqueue(rec.copyWith(status: DownloadStatus.queued));
   }
 
   /// Re-download a failed record from scratch: forget any stale mirror list,
@@ -974,6 +1126,9 @@ class DownloadManager extends ChangeNotifier {
 
   Future<void> cancel(DownloadRecord rec) async {
     _candidates.remove(rec.id); // user stopped it — don't auto-advance mirrors
+    _trackers.remove(rec.id);
+    _tempFilePaths.remove(rec.id);
+    liveStats.remove(rec.id);
     // Mark canceled FIRST so any in-flight resolve/update sees it and bails
     // (otherwise a resolve finishing after cancel would re-enqueue, leaving the
     // tile stuck "loading" despite saying canceled).
@@ -989,14 +1144,27 @@ class DownloadManager extends ChangeNotifier {
     }
     _mp4Queue.removeTasksWithIds([rec.id]); // drop it if still waiting in line
     try {
-      await _fileDownloader.cancelTaskWithId(rec.id); // direct-file task (if enqueued/running)
+      await _fileDownloader.cancelTaskWithId(
+        rec.id,
+      ); // direct-file task (if enqueued/running)
     } catch (_) {}
     if (!isAppleTv) {
       try {
-        DownloadService.instance.invoke('cancel', {'id': rec.id}); // HLS job (if any)
+        DownloadService.instance.invoke('cancel', {
+          'id': rec.id,
+        }); // HLS job (if any)
       } catch (_) {}
     }
     _tasks.remove(rec.id);
+    try {
+      final cachedPath = await _estimateTempPath(rec);
+      if (cachedPath != null) {
+        final f = File(cachedPath);
+        if (await f.exists()) await f.delete();
+        final meta = File('$cachedPath.meta');
+        if (await meta.exists()) await meta.delete();
+      }
+    } catch (_) {}
   }
 
   bool _isCanceled(String id) =>
@@ -1006,6 +1174,9 @@ class DownloadManager extends ChangeNotifier {
   /// Cancel (if active) and forget the record + delete the saved file.
   Future<void> delete(DownloadRecord rec) async {
     _candidates.remove(rec.id);
+    _trackers.remove(rec.id);
+    _tempFilePaths.remove(rec.id);
+    liveStats.remove(rec.id);
     if (rec.isTorrent) {
       try {
         await _torrentSvc.cancel(rec.id);
@@ -1017,7 +1188,9 @@ class DownloadManager extends ChangeNotifier {
     } catch (_) {}
     if (!isAppleTv) {
       try {
-        DownloadService.instance.invoke('cancel', {'id': rec.id}); // stop HLS job
+        DownloadService.instance.invoke('cancel', {
+          'id': rec.id,
+        }); // stop HLS job
       } catch (_) {}
     }
     _tasks.remove(rec.id);
@@ -1190,26 +1363,58 @@ class DownloadManager extends ChangeNotifier {
 
     if (update is TaskProgressUpdate) {
       if (update.progress >= 0) {
+        final speedBps = update.networkSpeed > 0
+            ? update.networkSpeed * 1024 * 1024
+            : 0.0;
+        final bytesTotal = update.expectedFileSize > 0
+            ? update.expectedFileSize
+            : rec.bytesTotal;
+        final bytesDownloaded = (bytesTotal > 0 && update.progress > 0)
+            ? (bytesTotal * update.progress).round()
+            : 0;
+        final timeRemaining = update.timeRemaining.inSeconds > 0
+            ? update.timeRemaining
+            : null;
+
+        _updateLiveProgress(
+          id: id,
+          progress: update.progress,
+          bytesDownloaded: bytesDownloaded > 0 ? bytesDownloaded : null,
+          bytesTotal: bytesTotal > 0 ? bytesTotal : null,
+          speedBps: speedBps > 0 ? speedBps : null,
+          timeRemaining: timeRemaining,
+        );
+
         _put(
           rec.copyWith(
             status: DownloadStatus.downloading,
             progress: update.progress,
-            bytesTotal: update.expectedFileSize > 0
-                ? update.expectedFileSize
+            bytesTotal: bytesTotal > 0
+                ? bytesTotal
                 : null,
           ),
         );
+        _startSpeedPollTimerIfNeeded();
         notifyListeners();
       }
       return;
     }
 
     if (update is TaskStatusUpdate) {
+      if (update.status == TaskStatus.complete ||
+          update.status == TaskStatus.failed ||
+          update.status == TaskStatus.canceled ||
+          update.status == TaskStatus.paused) {
+        _trackers.remove(id);
+        _tempFilePaths.remove(id);
+        liveStats.remove(id);
+      }
       switch (update.status) {
         case TaskStatus.enqueued:
           _put(rec.copyWith(status: DownloadStatus.queued));
         case TaskStatus.running:
           _put(rec.copyWith(status: DownloadStatus.downloading));
+          _startSpeedPollTimerIfNeeded();
         case TaskStatus.paused:
           _put(rec.copyWith(status: DownloadStatus.paused));
         case TaskStatus.complete:
@@ -1274,7 +1479,8 @@ class DownloadManager extends ChangeNotifier {
         _put(
           rec.copyWith(
             status: DownloadStatus.failed,
-            error: () => "This source can't be downloaded (stream-only / DASH) — "
+            error: () =>
+                "This source can't be downloaded (stream-only / DASH) — "
                 'try a different server',
           ),
         );
@@ -1298,7 +1504,8 @@ class DownloadManager extends ChangeNotifier {
           _put(
             rec.copyWith(
               status: DownloadStatus.failed,
-              error: () => 'That server returned a web page, not a video — '
+              error: () =>
+                  'That server returned a web page, not a video — '
                   'try a different server',
             ),
           );
@@ -1401,6 +1608,7 @@ class DownloadManager extends ChangeNotifier {
   /// each. Deleted only once the replacement is safely on disk, so a failed
   /// re-download doesn't cost the copy that already worked.
   Future<void> _markDone(DownloadRecord rec, String? path) async {
+    liveStats.remove(rec.id);
     _put(
       rec.copyWith(
         status: DownloadStatus.done,
@@ -1479,7 +1687,9 @@ class DownloadManager extends ChangeNotifier {
       s.container == SourceContainer.torrent;
 
   Future<void> _startTorrentDownload(
-      DownloadRecord rec, VideoSource source) async {
+    DownloadRecord rec,
+    VideoSource source,
+  ) async {
     _put(rec.copyWith(isTorrent: true, status: DownloadStatus.downloading));
     notifyListeners();
     try {
@@ -1494,14 +1704,18 @@ class DownloadManager extends ChangeNotifier {
       );
     } catch (e) {
       final wifi = e is PlatformException && e.code == 'wifi_only';
-      AppLogger.instance
-          .log('torrent download start failed (${rec.showTitle}): $e', level: 'E');
-      _put(rec.copyWith(
-        status: DownloadStatus.failed,
-        error: () => wifi
-            ? 'Torrents are set to Wi-Fi only (Settings › Torrents).'
-            : 'Torrent download failed to start.',
-      ));
+      AppLogger.instance.log(
+        'torrent download start failed (${rec.showTitle}): $e',
+        level: 'E',
+      );
+      _put(
+        rec.copyWith(
+          status: DownloadStatus.failed,
+          error: () => wifi
+              ? 'Torrents are set to Wi-Fi only (Settings › Torrents).'
+              : 'Torrent download failed to start.',
+        ),
+      );
       notifyListeners();
     }
   }
@@ -1524,8 +1738,9 @@ class DownloadManager extends ChangeNotifier {
       list.sort((a, b) => _height(b).compareTo(_height(a)));
       return list;
     }
-    final want =
-        int.tryParse(RegExp(r'(\d{3,4})').firstMatch(quality)?.group(1) ?? '');
+    final want = int.tryParse(
+      RegExp(r'(\d{3,4})').firstMatch(quality)?.group(1) ?? '',
+    );
     if (want == null) {
       list.sort((a, b) => _height(b).compareTo(_height(a)));
       return list;
@@ -1538,4 +1753,238 @@ class DownloadManager extends ChangeNotifier {
     });
     return list;
   }
+
+  void _startSpeedPollTimerIfNeeded() {
+    if (_speedPollTimer != null && _speedPollTimer!.isActive) return;
+    _speedPollTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      final active = _records.values
+          .where((r) => r.status == DownloadStatus.downloading)
+          .toList();
+      if (active.isEmpty) {
+        timer.cancel();
+        _speedPollTimer = null;
+        return;
+      }
+      for (final rec in active) {
+        _pollActiveRecord(rec);
+      }
+    });
+  }
+
+  Future<String?> _estimateTempPath(DownloadRecord rec) async {
+    try {
+      final cached = _tempFilePaths[rec.id];
+      if (cached != null) return cached;
+      final docs = await getApplicationDocumentsDirectory();
+      final safeShow = _safe(rec.showTitle);
+      final dir = Directory('${docs.path}/$_sharedDir/$safeShow');
+      if (!await dir.exists()) return null;
+      final epNum = rec.episodeNumber?.toInt();
+      final prefix = epNum != null ? '${safeShow}_E$epNum' : '${safeShow}_E';
+      for (final entity in dir.listSync()) {
+        if (entity is File) {
+          final base = entity.uri.pathSegments.isNotEmpty
+              ? entity.uri.pathSegments.last
+              : entity.path.split(Platform.pathSeparator).last;
+          if (base.startsWith(prefix) || base.startsWith(safeShow)) {
+            _tempFilePaths[rec.id] = entity.path;
+            return entity.path;
+          }
+        }
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  void _updateLiveProgress({
+    required String id,
+    required double progress,
+    int? bytesDownloaded,
+    int? bytesTotal,
+    double? speedBps,
+    Duration? timeRemaining,
+  }) {
+    final rec = _records[id];
+    if (rec == null) return;
+    final tracker = _trackers.putIfAbsent(id, () => _LiveTracker());
+    final now = DateTime.now();
+
+    // 1. Total bytes
+    if (bytesTotal != null && bytesTotal > 0) {
+      tracker.bytesTotal = bytesTotal;
+    } else if (rec.bytesTotal > 0) {
+      tracker.bytesTotal = rec.bytesTotal;
+    } else if (bytesDownloaded != null && bytesDownloaded > 0 && progress > 0.005) {
+      tracker.bytesTotal = (bytesDownloaded / progress).round();
+    } else if (tracker.bytesTotal <= 0 && progress > 0) {
+      final isMovie = rec.isMovie || rec.episodeNumber == null || rec.episodeNumber == 1;
+      tracker.bytesTotal = isMovie ? 1200 * 1024 * 1024 : 350 * 1024 * 1024;
+    }
+
+    // 2. Downloaded bytes
+    if (bytesDownloaded != null && bytesDownloaded > 0) {
+      tracker.bytesDownloaded = bytesDownloaded;
+    } else if (tracker.bytesTotal > 0 && progress > 0) {
+      tracker.bytesDownloaded = (tracker.bytesTotal * progress).round();
+    }
+
+    // 3. Speed
+    if (speedBps != null && speedBps > 0) {
+      tracker.speedBps = tracker.speedBps == 0
+          ? speedBps
+          : (tracker.speedBps * 0.7 + speedBps * 0.3);
+      tracker.lastTime = now;
+      tracker.lastBytes = tracker.bytesDownloaded;
+      tracker.lastProgress = progress;
+    } else {
+      final deltaMs = now.difference(tracker.lastTime).inMilliseconds;
+      if (deltaMs >= 500) {
+        bool updated = false;
+        if (tracker.bytesDownloaded > tracker.lastBytes) {
+          final deltaBytes = tracker.bytesDownloaded - tracker.lastBytes;
+          final instSpeed = (deltaBytes * 1000.0) / deltaMs;
+          tracker.speedBps = tracker.speedBps == 0
+              ? instSpeed
+              : (tracker.speedBps * 0.7 + instSpeed * 0.3);
+          updated = true;
+        } else if (progress > tracker.lastProgress && tracker.bytesTotal > 0) {
+          final deltaProgress = progress - tracker.lastProgress;
+          final deltaBytes = (deltaProgress * tracker.bytesTotal).round();
+          if (deltaBytes > 0) {
+            final instSpeed = (deltaBytes * 1000.0) / deltaMs;
+            tracker.speedBps = tracker.speedBps == 0
+                ? instSpeed
+                : (tracker.speedBps * 0.7 + instSpeed * 0.3);
+            updated = true;
+          }
+        }
+        if (updated) {
+          tracker.lastTime = now;
+          tracker.lastBytes = tracker.bytesDownloaded;
+          tracker.lastProgress = progress;
+        } else if (deltaMs >= 3000) {
+          // If 3 seconds passed without byte progression, gradually decay speed
+          tracker.speedBps = tracker.speedBps * 0.5;
+          tracker.lastTime = now;
+        }
+      }
+    }
+
+    // 4. ETA
+    if (timeRemaining != null && timeRemaining.inSeconds > 0) {
+      tracker.timeRemaining = timeRemaining;
+    } else if (tracker.speedBps > 0 && tracker.bytesTotal > tracker.bytesDownloaded) {
+      final remBytes = tracker.bytesTotal - tracker.bytesDownloaded;
+      tracker.timeRemaining = Duration(seconds: (remBytes / tracker.speedBps).round());
+    }
+
+    liveStats[id] = LiveDownloadStats(
+      speedBps: tracker.speedBps,
+      bytesDownloaded: tracker.bytesDownloaded,
+      bytesTotal: tracker.bytesTotal,
+      timeRemaining: tracker.timeRemaining,
+    );
+  }
+
+  Future<void> _pollActiveRecord(DownloadRecord rec) async {
+    final id = rec.id;
+    final tracker = _trackers.putIfAbsent(id, () => _LiveTracker());
+    final now = DateTime.now();
+
+    tracker.filePath ??= await _estimateTempPath(rec);
+    int currentBytes = 0;
+    if (tracker.filePath != null) {
+      try {
+        final f = File(tracker.filePath!);
+        if (await f.exists()) {
+          currentBytes = await f.length();
+        }
+      } catch (_) {}
+    }
+
+    if (currentBytes > 0) {
+      tracker.bytesDownloaded = currentBytes;
+      if (rec.progress > 0.005) {
+        tracker.bytesTotal = (currentBytes / rec.progress).round();
+      }
+    } else if (tracker.bytesTotal > 0 && rec.progress > 0) {
+      tracker.bytesDownloaded = (tracker.bytesTotal * rec.progress).round();
+    } else if (rec.progress > 0) {
+      final isMovie = rec.isMovie || rec.episodeNumber == null || rec.episodeNumber == 1;
+      final defaultTotal = isMovie ? 1200 * 1024 * 1024 : 350 * 1024 * 1024;
+      tracker.bytesTotal = defaultTotal;
+      tracker.bytesDownloaded = (defaultTotal * rec.progress).round();
+    }
+
+    final deltaMs = now.difference(tracker.lastTime).inMilliseconds;
+    if (deltaMs >= 800) {
+      bool updated = false;
+      if (currentBytes > 0 && tracker.lastBytes > 0 && currentBytes >= tracker.lastBytes) {
+        final deltaBytes = currentBytes - tracker.lastBytes;
+        final instSpeed = (deltaBytes * 1000.0) / deltaMs;
+        tracker.speedBps = tracker.speedBps == 0
+            ? instSpeed
+            : (tracker.speedBps * 0.7 + instSpeed * 0.3);
+        updated = true;
+      } else if (rec.progress > tracker.lastProgress && tracker.bytesTotal > 0) {
+        final deltaProgress = rec.progress - tracker.lastProgress;
+        final deltaBytes = (deltaProgress * tracker.bytesTotal).round();
+        if (deltaBytes > 0) {
+          final instSpeed = (deltaBytes * 1000.0) / deltaMs;
+          tracker.speedBps = tracker.speedBps == 0
+              ? instSpeed
+              : (tracker.speedBps * 0.7 + instSpeed * 0.3);
+          updated = true;
+        }
+      }
+      if (updated || tracker.lastBytes == 0) {
+        tracker.lastBytes = currentBytes > 0 ? currentBytes : tracker.bytesDownloaded;
+        tracker.lastProgress = rec.progress;
+        tracker.lastTime = now;
+      } else if (deltaMs >= 3000) {
+        tracker.speedBps = tracker.speedBps * 0.5;
+        tracker.lastTime = now;
+      }
+    }
+
+    if (tracker.speedBps > 0 && tracker.bytesTotal > tracker.bytesDownloaded) {
+      final remBytes = tracker.bytesTotal - tracker.bytesDownloaded;
+      tracker.timeRemaining = Duration(seconds: (remBytes / tracker.speedBps).round());
+    }
+
+    liveStats[id] = LiveDownloadStats(
+      speedBps: tracker.speedBps,
+      bytesDownloaded: tracker.bytesDownloaded,
+      bytesTotal: tracker.bytesTotal,
+      timeRemaining: tracker.timeRemaining,
+    );
+
+    notifyListeners();
+  }
+}
+
+/// Real-time live statistics for active downloads.
+class LiveDownloadStats {
+  const LiveDownloadStats({
+    this.speedBps = 0.0,
+    this.bytesDownloaded = 0,
+    this.bytesTotal = 0,
+    this.timeRemaining,
+  });
+
+  final double speedBps;
+  final int bytesDownloaded;
+  final int bytesTotal;
+  final Duration? timeRemaining;
+}
+
+class _LiveTracker {
+  double lastProgress = 0.0;
+  int lastBytes = 0;
+  DateTime lastTime = DateTime.now();
+  double speedBps = 0.0;
+  int bytesTotal = 0;
+  int bytesDownloaded = 0;
+  Duration? timeRemaining;
+  String? filePath;
 }

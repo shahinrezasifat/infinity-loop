@@ -34,6 +34,7 @@ class _EpisodesTab extends StatefulWidget {
     this.onDownloadMany,
     this.onSwitchSource,
     this.isReading = false,
+    this.isMovie = false,
   });
 
   /// Opens the source picker for this title. Set only for catalogue titles,
@@ -101,6 +102,7 @@ class _EpisodesTab extends StatefulWidget {
   /// of "Episodes" (single-season case only; multi-season keeps the season
   /// pill either way).
   final bool isReading;
+  final bool isMovie;
 
   @override
   State<_EpisodesTab> createState() => _EpisodesTabState();
@@ -301,6 +303,7 @@ class _EpisodesTabState extends State<_EpisodesTab> {
             onToggleView: () => setState(() => _grid = !_grid),
             onJump: showRanges ? _jump : null,
             isReading: widget.isReading,
+            isMovie: widget.isMovie,
             onBulkDownload: widget.onDownloadMany != null && !sl<AppMode>().isTv
                 ? () => _openBulkDownload(eps)
                 : null,
@@ -542,6 +545,7 @@ class _EpisodesTabState extends State<_EpisodesTab> {
             onDownload: () => widget.onDownload(ep),
             sourceId: widget.sourceId,
             showId: widget.showId,
+            isMovie: widget.isMovie,
           ),
         );
       },
@@ -600,6 +604,7 @@ class _EpisodesHeader extends StatelessWidget {
     required this.onToggleView,
     this.onJump,
     this.isReading = false,
+    this.isMovie = false,
     this.onBulkDownload,
   });
 
@@ -620,6 +625,9 @@ class _EpisodesHeader extends StatelessWidget {
 
   /// True for reading types — the single-season label reads "Chapters".
   final bool isReading;
+
+  /// True when the title is a movie (or single-video title).
+  final bool isMovie;
 
   /// Download a run of chapters at once; null hides the button. Reading only —
   /// a 200-chapter manga one tap at a time isn't a feature.
@@ -696,7 +704,9 @@ class _EpisodesHeader extends StatelessWidget {
                       ),
                     )
                   : Text(
-                      isReading ? context.l10n.chapters : context.l10n.episodes,
+                      isReading
+                          ? context.l10n.chapters
+                          : (isMovie ? 'Movie' : context.l10n.episodes),
                       style: AppText.headline,
                     ),
             ),
@@ -1251,12 +1261,14 @@ class _EpisodeRow extends StatelessWidget {
     required this.sourceId,
     required this.showId,
     this.filler = false,
+    this.isMovie = false,
   });
 
   final Episode ep;
   final int epNum;
   final String displayTitle;
   final bool filler;
+  final bool isMovie;
   final String coverUrl;
   final Map<String, String>? coverHeaders;
   final bool isWatched;
@@ -1315,9 +1327,11 @@ class _EpisodeRow extends StatelessWidget {
     final srcTitle = displayTitle.trim();
     final titleText =
         episodeDisplayTitle(ep, sourceTitle: srcTitle, number: epNum) ?? '';
-    final heading = titleText.isNotEmpty
-        ? '$epNum. $titleText'
-        : context.l10n.episodeLabel(epNum);
+    final heading = isMovie
+        ? (titleText.isNotEmpty ? titleText : 'Play Movie')
+        : (titleText.isNotEmpty
+            ? '$epNum. $titleText'
+            : context.l10n.episodeLabel(epNum));
 
     return InkWell(
       onTap: onTap,

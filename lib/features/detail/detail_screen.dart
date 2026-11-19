@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart' show CupertinoPicker;
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart' show CupertinoPicker;
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:media_kit/media_kit.dart';
@@ -26,6 +26,7 @@ import '../../core/ui/episode_unavailable_dialog.dart';
 import '../../core/zmode/playback_resolver.dart';
 import 'episode_sources_sheet.dart';
 import 'epub_export_sheet.dart';
+import '../sources/auto_link_sources_screen.dart';
 import '../../core/ui/jump_prompt.dart';
 import '../../core/app_mode.dart';
 import '../../core/cache/app_image_cache.dart';
@@ -37,6 +38,8 @@ import '../../core/metadata/metadata_enrichment.dart';
 import '../../core/notify/cs_notify.dart';
 import '../../core/notify/notification_service.dart';
 import '../../core/notify/subscription_store.dart';
+import '../../services/auto_link_provider.dart';
+import '../../services/auto_repo_service.dart';
 import '../../core/share/share_link.dart';
 import '../../core/download/chapter_download.dart';
 import '../../core/download/chapter_download_store.dart';
@@ -1178,6 +1181,21 @@ class _DetailViewState extends State<_DetailView>
     /// adaptive default. One-shot — the cubit clears it after this episode.
     VideoSource? initialSource,
   }) async {
+    if (widget.item.sourceId == AutoLinkProvider.id &&
+        index >= 0 &&
+        index < episodes.length) {
+      final episode = episodes[index];
+      final type = AutoRepoService.detectType(episode.url);
+      if (type == AutoLinkType.bdixDir || type == AutoLinkType.webSniffer) {
+        openAutoLinkUrl(
+          context,
+          title: episode.title.trim().isEmpty ? detail.title : episode.title,
+          url: episode.url,
+        );
+        return;
+      }
+    }
+
     // The catalogue lists this episode but the one source we checked stops
     // short of it (see [Episode.unavailable]). Say which source, and let the
     // viewer decide whether to spend the sweep — asking every installed
@@ -1604,7 +1622,9 @@ class _DetailViewState extends State<_DetailView>
       _snack(context.l10n.noEpisodesToDownload);
       return;
     }
-    if (total == 1) {
+    final isMovie =
+        (detail.type == ProviderType.movie && !detail.tmdbIsTv) || total <= 1;
+    if (total == 1 || isMovie) {
       await _pickSourceAndDownload(
         episodesBySeason.values.first.first,
         detail,
@@ -1737,6 +1757,8 @@ class _DetailViewState extends State<_DetailView>
           ),
           builder: (_) => _SourcePickerSheet(
             title: ep.title.trim().isNotEmpty ? ep.title : detail.title,
+            groupByLanguage:
+                detail.type == ProviderType.movie && !detail.tmdbIsTv,
             resolve: () => sl<CatalogueRepository>().sources(
               ep.url,
               sourceId: item.sourceId,
@@ -1759,6 +1781,8 @@ class _DetailViewState extends State<_DetailView>
         fallbacks: res.all,
         nowMs: DateTime.now().millisecondsSinceEpoch,
         malId: detail.malId ?? item.malId,
+        isMovie: (detail.type == ProviderType.movie && !detail.tmdbIsTv) ||
+            detail.episodes.length <= 1,
       ),
     );
     _snack(context.l10n.addedToDownloads);
@@ -1784,6 +1808,8 @@ class _DetailViewState extends State<_DetailView>
         episodes: episodes,
         nowMs: DateTime.now().millisecondsSinceEpoch,
         malId: detail.malId ?? item.malId,
+        isMovie: (detail.type == ProviderType.movie && !detail.tmdbIsTv) ||
+            episodes.length <= 1,
       ),
     );
     _snack(
@@ -2356,7 +2382,11 @@ class _DetailViewState extends State<_DetailView>
                 Tab(
                   text: isReading
                       ? context.l10n.chapters
-                      : context.l10n.episodes,
+                      : (((detail.type == ProviderType.movie &&
+                                  !detail.tmdbIsTv) ||
+                              (eps.length <= 1 && !hasMultipleSeasons))
+                          ? 'Movie'
+                          : context.l10n.episodes),
                 ),
                 Tab(
                   text: isReading ? context.l10n.characters : context.l10n.cast,
@@ -2378,6 +2408,8 @@ class _DetailViewState extends State<_DetailView>
             seasonEps: seasonEps,
             fillerEps: _fillerEps,
             hasMultipleSeasons: hasMultipleSeasons,
+            isMovie: (detail.type == ProviderType.movie && !detail.tmdbIsTv) ||
+                (eps.length <= 1 && !hasMultipleSeasons),
             seasonSet: seasonSet,
             currentSeason: currentSeason,
             onSelectSeason: cubit.selectSeason,

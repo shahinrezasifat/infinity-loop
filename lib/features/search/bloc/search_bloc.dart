@@ -27,11 +27,17 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     SearchPrefs? prefs,
     TitleSuggestionService? suggestions,
     this.forceMode,
+    this.fixedSourceId,
   }) : _repo = repo,
        _history = history,
        _prefs = prefs ?? sl<SearchPrefs>(),
        _suggestions = suggestions ?? sl<TitleSuggestionService>(),
-       super(_restoredState(prefs ?? sl<SearchPrefs>())) {
+       super(
+         _restoredState(
+           prefs ?? sl<SearchPrefs>(),
+           forceCurrentSourceOnly: fixedSourceId != null,
+         ),
+       ) {
     on<SearchStarted>(_onStarted);
     on<SearchQueryChanged>(_onQueryChanged);
     on<SearchSuggestionsUpdated>(_onSuggestionsUpdated);
@@ -83,6 +89,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   /// today's behaviour byte-identical.
   final ContentMode? forceMode;
 
+  /// Restricts Home-launched search to its selected source, regardless of
+  /// the saved search scope or the app's active content mode.
+  final String? fixedSourceId;
+
   /// Hard cap on one source's search.
   ///
   /// [SourceRepository.searchStatus] never throws and has no timeout of its
@@ -109,10 +119,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   static ({List<MediaItem> items, SourceOutcome outcome}) _timedOut() =>
       (items: const <MediaItem>[], outcome: SourceOutcome.timeout);
 
-  /// [SourceRepository.loadedSources] narrowed to the active content mode (or
-  /// [forceMode] when a caller set one), so an all-sources search only fans
-  /// out over sources that mode can actually show — a manga search shouldn't
-  /// query novel (or anime) sources, and vice versa.
+  /// [SourceRepository.loadedSources] narrowed to [fixedSourceId] when set,
+  /// otherwise to the active content mode (or [forceMode] when a caller set
+  /// one), so an all-sources search only fans out over sources that mode can
+  /// actually show — a manga search shouldn't query novel (or anime) sources,
+  /// and vice versa.
   ///
   /// Mirrors `_modeSources` in `search_screen.dart`, which already narrows the
   /// source *list* the UI offers (with the same [forceMode] override); without
@@ -128,6 +139,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   /// `sourceTypeOf` types `cs:`/`ani:`/untyped sources as anime, so the only
   /// sources this drops are the manga and novel ones.
   List<({String id, String name})> _modeSources() {
+    final fixedId = fixedSourceId;
+    if (fixedId != null) {
+      return _repo.loadedSources
+          .where((source) => source.id == fixedId)
+          .toList();
+    }
     final mode = forceMode ?? sl<ContentModeCubit>().state;
     return filterSourcesForMode(
       {for (final s in _repo.loadedSources) s.id: s},
@@ -138,7 +155,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   /// Seeds the bloc with the user's remembered filter/sort choices so they
   /// persist across screen opens.
-  static SearchState _restoredState(SearchPrefs prefs) {
+  static SearchState _restoredState(
+    SearchPrefs prefs, {
+    required bool forceCurrentSourceOnly,
+  }) {
     final content = SearchContentFilter.values.firstWhere(
       (f) => f.name == prefs.contentFilterName,
       orElse: () => SearchContentFilter.all,
@@ -163,7 +183,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       audioFilter: audio,
       genreFilter: prefs.genre,
       statusFilter: statusFilter,
-      currentSourceOnly: prefs.currentSourceOnly,
+      currentSourceOnly: forceCurrentSourceOnly || prefs.currentSourceOnly,
     );
   }
 
@@ -189,7 +209,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   ) async {
     if (state.trending.isNotEmpty) return;
     try {
-      final sections = await _repo.home();
+      final sections = await _repo.home(sourceId: fixedSourceId);
       final items = sections.isNotEmpty
           ? sections.first.items.take(12).toList()
           : <MediaItem>[];
@@ -236,6 +256,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       ),
     );
 
+    if (fixedSourceId != null) return;
+
     // Then fetch live title autocomplete (one fast call) and merge it in.
     final seq = ++_suggestSeq;
     _suggestDebounce = Timer(const Duration(milliseconds: 250), () async {
@@ -265,6 +287,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     SearchScopeChanged event,
     Emitter<SearchState> emit,
   ) async {
+    if (fixedSourceId != null && !event.currentSourceOnly) return;
     if (event.currentSourceOnly == state.currentSourceOnly) return;
     // Reset the per-source chip — it's meaningless in current-source mode and
     // stale when switching back to all-sources.
@@ -406,7 +429,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     // all-sources mode it's every loaded source EXCEPT the ones the user
     // switched off for search (search-only — doesn't affect Home use).
     List<({String id, String name})> sources;
-    if (state.currentSourceOnly) {
+    if (fixedSourceId != null) {
+      sources = _modeSources();
+    } else if (state.currentSourceOnly) {
       final activeId = sl<ActiveSourceCubit>().state;
       sources = [(id: activeId, name: _repo.displayName(activeId))];
     } else {

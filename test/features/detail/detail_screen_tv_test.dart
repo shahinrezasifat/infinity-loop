@@ -5,7 +5,7 @@
 // SourceRepository. DetailScreenTv is part of detail_screen.dart's library,
 // so we import detail_screen.dart to access it.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

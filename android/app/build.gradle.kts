@@ -7,7 +7,7 @@ plugins {
     // Aniyomi runtime models (Video/Hoster/Track) use kotlinx @Serializable.
     // Version scoped here (not in root settings) so it can't clash with the
     // serialization plugin version a Flutter plugin module pins for itself.
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.20"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.4.20"
     // Applied at the bottom only when google-services.json is present (gitignored).
     id("com.google.gms.google-services") apply false
     id("com.google.firebase.crashlytics") apply false
@@ -25,7 +25,15 @@ if (hasReleaseKeystore) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
-android {
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        // The vendored Aniyomi network layer uses Kotlin context parameters.
+        freeCompilerArgs.add("-Xcontext-parameters")
+    }
+}
+
+extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
     namespace = "com.spyou.watch_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
@@ -37,14 +45,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-        // The vendored Aniyomi network layer (OkHttpExtensions.parseAs) uses Kotlin
-        // context parameters, a preview feature in Kotlin 2.2.x. Enabling the syntax
-        // is additive — existing sources don't use it, so nothing else is affected.
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xcontext-parameters")
-    }
-
     defaultConfig {
         applicationId = "com.spyou.watch_app"
         minSdk = flutter.minSdkVersion
@@ -53,13 +53,8 @@ android {
         versionName = flutter.versionName
     }
 
-    // Drop x86/x86_64 (emulator-only) native libs from every output — including
-    // the prebuilt plugin lib (libmpv) that abiFilters / --target-platform do
-    // NOT strip. This is the reliable lever for the fat APK + AAB, and it's
-    // harmless to the per-ABI (arm) split builds.
     packaging {
         jniLibs {
-            excludes += listOf("**/x86/**", "**/x86_64/**")
             // Extract native libs to the device's lib dir (extractNativeLibs=true).
             // The modern default (false = libs stay uncompressed inside the APK)
             // makes media_kit's libmpv.so lookup fail on some devices (old Android
@@ -209,6 +204,8 @@ dependencies {
     implementation("org.libtorrent4j:libtorrent4j:2.1.0-31")
     implementation("org.libtorrent4j:libtorrent4j-android-arm64:2.1.0-31")
     implementation("org.libtorrent4j:libtorrent4j-android-arm:2.1.0-31")
+    implementation("org.libtorrent4j:libtorrent4j-android-x86_64:2.1.0-31")
+    implementation("org.libtorrent4j:libtorrent4j-android-x86:2.1.0-31")
     // Tiny local HTTP server that streams the downloading file to the player.
     implementation("org.nanohttpd:nanohttpd:2.3.1")
 
@@ -235,11 +232,10 @@ dependencies {
     // io.ktor.http.URLUtilsKt/Url/URLProtocol/CodecsKt. This build shipped no Ktor,
     // so those extractors throw NoClassDefFoundError at loadLinks time → "No playable
     // source" (the source loads fine in CloudStream, which has Ktor). We pin 3.2.x,
-    // NOT CloudStream's 3.5.0: 3.5.0 requires kotlin-stdlib 2.3.x and drags the whole
-    // graph forward, which our pinned Kotlin 2.2.20 compiler can't read (broke the
-    // vendored Aniyomi code). 3.2.x's stdlib floor is ≤2.2.x so there's no upward
-    // pull — compile stays clean. The 4 io.ktor.http URL classes the plugins use are
-    // stable across all 3.x, so the plugin (built vs 3.5.0) runs fine against 3.2.x.
+    // NOT CloudStream's 3.5.0: that version requires kotlin-stdlib 2.3.x and raises
+    // the runtime baseline for plugin-side Ktor dependencies. The 4 io.ktor.http
+    // URL classes the plugins use are stable across all 3.x, so the plugin (built
+    // vs 3.5.0) runs fine against 3.2.x.
     // runtimeOnly: only the dex-loaded plugin uses Ktor, never our own Kotlin.
     runtimeOnly("io.ktor:ktor-http:3.2.3")
     // androidx.preference backs ConfigurableAnimeSource.setupPreferenceScreen (the

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:hive/hive.dart';
 
 /// One selectable splash animation.
@@ -22,6 +24,7 @@ class SplashStyle {
 
   static const String boxName = 'app_prefs';
   static const String _key = 'splashStyleId';
+  static const String customImagePathKey = 'customSplashImagePath';
 
   /// The wordmark reveal — what the app has always shown. A fresh install is
   /// unchanged by this feature existing.
@@ -32,6 +35,22 @@ class SplashStyle {
     SplashStyleOption(id: 'wordmark', label: 'Wordmark'),
     SplashStyleOption(id: 'bankai', label: 'Bankai'),
   ];
+
+  static String? get customImagePath {
+    if (!Hive.isBoxOpen(boxName)) return null;
+    final v = Hive.box(boxName).get(customImagePathKey);
+    if (v is String && File(v).existsSync()) return v;
+    return null;
+  }
+
+  static Future<void> setCustomImagePath(String? path) async {
+    if (!Hive.isBoxOpen(boxName)) return;
+    if (path == null) {
+      await Hive.box(boxName).delete(customImagePathKey);
+    } else {
+      await Hive.box(boxName).put(customImagePathKey, path);
+    }
+  }
 
   /// Falls back to [defaultId] for anything unknown, so a build that drops an
   /// option can't leave the splash with nothing to play.
@@ -44,13 +63,15 @@ class SplashStyle {
   static String get selectedId {
     if (!Hive.isBoxOpen(boxName)) return defaultId;
     final v = Hive.box(boxName).get(_key);
+    if (v == 'custom' && customImagePath != null) return 'custom';
     if (v is String && options.any((o) => o.id == v)) return v;
     return defaultId;
   }
 
   static Future<void> select(String id) async {
-    if (!options.any((o) => o.id == id)) return;
     if (!Hive.isBoxOpen(boxName)) return;
-    await Hive.box(boxName).put(_key, id);
+    if (id == 'custom' || options.any((o) => o.id == id)) {
+      await Hive.box(boxName).put(_key, id);
+    }
   }
 }

@@ -1,7 +1,7 @@
 // Line 2 of the reading-mode chapter row: how the meta line degrades when the
 // source gives us little or nothing.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/models/episode.dart';
 import 'package:watch_app/features/detail/chapter_meta.dart';

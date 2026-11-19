@@ -7,7 +7,7 @@
 // a CloudStreamManager registered (sourceTypeOf's identity-header lookup);
 // mirrors reading_detail_routing_test.dart's fake for that.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/di/injector.dart' show sl;
 import 'package:watch_app/core/models/home_section.dart';

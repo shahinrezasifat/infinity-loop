@@ -24,7 +24,11 @@ enum DockTab {
   /// Profile is the only way into Settings — and Settings is where this very
   /// list is edited. Hiding it would strand the user with no way back, so it
   /// is pinned: always present, never reorderable off the end.
-  bool get isPinned => this == DockTab.profile;
+  bool get isPinned =>
+      this == DockTab.profile ||
+      this == DockTab.myList ||
+      this == DockTab.downloads ||
+      this == DockTab.sources;
 }
 
 /// Which tabs the phone dock shows, and in what order.
@@ -36,14 +40,10 @@ class NavPrefs extends ChangeNotifier {
   static const String _tabsKey = 'tabs';
   static const String _startKey = 'start';
 
-  /// The dock is a fixed-width capsule that fits five icons; below three it
-  /// looks empty and above five the labels start colliding.
-  ///
-  /// The cap is four, not five, because the mode switcher is drawn between
-  /// the tabs as the dock's centre button and is not a [DockTab] — so the
-  /// bar always renders one more icon than there are tabs.
+  /// Five primary destinations: Home, My List, Downloads, Sources and Profile.
+  /// The dock is wide enough for all five labels.
   static const int minTabs = 3;
-  static const int maxTabs = 4;
+  static const int maxTabs = 5;
 
   /// What the dock shipped with, and what a corrupt or empty value falls back
   /// to. Search lives in the Home header and Schedule on the Home card row,
@@ -54,6 +54,7 @@ class NavPrefs extends ChangeNotifier {
   static const List<DockTab> defaultTabs = [
     DockTab.home,
     DockTab.myList,
+    DockTab.downloads,
     DockTab.sources,
     DockTab.profile,
   ];
@@ -133,8 +134,17 @@ class NavPrefs extends ChangeNotifier {
       for (final t in tabs)
         if (seen.add(t)) t,
     ];
-    for (final pinned in DockTab.values.where((t) => t.isPinned)) {
-      if (!out.contains(pinned)) out.add(pinned);
+    if (out.length < minTabs) return defaultTabs;
+    for (final pinned in [
+      DockTab.myList,
+      DockTab.downloads,
+      DockTab.sources,
+      DockTab.profile,
+    ]) {
+      if (out.contains(pinned)) continue;
+      final defaultIndex = defaultTabs.indexOf(pinned);
+      final position = defaultIndex.clamp(0, out.length);
+      out.insert(position, pinned);
     }
     if (out.length > maxTabs) {
       // Drop from the end, but never the pinned tab.

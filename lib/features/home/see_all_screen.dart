@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../core/app_mode.dart';
 import '../../core/di/injector.dart';
@@ -134,9 +134,8 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
         title: Text(widget.title, style: AppText.headline),
       ),
       body: GridView.builder(
-        controller: paginating ? _controller : null,
+        scrollCacheExtent: ScrollCacheExtent.pixels(800), controller: paginating ? _controller : null,
         padding: const EdgeInsets.all(16),
-        cacheExtent: 800,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: posterGridAspect(context),

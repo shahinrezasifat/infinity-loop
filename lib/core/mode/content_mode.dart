@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../models/provider_info.dart';
 
 /// The app-wide content mode. Anime is the default and covers the whole

@@ -16,41 +16,27 @@ void main() {
     await dir.delete(recursive: true);
   });
 
-  // On for everyone since the Settings toggle was removed: the metadata
-  // catalogue is how the app browses now, so a fresh box must land there
-  // rather than on the source-only path nothing can switch back to.
-  test('is on by default and follows anime', () {
-    expect(ZModePrefs.enabled, isTrue);
+  test('is source-only by default and follows anime', () {
+    expect(ZModePrefs.enabled, isFalse);
     expect(ZModePrefs.streamKind, StreamKind.anime);
   });
 
   test('persists the toggle and bumps revision', () async {
     final before = ZModePrefs.revision.value;
-    // Off is now the value that differs from the default, so that is the one
-    // worth writing. The path still exists for tests even though no UI
-    // reaches it.
-    await ZModePrefs.setEnabled(false);
-    expect(ZModePrefs.enabled, isFalse);
+    await ZModePrefs.setEnabled(true);
+    expect(ZModePrefs.enabled, isTrue);
     expect(ZModePrefs.revision.value, before + 1);
     await Hive.close();
     Hive.init(dir.path);
     await ZModePrefs.init();
-    // And init CLEARS it. Anyone who turned the mode off while the toggle
-    // existed would otherwise be stranded in the source-only app with no
-    // control left to bring them back, because the on-by-default only applies
-    // to an absent key.
     expect(ZModePrefs.enabled, isTrue);
   });
 
-  test('a stored off is cleared on init, not merely overridden', () async {
-    await ZModePrefs.setEnabled(false);
-    expect(ZModePrefs.enabled, isFalse);
+  test('a stored on remains enabled on init', () async {
+    await ZModePrefs.setEnabled(true);
+    expect(ZModePrefs.enabled, isTrue);
 
     await ZModePrefs.init();
-
-    // The key itself has to go: leaving it and reading around it would strand
-    // the value again the moment anything read the box directly.
-    expect(Hive.box(ZModePrefs.boxName).containsKey('enabled'), isFalse);
     expect(ZModePrefs.enabled, isTrue);
   });
 
@@ -65,6 +51,6 @@ void main() {
   test('reads as the default before init without throwing', () async {
     await Hive.close();
     Hive.init(dir.path);
-    expect(ZModePrefs.enabled, isTrue);
+    expect(ZModePrefs.enabled, isFalse);
   });
 }

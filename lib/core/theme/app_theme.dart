@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'app_colors.dart';
 import 'app_text.dart';
 
 ThemeData buildAppTheme() {
   final scheme = ColorScheme.dark(
     surface: AppColors.bg,
-    primary: AppColors.textPrimary, // white primary actions
+    primary: AppColors.accent,
     secondary: AppColors.accent,
-    onPrimary: Colors.black,
+    onPrimary: AppColors.textPrimary,
   );
   return ThemeData(
     useMaterial3: true,

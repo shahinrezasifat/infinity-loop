@@ -5,7 +5,7 @@
 // set up — see source_switcher.dart's "no GetIt lookup needed" comment on
 // that prefix.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/di/injector.dart' show sl;

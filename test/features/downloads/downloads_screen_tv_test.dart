@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/download/download_manager.dart';
@@ -6,7 +6,8 @@ import 'package:watch_app/core/download/download_record.dart';
 import 'package:watch_app/core/models/episode.dart';
 import 'package:watch_app/core/models/video_source.dart';
 import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/features/downloads/downloads_screen.dart' show DownloadTile;
+import 'package:watch_app/features/downloads/downloads_screen.dart'
+    show DownloadTile;
 import 'package:watch_app/features/downloads/downloads_screen_tv.dart';
 
 // ── Minimal fakes ─────────────────────────────────────────────────────────────
@@ -26,8 +27,7 @@ class _FakeDownloadManager extends ChangeNotifier implements DownloadManager {
   Map<String, List<DownloadRecord>> get byShow => _byShow;
 
   @override
-  List<DownloadRecord> get all =>
-      _byShow.values.expand((l) => l).toList();
+  List<DownloadRecord> get all => _byShow.values.expand((l) => l).toList();
 
   @override
   DownloadRecord? recordFor(String sourceId, String showId, String episodeId) =>
@@ -49,6 +49,7 @@ class _FakeDownloadManager extends ChangeNotifier implements DownloadManager {
     required List<Episode> episodes,
     required int nowMs,
     int? malId,
+    bool isMovie = false,
   }) async {}
 
   @override
@@ -66,6 +67,7 @@ class _FakeDownloadManager extends ChangeNotifier implements DownloadManager {
     required int nowMs,
     int? malId,
     List<VideoSource> fallbacks = const [],
+    bool isMovie = false,
   }) async {}
 
   @override
@@ -100,19 +102,19 @@ class _RecordingManager extends ChangeNotifier implements DownloadManager {
 }
 
 DownloadRecord _rec(DownloadStatus status) => DownloadRecord(
-      id: 'id1',
-      sourceId: 'src',
-      showId: 'aot',
-      showTitle: 'Attack on Titan',
-      showUrl: 'u',
-      episodeId: 'ep1',
-      episodeUrl: 'eu',
-      episodeTitle: 'Ep 1',
-      category: 'sub',
-      quality: '1080p',
-      status: status,
-      createdAt: DateTime(2026, 1, 1).millisecondsSinceEpoch,
-    );
+  id: 'id1',
+  sourceId: 'src',
+  showId: 'aot',
+  showTitle: 'Attack on Titan',
+  showUrl: 'u',
+  episodeId: 'ep1',
+  episodeUrl: 'eu',
+  episodeTitle: 'Ep 1',
+  category: 'sub',
+  quality: '1080p',
+  status: status,
+  createdAt: DateTime(2026, 1, 1).millisecondsSinceEpoch,
+);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -199,8 +201,9 @@ void main() {
 
       // Each show group renders a "Delete all episodes" header button plus one
       // focusable per episode tile.
-      final focusables =
-          tester.widgetList<TvFocusable>(find.byType(TvFocusable)).toList();
+      final focusables = tester
+          .widgetList<TvFocusable>(find.byType(TvFocusable))
+          .toList();
       expect(focusables.length, greaterThanOrEqualTo(2));
 
       // Episode tiles are the focusables wrapping a DownloadTile (the header
@@ -227,10 +230,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(
-        find.text('Episodes you download appear here'),
-        findsOneWidget,
-      );
+      expect(find.text('Episodes you download appear here'), findsOneWidget);
       // The download-location header ("Saving to … · Change") is always present
       // and focusable so it stays D-pad reachable even with no downloads — it's
       // the only focusable on an empty screen.
@@ -279,51 +279,60 @@ void main() {
 
   // ── _TvDownloadActions ───────────────────────────────────────────────────
   group('_TvDownloadActions', () {
-    testWidgets('downloading record shows Pause + Cancel + Delete (no Play/Resume)',
-        (tester) async {
-      final manager = _RecordingManager();
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: debugTvDownloadActions(
-            record: _rec(DownloadStatus.downloading),
-            manager: manager,
+    testWidgets(
+      'downloading record shows Pause + Cancel + Delete (no Play/Resume)',
+      (tester) async {
+        final manager = _RecordingManager();
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: debugTvDownloadActions(
+                record: _rec(DownloadStatus.downloading),
+                manager: manager,
+              ),
+            ),
           ),
-        ),
-      ));
-      expect(find.text('Pause'), findsOneWidget);
-      expect(find.text('Cancel'), findsOneWidget);
-      expect(find.text('Delete'), findsOneWidget);
-      expect(find.text('Play'), findsNothing);
-      expect(find.text('Resume'), findsNothing);
-    });
+        );
+        expect(find.text('Pause'), findsOneWidget);
+        expect(find.text('Cancel'), findsOneWidget);
+        expect(find.text('Delete'), findsOneWidget);
+        expect(find.text('Play'), findsNothing);
+        expect(find.text('Resume'), findsNothing);
+      },
+    );
 
     testWidgets('paused record shows Resume + Cancel + Delete', (tester) async {
       final manager = _RecordingManager();
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: debugTvDownloadActions(
-            record: _rec(DownloadStatus.paused),
-            manager: manager,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: debugTvDownloadActions(
+              record: _rec(DownloadStatus.paused),
+              manager: manager,
+            ),
           ),
         ),
-      ));
+      );
       expect(find.text('Resume'), findsOneWidget);
       expect(find.text('Cancel'), findsOneWidget);
       expect(find.text('Delete'), findsOneWidget);
       expect(find.text('Pause'), findsNothing);
     });
 
-    testWidgets('done record shows Play + Delete (no Pause/Resume/Cancel)',
-        (tester) async {
+    testWidgets('done record shows Play + Delete (no Pause/Resume/Cancel)', (
+      tester,
+    ) async {
       final manager = _RecordingManager();
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: debugTvDownloadActions(
-            record: _rec(DownloadStatus.done),
-            manager: manager,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: debugTvDownloadActions(
+              record: _rec(DownloadStatus.done),
+              manager: manager,
+            ),
           ),
         ),
-      ));
+      );
       expect(find.text('Play'), findsOneWidget);
       expect(find.text('Delete'), findsOneWidget);
       expect(find.text('Pause'), findsNothing);
@@ -338,9 +347,13 @@ void main() {
       // See test/core/tv/tv_focusable_test.dart and tv_back_button_test.dart.
       final manager = _RecordingManager();
       final r = _rec(DownloadStatus.downloading);
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(body: debugTvDownloadActions(record: r, manager: manager)),
-      ));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: debugTvDownloadActions(record: r, manager: manager),
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
       // Pause is the first action for a downloading record, so it already
       // holds autofocus — pressing OK activates it directly.
@@ -352,9 +365,13 @@ void main() {
     testWidgets('tapping Delete calls manager.delete', (tester) async {
       final manager = _RecordingManager();
       final r = _rec(DownloadStatus.done);
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(body: debugTvDownloadActions(record: r, manager: manager)),
-      ));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: debugTvDownloadActions(record: r, manager: manager),
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
       // Delete is the second action for a done record (Play holds autofocus)
       // — move focus with Tab, the default Flutter focus-traversal key, then

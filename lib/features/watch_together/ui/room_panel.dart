@@ -1,5 +1,5 @@
 // lib/features/watch_together/ui/room_panel.dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import '../model/room_state.dart';
 import '../watch_together_controller.dart';

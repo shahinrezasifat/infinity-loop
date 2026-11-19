@@ -1,8 +1,10 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:watch_app/core/state/active_source_cubit.dart';
 import 'package:watch_app/core/zmode/zmode_prefs.dart';
 import 'package:watch_app/features/home/home_screen.dart';
 import 'package:watch_app/features/home/search_screen.dart';
@@ -31,17 +33,20 @@ class _RecordingNavigatorObserver extends NavigatorObserver {
 
 void main() {
   late Directory tempDir;
+  late ActiveSourceCubit activeSource;
 
   setUp(() async {
     tempDir = await Directory.systemTemp.createTemp('home_search_action');
     Hive.init(tempDir.path);
     await ZModePrefs.init();
+    activeSource = ActiveSourceCubit();
     // On by default since the Settings toggle was removed; these tests cover
     // both paths, so start from off and let each one opt in.
     await ZModePrefs.setEnabled(false);
   });
 
   tearDown(() async {
+    await activeSource.close();
     await Hive.close();
     try {
       await tempDir.delete(recursive: true);
@@ -53,7 +58,12 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         navigatorObservers: [observer],
-        home: const Scaffold(body: HomeSearchAction()),
+        home: Scaffold(
+          body: BlocProvider<ActiveSourceCubit>.value(
+            value: activeSource,
+            child: const HomeSearchAction(),
+          ),
+        ),
       ),
     );
     return observer;
@@ -87,5 +97,8 @@ void main() {
       tester.element(find.byType(HomeSearchAction)),
     );
     expect(pushedWidget, isA<SearchScreen>());
+    final search = pushedWidget as SearchScreen;
+    expect(search.forceSources, isTrue);
+    expect(search.fixedSourceId, activeSource.state);
   });
 }

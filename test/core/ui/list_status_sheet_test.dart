@@ -7,7 +7,7 @@
 // _syncToTrackers. These tests cover both: the label follows `item.type`,
 // and a manga/anime item forwards the matching MediaKind to the tracker hub.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/app_mode.dart';
 import 'package:watch_app/core/di/injector.dart';

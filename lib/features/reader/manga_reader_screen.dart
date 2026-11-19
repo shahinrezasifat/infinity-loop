@@ -5,13 +5,12 @@ import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/reading/reader_image_budget.dart';
 import '../../core/reading/crop_borders.dart';
 import '../../core/reading/reader_page_queue.dart';
-import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:gal/gal.dart';

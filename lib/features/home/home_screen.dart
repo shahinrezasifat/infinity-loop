@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../core/app_config.dart';
 import '../../core/app_mode.dart';
 import '../../core/aniyomi/aniyomi_image_provider.dart';
 import '../../core/di/injector.dart';
@@ -46,36 +47,33 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/zmode/zmode_prefs.dart';
 import '../../l10n/l10n.dart';
-import '../../core/announce/announcement.dart';
-import '../announce/announcement_sheet.dart';
-import '../community/community_sheet.dart';
-import '../downloads/downloads_screen.dart';
-import '../notify/subscriptions_screen.dart';
 import '../reader/manga_reader_screen.dart';
 import '../reader/novel_reader_screen.dart';
 import '../settings/streaming_services_screen.dart';
 import '../sources/aniyomi_repo_tab.dart' show kAniyomiReposBoxName;
 import '../sources/providers_hub_screen.dart';
 import '../sources/zangetsu_sources_screen.dart';
-import '../update/update_dialog.dart';
 import 'continue_section.dart';
 import 'my_list_screen.dart';
 import 'tracker_continue_section.dart';
 import '../../core/ui/content_row.dart';
 import '../../core/ui/banner_style.dart';
 import '../../core/ui/featured_banner_panels.dart';
+import '../../core/ui/featured_banner_spotlight.dart';
+import '../../core/ui/featured_banner_showcase.dart';
+import '../../core/ui/featured_banner_compact.dart';
+import '../../core/ui/featured_banner_cinema.dart';
+import '../../core/ui/featured_banner_glass.dart';
+import '../../core/ui/featured_banner_editorial.dart';
 import '../../core/ui/featured_carousel.dart';
 import '../../core/ui/featured_hero.dart';
 import '../../core/metadata/title_logo_service.dart';
-import 'metadata_switch_sheet.dart';
 import '../../core/ui/list_status_sheet.dart';
 import '../../core/ui/media_info_sheet.dart';
 import '../../core/ui/poster_card.dart';
 import '../../core/ui/row_skeleton.dart';
 import '../../core/ui/source_switcher.dart';
 import '../../core/ui/states.dart';
-import '../auth/auth_cubit.dart';
-import '../auth/reconnect.dart';
 import '../detail/detail_screen.dart';
 import '../history/history_screen.dart';
 import '../player/player_screen.dart';
@@ -116,7 +114,7 @@ class _HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<_HomeView>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   final _repo = sl<CatalogueRepository>();
   final _myList = sl<MyListStore>();
 
@@ -132,6 +130,7 @@ class _HomeViewState extends State<_HomeView>
   // blade, the mode swaps hidden at that peak, then it reveals. Self-contained —
   // see [_enterMode] / [_slashOverlay].
   late final AnimationController _slashCtrl;
+  late final AnimationController _wordmarkGradientCtrl;
   bool _slashing = false;
   bool _slashSwapped = false;
   ContentMode? _slashTarget;
@@ -166,6 +165,10 @@ class _HomeViewState extends State<_HomeView>
               });
             }
           });
+    _wordmarkGradientCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2200),
+    )..repeat();
     // The splash usually pre-warms the rows; only fetch here if it didn't
     // (e.g. first run right after onboarding, or a source with no warm yet).
     // tvOS: provider JS loads AFTER the splash (runDeferredAppleTvBootTasks).
@@ -176,19 +179,10 @@ class _HomeViewState extends State<_HomeView>
       final cubit = context.read<HomeCubit>();
       if (cubit.state.sections == null && !cubit.state.loading) cubit.load();
     }
-    // Silently check GitHub Releases once on launch; the dialog only appears if
-    // a newer, non-skipped version exists. Best-effort — never blocks startup.
+    // App releases are intentionally pinned. This build never checks for or
+    // prompts to install a newer app version.
     if (!_updateChecked && !isAppleTv) {
       _updateChecked = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        if (!mounted) return;
-        await maybeShowUpdateDialog(context);
-        // One-time community welcome (its own flag, independent of the per-id
-        // announcement feed), then any new developer announcement — all awaited
-        // in sequence so the modals never fight over the stack.
-        if (mounted) await maybeShowCommunitySheet(context);
-        if (mounted) await maybeShowAnnouncement(context);
-      });
       _checkSourceUpdates();
     }
   }
@@ -196,6 +190,7 @@ class _HomeViewState extends State<_HomeView>
   @override
   void dispose() {
     _slashCtrl.dispose();
+    _wordmarkGradientCtrl.dispose();
     super.dispose();
   }
 
@@ -633,35 +628,39 @@ class _HomeViewState extends State<_HomeView>
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
         child: Row(
           children: [
-            // Brand wordmark — the actual logo lettering (exact font).
-            // Tapping it swaps the metadata provider for wherever you are
-            // (AniList/MyAnimeList, or TMDB/Simkl on movies), which used to
-            // mean digging through Settings. Align sizes to the image, so
-            // the tap area is the wordmark itself and the rest of the row
-            // is untouched.
             Expanded(
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => showMetadataSwitchSheet(context),
-                  child: Padding(
-                    // Only the padding is new: 22px of artwork is under the
-                    // 48px minimum tap target, and vertical padding alone
-                    // cannot shift a left-aligned image.
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Image.asset(
-                      'assets/icon/wordmark.png',
-                      height: 22,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+                child: AnimatedBuilder(
+                  animation: _wordmarkGradientCtrl,
+                  builder: (context, _) {
+                    final shift = (_wordmarkGradientCtrl.value * 2) - 1;
+                    return ShaderMask(
+                      blendMode: BlendMode.srcIn,
+                      shaderCallback: (bounds) => LinearGradient(
+                        begin: Alignment(shift - 1.2, 0),
+                        end: Alignment(shift + 1.2, 0),
+                        colors: const [
+                          Color(0xFF2FCB9A),
+                          Color(0xFF4D9DFF),
+                          Color(0xFF77D84B),
+                          Color(0xFF4D9DFF),
+                          Color(0xFF2FCB9A),
+                        ],
+                        stops: const [0, 0.25, 0.5, 0.75, 1],
+                      ).createShader(bounds),
+                      child: Image.asset(
+                        'assets/icon/wordmark.png',
+                        height: 54,
+                        fit: BoxFit.contain,
+                        alignment: Alignment.centerLeft,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
             const _IncognitoChip(),
-            _headerDownloadButton(),
-            _notificationBell(context),
             const HomeSearchAction(),
             const HomeSourceSwitcherSlot(),
           ],
@@ -698,6 +697,64 @@ class _HomeViewState extends State<_HomeView>
           onToggleList: toggleList,
           meta: _heroMeta,
         );
+      case BannerStyle.spotlightId:
+        return FeaturedBannerSpotlight(
+          items: heroItems,
+          reading: reading,
+          inList: (m) => _myList.contains(m),
+          onPlay: _playFeatured,
+          onInfo: _openDetail,
+          onToggleList: toggleList,
+          meta: _heroMeta,
+        );
+      case BannerStyle.showcaseId:
+        return FeaturedBannerShowcase(
+          items: heroItems,
+          reading: reading,
+          inList: (m) => _myList.contains(m),
+          onPlay: _playFeatured,
+          onInfo: _openDetail,
+          onToggleList: toggleList,
+          meta: _heroMeta,
+        );
+      case BannerStyle.compactId:
+        return FeaturedBannerCompact(
+          items: heroItems,
+          reading: reading,
+          onPlay: _playFeatured,
+          onInfo: _openDetail,
+          meta: _heroMeta,
+        );
+      case BannerStyle.cinemaId:
+        return FeaturedBannerCinema(
+          items: heroItems,
+          reading: reading,
+          inList: (m) => _myList.contains(m),
+          onPlay: _playFeatured,
+          onInfo: _openDetail,
+          onToggleList: toggleList,
+          meta: _heroMeta,
+        );
+      case BannerStyle.glassId:
+        return FeaturedBannerGlass(
+          items: heroItems,
+          reading: reading,
+          inList: (m) => _myList.contains(m),
+          onPlay: _playFeatured,
+          onInfo: _openDetail,
+          onToggleList: toggleList,
+          meta: _heroMeta,
+        );
+      case BannerStyle.editorialId:
+        return FeaturedBannerEditorial(
+          items: heroItems,
+          reading: reading,
+          inList: (m) => _myList.contains(m),
+          onPlay: _playFeatured,
+          onInfo: _openDetail,
+          onToggleList: toggleList,
+          meta: _heroMeta,
+        );
       default:
         // Auto-rotating carousel (up to 6 trending items)
         return FeaturedCarousel(
@@ -711,72 +768,6 @@ class _HomeViewState extends State<_HomeView>
           style: HeroTransition.cinematic,
         );
     }
-  }
-
-  /// Header download shortcut → [DownloadsScreen]. Same shape as
-  /// [HomeSearchAction]: flat icon, no badge — the screen itself is the
-  /// progress view, so there's nothing to surface here. Pushed as a normal
-  /// route (with back), unlike the dock tab which suppresses it.
-  Widget _headerDownloadButton() {
-    return IconButton(
-      icon: const DockIcon(
-        DockGlyph.download,
-        color: AppColors.textSecondary,
-        size: 22,
-      ),
-      tooltip: context.l10n.downloads,
-      onPressed: () => Navigator.of(
-        context,
-      ).push(MaterialPageRoute<void>(builder: (_) => const DownloadsScreen())),
-    );
-  }
-
-  /// Flat bell → Notifications screen. The accent dot shows while any
-  /// announcement is unseen and clears itself reactively (the screen calls
-  /// markAllSeen, the Hive box updates, the listenable rebuilds).
-  Widget _notificationBell(BuildContext context) {
-    // Built fresh inside the listenable's builder — a captured widget
-    // instance would be canonical and the rebuild would be skipped.
-    Widget bell() => GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => const SubscriptionsScreen()),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            const DockIcon(
-              DockGlyph.bell,
-              color: AppColors.textSecondary,
-              size: 22,
-            ),
-            if (Hive.isBoxOpen(AnnouncementStore.boxName) &&
-                AnnouncementStore().unseenCount() > 0)
-              Positioned(
-                top: 1,
-                right: 2,
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.accent,
-                    border: Border.all(color: AppColors.bg, width: 1.5),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-    // Rebuild the dot when the announcements box changes (e.g. markAllSeen).
-    if (!Hive.isBoxOpen(AnnouncementStore.boxName)) return bell();
-    return ValueListenableBuilder(
-      valueListenable: Hive.box(AnnouncementStore.boxName).listenable(),
-      builder: (context, _, child) => bell(),
-    );
   }
 
   /// Builds one provider-defined browse row (poster cards). The section is
@@ -841,9 +832,9 @@ class _HomeViewState extends State<_HomeView>
   /// switch makes a future row type a compile error here instead of a silent
   /// gap, and the local row reuses [ContinueSection] itself so its reactive
   /// Hive/mode behaviour is identical wherever the user drags it.
-  Widget _homeRowSliver(HomeRow row, {required bool loggedIn}) => switch (row) {
+  Widget _homeRowSliver(HomeRow row) => switch (row) {
     LocalContinueHomeRow() => ContinueSection(
-      loggedIn: loggedIn,
+      loggedIn: true,
       onResume: _resume,
       onLongPress: _showContinueInfo,
       onSeeAll: _openHistory,
@@ -963,10 +954,15 @@ class _HomeViewState extends State<_HomeView>
       _openDetail(playable);
       return;
     }
+    final sourceId = _homeSearchSourceId(context);
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (_) => SearchScreen(initialQuery: item.title),
+        builder: (_) => SearchScreen(
+          initialQuery: item.title,
+          forceSources: sourceId != null,
+          fixedSourceId: sourceId,
+        ),
       ),
     );
   }
@@ -1013,55 +1009,6 @@ class _HomeViewState extends State<_HomeView>
     ).then((_) {
       if (mounted) setState(() {});
     });
-  }
-
-  /// Shown at the top of Home when the session lapsed — cloud sync is silently
-  /// off until the user reconnects. Tapping re-authenticates in place (no logout
-  /// / no wipe) and then refreshes Home to surface the freshly-synced rows.
-  Widget _reconnectBanner() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-      child: Material(
-        color: AppColors.accentSoft,
-        borderRadius: BorderRadius.circular(14),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(14),
-          onTap: () async {
-            final ok = await showReconnectDialog(context) ?? false;
-            if (ok && mounted) context.read<HomeCubit>().load();
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.sync_problem_rounded,
-                  color: AppColors.accent,
-                  size: 20,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(context.l10n.reconnectToSync, style: AppText.body),
-                      Text(
-                        'Your session expired — tap to sign in and sync your library.',
-                        style: AppText.caption,
-                      ),
-                    ],
-                  ),
-                ),
-                Icon(
-                  Icons.chevron_right_rounded,
-                  color: AppColors.textSecondary,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   /// A row of cards under the banner, showing the modes you're NOT in plus —
@@ -1382,17 +1329,20 @@ class _HomeViewState extends State<_HomeView>
   /// show (streaming) or last read manga/novel. Null when there's nothing yet.
   ({String? cover, Map<String, String>? headers}) _modeArt(ContentMode m) {
     if (m == ContentMode.anime) {
-      if (!Hive.isBoxOpen(WatchHistory.boxName))
+      if (!Hive.isBoxOpen(WatchHistory.boxName)) {
         return (cover: null, headers: null);
+      }
       for (final e in sl<WatchHistory>().all()) {
         final c = e.thumbnail ?? e.cover;
-        if (c != null && c.isNotEmpty)
+        if (c != null && c.isNotEmpty) {
           return (cover: c, headers: e.coverHeaders);
+        }
       }
       return (cover: null, headers: null);
     }
-    if (!Hive.isBoxOpen(ReadHistory.boxName))
+    if (!Hive.isBoxOpen(ReadHistory.boxName)) {
       return (cover: null, headers: null);
+    }
     final type = m == ContentMode.manga
         ? ProviderType.manga
         : ProviderType.novel;
@@ -1571,10 +1521,12 @@ class _HomeViewState extends State<_HomeView>
                                 ),
                               ),
                             ),
-                            Image.asset(
-                              'assets/icon/logo_mark.png',
-                              width: logoSize,
-                              height: logoSize,
+                            Text(
+                              kAppName,
+                              style: AppText.largeTitle.copyWith(
+                                fontSize: logoSize * 0.28,
+                                fontWeight: FontWeight.w800,
+                              ),
                             ),
                             if (glintOn)
                               ClipRRect(
@@ -1625,12 +1577,6 @@ class _HomeViewState extends State<_HomeView>
   @override
   Widget build(BuildContext context) {
     if (sl<AppMode>().isTv) return const HomeScreenTv();
-    // Continue Watching is a logged-in feature; hide the row when signed out.
-    final authState = context.watch<AuthCubit>().state;
-    final loggedIn = authState.isLoggedIn;
-    // Session lapsed (logged-in from cache only) → cloud sync is silently off.
-    final needsReconnect = loggedIn && authState.needsReconnect;
-
     return BlocListener<ActiveSourceCubit, String>(
       listenWhen: (prev, curr) => prev != curr,
       listener: (context, _) {
@@ -1649,16 +1595,7 @@ class _HomeViewState extends State<_HomeView>
           children: [
             RefreshIndicator(
               color: AppColors.accent,
-              onRefresh: () {
-                // Pull-to-refresh is the user saying "try again", so it also
-                // re-tests a session the startup check only assumed was dead
-                // (the "Reconnect to sync" banner). force: it must not sit out
-                // the cool-off when someone deliberately pulled.
-                if (sl.isRegistered<AuthCubit>()) {
-                  unawaited(sl<AuthCubit>().revalidateIfFlagged(force: true));
-                }
-                return context.read<HomeCubit>().load();
-              },
+              onRefresh: () => context.read<HomeCubit>().load(),
               child: BlocBuilder<HomeCubit, HomeState>(
                 builder: (context, state) {
                   final sections = state.sections ?? const <HomeSection>[];
@@ -1742,9 +1679,6 @@ class _HomeViewState extends State<_HomeView>
                       SliverToBoxAdapter(child: _modeCards()),
 
                       // ── Reconnect banner (session lapsed → sync is off) ───────
-                      if (needsReconnect)
-                        SliverToBoxAdapter(child: _reconnectBanner()),
-
                       // ── The arrangement ─────────────────────────────────────
                       // state.rows is the merged view of this load: the local
                       // Continue row, the tracker rows the user enabled, and the
@@ -1755,12 +1689,10 @@ class _HomeViewState extends State<_HomeView>
                       // ContinueSection keeps its old spot above the skeletons
                       // so the loading screen is exactly today's.
                       if (state.rows case final rows?)
-                        ...rows.map(
-                          (r) => _homeRowSliver(r, loggedIn: loggedIn),
-                        )
+                        ...rows.map((r) => _homeRowSliver(r))
                       else
                         ContinueSection(
-                          loggedIn: loggedIn,
+                          loggedIn: true,
                           onResume: _resume,
                           onLongPress: _showContinueInfo,
                           onSeeAll: _openHistory,
@@ -1845,9 +1777,8 @@ class _HomeViewState extends State<_HomeView>
 }
 
 /// Opens [SearchScreen] — the primary way into search now that it's off the
-/// dock. Shown regardless of Z Mode: [SearchScreen] itself already switches
-/// between the metadata catalogue and the active source, so the header icon
-/// that reaches it doesn't need to.
+/// dock. In source mode, the query is pinned to Home's selected source; in
+/// Z Mode it searches the metadata catalogue.
 class HomeSearchAction extends StatelessWidget {
   const HomeSearchAction({super.key});
 
@@ -1860,21 +1791,24 @@ class HomeSearchAction extends StatelessWidget {
         size: 22,
       ),
       tooltip: context.l10n.search,
-      onPressed: () => Navigator.of(
-        context,
-      ).push(MaterialPageRoute<void>(builder: (_) => const SearchScreen())),
+      onPressed: () {
+        final sourceId = _homeSearchSourceId(context);
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => SearchScreen(
+              forceSources: sourceId != null,
+              fixedSourceId: sourceId,
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
-/// The header's source switcher. Hidden while Z Mode is on — the active
-/// source doesn't affect anything on screen there (Home is metadata-driven)
-/// and the control would be misleading. Shown with Z Mode off, where Home is
-/// source-driven and this is how you change which one.
-///
-/// Reactive to [ZModePrefs.revision] (a [ValueListenableBuilder], not a
-/// listener on [_HomeViewState]) so flipping the toggle updates this
-/// immediately without needing the rest of Home to rebuild.
+/// The header's source switcher. It stays available in every mode so users
+/// can pick a source directly from Home; choosing one switches Home out of
+/// Z Mode and loads that source's feed.
 ///
 /// Extracted as its own widget — rather than inlined in [_HomeViewState]'s
 /// build — so this is testable without pumping the real [HomeScreen], whose
@@ -1884,26 +1818,55 @@ class HomeSourceSwitcherSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<int>(
-      valueListenable: ZModePrefs.revision,
-      builder: (context, _, _) => !ZModePrefs.enabled
-          ? BlocBuilder<ActiveSourceCubit, String>(
-              builder: (context, id) => SourceSwitcher(
-                currentId: id,
-                onChanged: (newId) =>
-                    context.read<ActiveSourceCubit>().setSource(newId),
-                onInstallSources: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) =>
-                        const ZangetsuSourcesScreen(openToRepos: true),
-                  ),
-                ),
-              ),
-            )
-          : const SizedBox.shrink(),
+    return BlocBuilder<ActiveSourceCubit, String>(
+      builder: (context, id) => SourceSwitcher(
+        currentId: id,
+        iconOnly: true,
+        onChanged: (newId) => unawaited(_selectHomeSource(context, newId)),
+        onInstallSources: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => const ZangetsuSourcesScreen(openToRepos: true),
+          ),
+        ),
+      ),
     );
   }
 }
+
+Future<void> _selectHomeSource(BuildContext context, String sourceId) async {
+  final manager = sl<CloudStreamManager>();
+  if (manager.defaultRepoUrl != null) {
+    try {
+      await manager.setHomeSourceOverride(sourceId);
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context)
+        ..clearSnackBars()
+        ..showSnackBar(
+          SnackBar(content: Text('Could not change Home source: $e')),
+        );
+      return;
+    }
+  }
+  if (ZModePrefs.enabled) {
+    try {
+      await ZModePrefs.setEnabled(false);
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context)
+        ..clearSnackBars()
+        ..showSnackBar(
+          SnackBar(content: Text('Could not switch Home to this source: $e')),
+        );
+      return;
+    }
+  }
+  if (!context.mounted) return;
+  context.read<ActiveSourceCubit>().setSource(sourceId);
+}
+
+String? _homeSearchSourceId(BuildContext context) =>
+    ZModePrefs.enabled ? null : context.read<ActiveSourceCubit>().state;
 
 /// Home's "provider returned no sections" branch. A reading mode with
 /// literally nothing installed for it gets a message that says so, with an

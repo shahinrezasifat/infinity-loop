@@ -1,38 +1,34 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../core/anilist/anilist_service.dart';
 import '../../core/app_config.dart';
 import '../../core/app_mode.dart';
+import '../../core/anilist/anilist_service.dart';
 import '../../core/metadata/streaming_providers.dart';
 import '../../core/tracker/tracker_hub.dart';
+import '../../core/tracker/mal_service.dart';
+import '../../core/tracker/mangabaka_service.dart';
+import '../../core/tracker/simkl_service.dart';
+import '../../core/tracker/tracker.dart';
 import '../../core/ui/streaming_prefs.dart';
 import '../../core/zmode/metadata_provider_prefs.dart';
 import '../../core/cache/media_cache.dart';
 import '../../core/logging/app_logger.dart';
 import '../../core/logging/log_report_service.dart';
-import '../../core/tracker/mal_service.dart';
-import '../../core/tracker/mangabaka_service.dart';
-import '../../core/tracker/simkl_service.dart';
-import '../../core/tracker/tracker.dart';
 import '../player/player_screen.dart' show openSubtitleStyleSheet;
 import '../player/shader_presets.dart';
 import '../player/tv_exo_spike_screen.dart';
 import '../../core/di/injector.dart';
 import '../../core/platform/apple_tv.dart';
 import '../../core/playback/external_player.dart';
-import '../../core/playback/my_list.dart';
 import '../../core/playback/playback_prefs.dart';
-import '../../core/playback/watch_history.dart';
-import '../auth/reconnect.dart';
 import '../../core/privacy/incognito_mode.dart';
 import '../../core/playback/search_prefs.dart';
 import '../../core/playback/subtitle_language.dart';
@@ -47,7 +43,6 @@ import 'appearance_screen.dart';
 import 'home_rows_screen.dart';
 import 'nav_tabs_screen.dart';
 import 'reader_settings_screen.dart';
-import 'discord_settings_screen.dart';
 import 'torrent_settings_screen.dart';
 import '../../core/provider/provider_downloader.dart';
 import '../../core/provider/provider_registry.dart';
@@ -59,19 +54,13 @@ import '../home/metadata_switch_sheet.dart';
 import '../../l10n/ui_strings.dart';
 import '../../core/ui/subtitle_language_picker.dart';
 import '../../core/theme/app_text.dart';
-import '../../core/update/update_service.dart';
-import '../update/update_dialog.dart';
 import '../../core/ui/app_dialog.dart';
 import '../../core/ui/settings_widgets.dart';
 import '../../core/tv/tv_list_focusable.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/ui/dock_visibility.dart';
-import '../../core/ui/team_section.dart';
-import 'contributors_screen.dart';
+import 'developer_screen.dart';
 import 'donate_screen.dart';
-import '../auth/auth_cubit.dart';
-import '../backup/backup_screen.dart';
-import '../watch_together/ui/watch_party_lobby_screen.dart';
-import '../auth/auth_screens.dart';
 import '../onboarding/how_it_works.dart';
 import '../notify/subscriptions_screen.dart';
 import 'tracker_settings_screen.dart';
@@ -79,7 +68,6 @@ import '../sources/source_health_screen.dart';
 import '../sources/sources_screen.dart';
 import 'source_priority_screen.dart';
 import 'player_controls_screen.dart';
-import 'connections_screen_tv.dart';
 import 'settings_search_index.dart';
 import 'cubit/settings_cubit.dart';
 import '../../core/tv/tv_focusable.dart';
@@ -193,15 +181,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   /// TV multi-item section list — same Material page push/pop as Playback.
   Widget _tvSectionPage(BuildContext context, String section) {
     final enabledCount = _registry.getAll().where((e) => e.enabled).length;
-    final connectedCount = <Tracker>[
-      sl<AniListService>(),
-      sl<MalService>(),
-      sl<SimklService>(),
-    ].where((t) => t.isConnected).length;
     final items = _buildSettingsEntries(
       l10n: context.l10n,
       enabledCount: enabledCount,
-      connectedCount: connectedCount,
     ).where((e) => e.section == section).toList();
 
     return Scaffold(
@@ -665,145 +647,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (mounted) setState(() {});
   }
 
-  /// Account header — a single profile card at the top of Settings. Signed in:
-  /// avatar + name + email → Profile. Signed out: an avatar placeholder + a
-  /// clear "Sign in" call-to-action → Login (its own card, so it no longer
-  /// reads as a flat duplicate of the "Account & sync" row below it).
-  Widget _accountCard(BuildContext context) {
-    return BlocBuilder<AuthCubit, AuthState>(
-      builder: (context, auth) {
-        final Widget row;
-        if (auth.isLoggedIn) {
-          final initial = auth.displayName.isNotEmpty
-              ? auth.displayName[0].toUpperCase()
-              : '?';
-          row = _accountRow(
-            onTap: () => _push(const ProfileScreen()),
-            autofocus: _isTv,
-            semanticLabel: auth.displayName,
-            avatar: CircleAvatar(
-              radius: 24,
-              backgroundColor: AppColors.surface2,
-              backgroundImage: auth.avatarUrl != null
-                  ? CachedNetworkImageProvider(auth.avatarUrl!)
-                  : null,
-              child: auth.avatarUrl == null
-                  ? Text(
-                      initial,
-                      style: AppText.headline.copyWith(fontSize: 18),
-                    )
-                  : null,
-            ),
-            title: auth.displayName,
-            subtitle: auth.user?.email ?? '',
-            trailing: const Icon(
-              Icons.chevron_right_rounded,
-              color: AppColors.textTertiary,
-              size: 20,
-            ),
-          );
-        } else {
-          row = _accountRow(
-            onTap: () => _push(const LoginScreen()),
-            autofocus: _isTv,
-            semanticLabel: context.l10n.signIn,
-            avatar: CircleAvatar(
-              radius: 24,
-              backgroundColor: AppColors.accentSoft,
-              child: Icon(
-                Icons.person_outline_rounded,
-                color: AppColors.accent,
-                size: 24,
-              ),
-            ),
-            title: context.l10n.signIn,
-            subtitle: _isTv
-                ? context.l10n.signInSubtitleTv
-                : context.l10n.signInSubtitle,
-            trailing: _isTv
-                ? const Icon(
-                    Icons.chevron_right_rounded,
-                    color: AppColors.textTertiary,
-                    size: 22,
-                  )
-                : Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 7,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.accent,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      context.l10n.signIn,
-                      style: AppText.caption.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-          );
-        }
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: SettingsCard(children: [row]),
-        );
-      },
-    );
-  }
-
-  Widget _accountRow({
-    required VoidCallback onTap,
-    required Widget avatar,
-    required String title,
-    required String subtitle,
-    required Widget trailing,
-    bool autofocus = false,
-    String? semanticLabel,
-  }) {
-    final content = Padding(
-      padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
-      child: Row(
-        children: [
-          avatar,
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppText.headline.copyWith(fontSize: 16),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  style: AppText.caption,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 10),
-          trailing,
-        ],
-      ),
-    );
-    if (_isTv) {
-      return TvListFocusable(
-        autofocus: autofocus,
-        semanticLabel: semanticLabel ?? title,
-        onTap: onTap,
-        child: ExcludeSemantics(child: content),
-      );
-    }
-    return InkWell(onTap: onTap, child: content);
-  }
-
   /// A plain grey value shown at the row's trailing edge (before the chevron).
   /// Used for e.g. "Rows", "Off", "2 linked".
   Widget _value(String text) => Row(
@@ -884,105 +727,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   List<_SettingsEntry> _buildSettingsEntries({
     required AppLocalizations l10n,
     required int enabledCount,
-    required int connectedCount,
   }) => [
-    // Account & sync
-    _SettingsEntry(
-      section: SettingsSection.account,
-      icon: Icons.sync_alt_rounded,
-      title: l10n.connections,
-      subtitle: connectedCount > 0
-          ? l10n.connectedCount(connectedCount)
-          : l10n.connectionsTvSubtitle,
-      keywords: l10n.connectionsTvSubtitle.toLowerCase(),
-      onTap: () async {
-        await _push(
-          _isTv ? const ConnectionsScreenTv() : const ConnectionsScreen(),
-        );
-        if (mounted) setState(() {});
-      },
-    ),
-    if (!_isTv || !isAppleTv)
-      _SettingsEntry(
-        section: SettingsSection.account,
-        icon: Icons.gamepad_outlined,
-        title: l10n.discord,
-        subtitle: l10n.discordSubtitle,
-        keywords: 'discord rich presence',
-        onTap: () async {
-          await _push(const DiscordSettingsScreen());
-          if (mounted) setState(() {});
-        },
-      ),
-    _SettingsEntry(
-      section: SettingsSection.account,
-      icon: Icons.groups_2_outlined,
-      title: l10n.watchParty,
-      subtitle: l10n.watchPartySubtitle,
-      keywords: 'watch party together',
-      onTap: () {
-        if (sl<AuthCubit>().state.user == null) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(l10n.signInToWatchTogether)));
-          return;
-        }
-        _push(const WatchPartyLobbyScreen());
-      },
-    ),
-    _SettingsEntry(
-      section: SettingsSection.account,
-      icon: Icons.cloud_upload_outlined,
-      title: l10n.syncLibraryToCloud,
-      subtitle: l10n.syncLibraryToCloudSubtitle,
-      keywords:
-          'sync cloud upload library history continue watching list device '
-          'cross-device re-sync fix restore',
-      onTap: () async {
-        if (sl<AuthCubit>().state.user == null) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(l10n.signInFirst)));
-          return;
-        }
-        // The session may have lapsed (logged-in from cache only). Get a live
-        // one first — otherwise every upsert silently no-ops ("Synced 0").
-        final live = await ensureLiveSession(context);
-        if (!mounted) return;
-        if (!live) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(l10n.reconnectToSyncLibrary)));
-          return;
-        }
-        final messenger = ScaffoldMessenger.of(context);
-        messenger
-          ..clearSnackBars()
-          ..showSnackBar(SnackBar(content: Text(l10n.syncingLibraryToCloud)));
-        final h = (await sl<WatchHistory>().pushAllLocalToCloud()).pushed;
-        final l = (await sl<MyListStore>().pushAllLocalToCloud()).pushed;
-        if (!mounted) return;
-        messenger
-          ..clearSnackBars()
-          ..showSnackBar(
-            SnackBar(
-              content: Text(
-                h == 0 && l == 0
-                    ? l10n.syncLibraryAlreadySynced
-                    : l10n.syncLibraryPushed(h, l),
-              ),
-            ),
-          );
-      },
-    ),
-    _SettingsEntry(
-      section: SettingsSection.account,
-      icon: Icons.cloud_sync_outlined,
-      title: l10n.backupAndRestore,
-      subtitle: l10n.backupAndRestoreSubtitle,
-      keywords: 'backup restore export import save cloud',
-      onTap: () => _push(const BackupScreen()),
-    ),
     // Sources
     _SettingsEntry(
       section: SettingsSection.sources,
@@ -1315,17 +1060,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final enabledCount = _registry.getAll().where((e) => e.enabled).length;
     final l10n = context.l10n;
-    final connectedCount = <Tracker>[
-      sl<AniListService>(),
-      sl<MalService>(),
-      sl<SimklService>(),
-    ].where((t) => t.isConnected).length;
 
     // Single source of truth for both the grouped list and the search filter.
     final entries = _buildSettingsEntries(
       l10n: l10n,
       enabledCount: enabledCount,
-      connectedCount: connectedCount,
     );
 
     final hub = _buildHub(entries);
@@ -1415,10 +1154,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
               if (!_isTv) children.add(_searchField(query));
               if (query.isEmpty) {
-                // Browse view: account row + one tappable row per section.
-                children
-                  ..add(_accountCard(context))
-                  ..addAll(_categoryRows(entries));
+                // Browse view: one tappable row per section.
+                children.addAll(_categoryRows(entries));
               } else {
                 // Search cuts across every section (unchanged behaviour).
                 children.addAll(_buildSettingsList(entries, query));

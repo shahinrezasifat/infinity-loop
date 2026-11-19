@@ -3,6 +3,7 @@ package com.spyou.watch_app.cloudstream
 import android.content.Context
 import org.json.JSONArray
 import org.json.JSONObject
+import org.json.JSONTokener
 import java.io.File
 import java.net.URL
 
@@ -55,33 +56,46 @@ class RepoManager(private val context: Context) {
      */
     fun loadRepo(repoUrl: String): Pair<String, List<CsPlugin>> {
         val out = mutableListOf<CsPlugin>()
-        val repo = JSONObject(fetch(repoUrl))
-        val name = repo.optString("name").ifEmpty { hostOf(repoUrl) }
-        val lists = repo.optJSONArray("pluginLists") ?: JSONArray()
-        for (i in 0 until lists.length()) {
-            val listUrl = lists.optString(i).ifEmpty { continue }
-            try {
-                val arr = JSONArray(fetch(listUrl))
-                for (j in 0 until arr.length()) {
-                    val p = arr.optJSONObject(j) ?: continue
-                    val cs3 = p.optString("url")
-                    if (cs3.isEmpty()) continue
-                    out.add(
-                        CsPlugin(
-                            internalName = p.optString("internalName", p.optString("name")),
-                            name = p.optString("name", p.optString("internalName")),
-                            url = cs3,
-                            version = p.optInt("version", 1),
-                            language = p.optString("language").ifEmpty { null },
-                            tvTypes = p.optJSONArray("tvTypes")?.let { t ->
-                                (0 until t.length()).map { t.optString(it) }
-                            } ?: emptyList(),
-                            iconUrl = p.optString("iconUrl").ifEmpty { null },
-                            repoUrl = repoUrl,
-                        ),
-                    )
+        val body = fetch(repoUrl).removePrefix("\uFEFF").trim()
+        val name: String
+        val lists = mutableListOf<JSONArray>()
+        when (val manifest = JSONTokener(body).nextValue()) {
+            is JSONArray -> {
+                name = "18+"
+                lists.add(manifest)
+            }
+            is JSONObject -> {
+                name = manifest.optString("name").ifEmpty { hostOf(repoUrl) }
+                val pluginLists = manifest.optJSONArray("pluginLists") ?: JSONArray()
+                for (i in 0 until pluginLists.length()) {
+                    val listUrl = pluginLists.optString(i).ifEmpty { continue }
+                    try {
+                        lists.add(JSONArray(fetch(listUrl)))
+                    } catch (_: Exception) { /* skip a bad list */ }
                 }
-            } catch (_: Exception) { /* skip a bad list */ }
+            }
+            else -> throw IllegalArgumentException("Unsupported repository manifest")
+        }
+        for (arr in lists) {
+            for (j in 0 until arr.length()) {
+                val p = arr.optJSONObject(j) ?: continue
+                val cs3 = p.optString("url")
+                if (cs3.isEmpty()) continue
+                out.add(
+                    CsPlugin(
+                        internalName = p.optString("internalName", p.optString("name")),
+                        name = p.optString("name", p.optString("internalName")),
+                        url = cs3,
+                        version = p.optInt("version", 1),
+                        language = p.optString("language").ifEmpty { null },
+                        tvTypes = p.optJSONArray("tvTypes")?.let { t ->
+                            (0 until t.length()).map { t.optString(it) }
+                        } ?: emptyList(),
+                        iconUrl = p.optString("iconUrl").ifEmpty { null },
+                        repoUrl = repoUrl,
+                    ),
+                )
+            }
         }
         return name to out
     }

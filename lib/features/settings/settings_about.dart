@@ -1,7 +1,6 @@
 // About: version, updates, support and the developer credits.
 part of 'settings_screen.dart';
 
-
 // ---------------------------------------------------------------------------
 // About
 // ---------------------------------------------------------------------------
@@ -14,21 +13,12 @@ class AboutSettingsScreen extends StatefulWidget {
 }
 
 class _AboutSettingsScreenState extends State<AboutSettingsScreen> {
-  static const String _websiteUrl = 'https://zangetsu.online';
-  static const String _telegramUrl = 'https://t.me/+9mQlsdvDlo83Mjk1';
-  static const String _discordUrl = kDiscordInviteUrl;
-  static const String _githubUrl = 'https://github.com/Spyou/Zangetsu';
-
-  final UpdateService _updateService = UpdateService();
-  bool _betaUpdates = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _updateService.betaOptIn().then((v) {
-      if (mounted) setState(() => _betaUpdates = v);
-    });
-  }
+  static const String _websiteUrl = 'https://motionwork-tali.top';
+  static const String _githubUrl = 'https://github.com/shahinrezasifat1999';
+  static const String _facebookUrl =
+      'https://www.facebook.com/Shahin.Reza.Sifat1997/';
+  static const String _youtubeUrl =
+      'https://www.youtube.com/@SHAHINREZASIFAT2025';
 
   Future<void> _open(String url) async {
     final uri = Uri.parse(url);
@@ -51,14 +41,15 @@ class _AboutSettingsScreenState extends State<AboutSettingsScreen> {
         children: [
           const _ProfileCard(),
           const SizedBox(height: 24),
-          // Contributors — above Social, opens the full list.
+          // Developer card
           SettingsCard(
             children: [
               SettingsTile(
                 autofocus: true,
-                icon: Icons.group_rounded,
-                title: context.l10n.contributors,
-                onTap: () => _push(const ContributorsScreen()),
+                icon: Icons.person_rounded,
+                title: 'Developer',
+                subtitle: 'S. M. Shahin Reza Sifat · Motion Work',
+                onTap: () => _push(const DeveloperScreen()),
               ),
             ],
           ),
@@ -68,26 +59,26 @@ class _AboutSettingsScreenState extends State<AboutSettingsScreen> {
               SettingsTile(
                 icon: Icons.language_rounded,
                 title: context.l10n.website,
-                subtitle: 'zangetsu.online',
+                subtitle: 'motionwork-tali.top',
                 onTap: () => _open(_websiteUrl),
-              ),
-              SettingsTile(
-                icon: Icons.send_rounded,
-                title: context.l10n.telegram,
-                subtitle: context.l10n.communityChat,
-                onTap: () => _open(_telegramUrl),
-              ),
-              SettingsTile(
-                icon: Icons.discord,
-                title: context.l10n.discord,
-                subtitle: context.l10n.joinTheServer,
-                onTap: () => _open(_discordUrl),
               ),
               SettingsTile(
                 icon: Icons.code_rounded,
                 title: context.l10n.github,
-                subtitle: context.l10n.viewTheSourceCode,
+                subtitle: 'github.com/shahinrezasifat1999',
                 onTap: () => _open(_githubUrl),
+              ),
+              SettingsTile(
+                icon: Icons.facebook_rounded,
+                title: 'Facebook',
+                subtitle: 'Shahin.Reza.Sifat1997',
+                onTap: () => _open(_facebookUrl),
+              ),
+              SettingsTile(
+                icon: Icons.play_circle_outline_rounded,
+                title: 'YouTube',
+                subtitle: '@SHAHINREZASIFAT2025',
+                onTap: () => _open(_youtubeUrl),
               ),
             ],
           ),
@@ -99,38 +90,6 @@ class _AboutSettingsScreenState extends State<AboutSettingsScreen> {
                 title: context.l10n.howItWorks,
                 subtitle: context.l10n.howItWorksSubtitle,
                 onTap: () => _push(const HowItWorksScreen()),
-              ),
-              SettingsTile(
-                icon: Icons.system_update_rounded,
-                title: context.l10n.checkForUpdates,
-                subtitle: context.l10n.checkForUpdatesSubtitle,
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(context.l10n.checkingForUpdates)),
-                  );
-                  maybeShowUpdateDialog(context, manual: true);
-                },
-              ),
-              SettingsTile(
-                icon: Icons.science_outlined,
-                title: context.l10n.betaUpdates,
-                subtitle: context.l10n.betaUpdatesSubtitle,
-                subtitleMaxLines: null,
-                trailing: Switch.adaptive(
-                  value: _betaUpdates,
-                  activeThumbColor: AppColors.accent,
-                  onChanged: (v) async {
-                    // Turning it on: confirm first so it's never a silent opt-in.
-                    if (v && !await confirmJoinBeta(context)) return;
-                    await _updateService.setBetaOptIn(v);
-                    if (!mounted) return;
-                    setState(() => _betaUpdates = v);
-                    // Then check right away so a waiting beta shows up.
-                    if (v && context.mounted) {
-                      maybeShowUpdateDialog(context, manual: true);
-                    }
-                  },
-                ),
               ),
               SettingsTile(
                 icon: Icons.favorite_border_rounded,
@@ -175,10 +134,18 @@ class _ProfileCard extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 6),
-        Image.asset('assets/icon/logo_mark.png', height: 96),
-        const SizedBox(height: 16),
-        Text(kAppName, style: AppText.largeTitle.copyWith(fontSize: 25)),
-        const SizedBox(height: 3),
+        Image.asset(
+          'assets/icon/app_icon.png',
+          height: 96,
+          fit: BoxFit.contain,
+        ),
+        const SizedBox(height: 10),
+        Image.asset(
+          'assets/icon/wordmark.png',
+          height: 38,
+          fit: BoxFit.contain,
+        ),
+        const SizedBox(height: 6),
         Text(
           'v$kAppVersion',
           style: AppText.caption.copyWith(color: AppColors.textTertiary),
@@ -202,25 +169,42 @@ class _DeveloperRow extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
-          onTap: () async {
-            final uri = Uri.parse('https://github.com/spyou');
-            if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-              await launchUrl(uri, mode: LaunchMode.platformDefault);
-            }
-          },
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (_) => const DeveloperScreen()),
+          ),
           child: Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              // One solid dark grey, matching the app's cards.
               color: AppColors.settingsCard,
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
               children: [
-                const TeamAvatar(
-                  url: 'https://github.com/spyou.png?size=200',
-                  name: 'Krishna',
-                  size: 46,
+                ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: 'https://github.com/shahinrezasifat1999.png',
+                    width: 46,
+                    height: 46,
+                    fit: BoxFit.cover,
+                    placeholder: (_, _) => Container(
+                      width: 46,
+                      height: 46,
+                      color: AppColors.surface2,
+                      child: const Icon(
+                        Icons.person_rounded,
+                        color: AppColors.textTertiary,
+                      ),
+                    ),
+                    errorWidget: (_, _, _) => Container(
+                      width: 46,
+                      height: 46,
+                      color: AppColors.surface2,
+                      child: Icon(
+                        Icons.person_rounded,
+                        color: AppColors.accent,
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
@@ -228,7 +212,7 @@ class _DeveloperRow extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Krishna Vishwakarma',
+                        'S. M. Shahin Reza Sifat',
                         style: AppText.headline.copyWith(
                           color: AppColors.textPrimary,
                           fontWeight: FontWeight.w700,
@@ -238,16 +222,21 @@ class _DeveloperRow extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        context.l10n.leadDeveloper,
+                        'Software Developer & Founder of Motion Work',
                         style: AppText.caption.copyWith(
                           color: AppColors.textSecondary,
                           fontWeight: FontWeight.w600,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
-                const Icon(Icons.code_rounded, color: AppColors.textTertiary),
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppColors.textTertiary,
+                ),
               ],
             ),
           ),

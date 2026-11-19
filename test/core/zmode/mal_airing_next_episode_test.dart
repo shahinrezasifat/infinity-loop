@@ -29,7 +29,7 @@ MalCatalogue _mal({
         'title': 'A Show',
         'num_episodes': episodes,
         'status': status,
-        if (startDate != null) 'start_date': startDate,
+        'start_date': ?startDate,
       },
     );
   return MalCatalogue(dio);

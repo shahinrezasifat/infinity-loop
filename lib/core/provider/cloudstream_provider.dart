@@ -177,8 +177,7 @@ class CloudStreamProvider implements BaseProvider {
   /// ambiguous — we send `"<fileId><name>"` and the host matches BOTH,
   /// landing on the exact source. Sources with no file id (unique `cs:<name>`
   /// sources) fall back to the bare name, which the host still accepts.
-  String get hostKey =>
-      (sourcePlugin != null && sourcePlugin!.isNotEmpty)
+  String get hostKey => (sourcePlugin != null && sourcePlugin!.isNotEmpty)
       ? '${sourcePlugin!}$keySep$name'
       : name;
 
@@ -460,10 +459,10 @@ class CloudStreamProvider implements BaseProvider {
       final sep = key.indexOf('|');
       if (sep <= 0) continue;
       try {
-        await _csChannel.invokeMethod(
-          'cancelLinks',
-          {'name': key.substring(0, sep), 'data': key.substring(sep + 1)},
-        );
+        await _csChannel.invokeMethod('cancelLinks', {
+          'name': key.substring(0, sep),
+          'data': key.substring(sep + 1),
+        });
       } catch (_) {
         // Best-effort: a failed cancel just lets that hunt run its cap out.
       }
@@ -676,10 +675,10 @@ class CloudStreamProvider implements BaseProvider {
     return sections.isEmpty ? null : sections;
   }
 
-  /// One further page of a CloudStream `mainPage` category, for the "See all"
-  /// browse grid's infinite scroll. [categoryId] is the packed `"<name> <data>"`
-  /// produced in [_fetchHome]; [page] is 1-based. Android-only; returns `[]` on
-  /// any error (never throws) so a failed page just stops the scroll.
+  /// One further page of a CloudStream `mainPage` category. [categoryId] is the
+  /// packed `"<name> <data>"` produced in [_fetchHome]; [page] is 1-based.
+  /// Android-only; returns `[]` on any error (never throws) so a failed page
+  /// just stops the scroll.
   Future<List<MediaItem>> browseMainPage(String categoryId, int page) async {
     if (!Platform.isAndroid) return const [];
     // Split on the FIRST space: name is a single token, data may itself contain
@@ -858,6 +857,15 @@ class CsRepoGroup {
   final List<CloudStreamProvider> sources;
 }
 
+bool isAdultCloudStreamRepoUrl(String url) {
+  final normalized = url.toLowerCase().replaceAll('/refs/heads/', '/');
+  return CloudStreamManager.adultRepoUrls.any(
+    (repoUrl) => normalized.contains(
+      repoUrl.toLowerCase().replaceAll('/refs/heads/', '/'),
+    ),
+  );
+}
+
 /// Owns the set of installed CloudStream sources and the channel calls that
 /// build them. Android-only: every method is a no-op (returns empty) elsewhere.
 ///
@@ -865,11 +873,25 @@ class CsRepoGroup {
 /// the owner/repo grouping survives a restart even though the loaded sources
 /// themselves are rebuilt from the native host each launch.
 class CloudStreamManager extends ChangeNotifier {
+  static const String adultRepoUrl =
+      'https://raw.githubusercontent.com/punpunsx/cloudstream-18plus-Extensions/builds/plugins.json';
+  static const String cxxxAdultRepoUrl =
+      'https://raw.githubusercontent.com/phisher98/CXXX/builds/CXXX.json';
+  static const String gizliKeyifAdultRepoUrl =
+      'https://raw.githubusercontent.com/Kraptor123/Cs-GizliKeyif/refs/heads/master/repo.json';
+  static const List<String> adultRepoUrls = [
+    adultRepoUrl,
+    cxxxAdultRepoUrl,
+    gizliKeyifAdultRepoUrl,
+  ];
+
   /// Hive box name for the persisted repo list.
   static const String boxName = 'cs_repos';
   static const String _reposKey = 'repos';
   static const String _disabledKey = 'disabled';
   static const String _notifyUpdatesKey = 'notifyUpdates';
+  static const String _defaultRepoKey = 'defaultRepoUrl';
+  static const String _homeSourceOverrideKey = 'homeSourceOverride';
 
   /// Opens the persisted-repo box. Safe on every platform (only the channel
   /// calls are Android-gated). Must be called before constructing the manager.
@@ -901,6 +923,67 @@ class CloudStreamManager extends ChangeNotifier {
   static const Duration _updatesTtl = Duration(minutes: 30);
 
   Box? get _box => Hive.isBoxOpen(boxName) ? Hive.box(boxName) : null;
+
+  /// URL of the repository whose enabled sources feed the Home screen.
+  String? get defaultRepoUrl {
+    final url = _box?.get(_defaultRepoKey);
+    return url is String && hasRepo(url) ? url : null;
+  }
+
+  /// A Home picker selection temporarily overrides a repository-wide Home feed.
+  String? get homeSourceOverrideId {
+    final id = _box?.get(_homeSourceOverrideKey);
+    return id is String && id.isNotEmpty ? id : null;
+  }
+
+  /// Enabled sources contributing to the selected repository's Home feed.
+  List<CloudStreamProvider> get defaultRepoSources {
+    final url = defaultRepoUrl;
+    if (url == null) return const [];
+    for (final group in repoGroups) {
+      if (group.url == url) {
+        return group.sources.where((p) => isEnabled(p.sourceId)).toList();
+      }
+    }
+    return const [];
+  }
+
+  /// Changes only when the default Home repository or its enabled sources do.
+  String get defaultHomeSignature {
+    final url = defaultRepoUrl;
+    if (url == null) return '';
+    final sources = defaultRepoSources
+        .map((p) => '${p.sourceId}:${p.sourcePlugin ?? ''}')
+        .join('|');
+    return '$url|${homeSourceOverrideId ?? ''}|$sources';
+  }
+
+  /// Selects a repository for Home. At least one enabled plugin is required,
+  /// since repository manifests contain extensions rather than Home content.
+  Future<void> setDefaultRepo(String url) async {
+    if (url.isEmpty || !hasRepo(url)) {
+      throw ArgumentError.value(url, 'url', 'Repository is not installed');
+    }
+    final hasEnabledSources = repoGroups.any(
+      (group) =>
+          group.url == url && group.sources.any((p) => isEnabled(p.sourceId)),
+    );
+    if (!hasEnabledSources) {
+      throw StateError('Enable at least one source from this repository first');
+    }
+    await _box?.put(_defaultRepoKey, url);
+    await _box?.delete(_homeSourceOverrideKey);
+    notifyListeners();
+  }
+
+  /// Pins the Home picker to one source instead of aggregating its default repo.
+  Future<void> setHomeSourceOverride(String sourceId) async {
+    if (sourceId.isEmpty) {
+      throw ArgumentError.value(sourceId, 'sourceId', 'Must not be empty');
+    }
+    await _box?.put(_homeSourceOverrideKey, sourceId);
+    notifyListeners();
+  }
 
   /// Total installed plugins (across all repos) with an available update.
   int get updateCount =>
@@ -947,6 +1030,18 @@ class CloudStreamManager extends ChangeNotifier {
   /// an "Added" state for recommended repos instead of a duplicate "Add").
   bool hasRepo(String url) =>
       _repos.any((r) => (r['url'] ?? '').toString() == url);
+
+  Future<void> ensureAdultRepoPreadded() async {
+    if (!Platform.isAndroid) return;
+    for (final url in adultRepoUrls) {
+      if (hasRepo(url)) continue;
+      try {
+        await addRepo(url);
+      } catch (e) {
+        debugPrint('[cloudstream] failed to pre-add Adult repo $url: $e');
+      }
+    }
+  }
 
   /// Resolve a provider for [sourceId], falling back to the provider's
   /// repo/version-agnostic IDENTITY (its internalName / name, ignoring the
@@ -1012,6 +1107,7 @@ class CloudStreamManager extends ChangeNotifier {
   /// Remove a repo entirely: unregister + delete its cached `.cs3`s natively,
   /// drop the persisted record, and rebuild. No-op channel on non-Android.
   Future<void> deleteRepo(String url) async {
+    final wasDefault = defaultRepoUrl == url;
     final repo = _repos.firstWhere(
       (r) => (r['url'] ?? '').toString() == url,
       orElse: () => const {},
@@ -1030,6 +1126,10 @@ class CloudStreamManager extends ChangeNotifier {
       }
     }
     _repos.removeWhere((r) => (r['url'] ?? '').toString() == url);
+    if (wasDefault) {
+      await _box?.delete(_defaultRepoKey);
+      await _box?.delete(_homeSourceOverrideKey);
+    }
     _persistRepos();
     notifyListeners();
   }
@@ -1150,6 +1250,7 @@ class CloudStreamManager extends ChangeNotifier {
 
     for (final repo in _repos) {
       final repoUrl = (repo['url'] ?? '').toString();
+      final repoName = (repo['name'] ?? '').toString();
       final repoTag = _csRepoTag(repoUrl);
       final files = <String>{};
       final rawFiles = repo['files'];
@@ -1184,9 +1285,13 @@ class CloudStreamManager extends ChangeNotifier {
       }
       groups.add(
         CsRepoGroup(
-          url: (repo['url'] ?? '').toString(),
-          name: (repo['name'] ?? '').toString(),
-          owner: _ownerOf((repo['url'] ?? '').toString()),
+          url: repoUrl,
+          name:
+              isAdultCloudStreamRepoUrl(repoUrl) &&
+                  repoUrl.toLowerCase().contains('punpunsx')
+              ? 'Adult'
+              : repoName,
+          owner: _ownerOf(repoUrl),
           catalog: catalog,
           sources: sources,
         ),

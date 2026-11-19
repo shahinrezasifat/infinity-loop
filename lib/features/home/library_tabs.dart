@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';
@@ -35,7 +35,7 @@ class LibraryTab {
 /// jumped between tabs instead of tracking the gesture. The detail screen
 /// already uses a TabController for the same job, so this matches it.
 class LibraryTabs extends StatefulWidget {
-  const LibraryTabs({
+  const LibraryTabs({super.key, 
     required this.tabs,
     required this.selectedId,
     required this.onSelected,

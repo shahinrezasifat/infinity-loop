@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter/foundation.dart' show debugPrint, visibleForTesting;
 
 import '../aniyomi/aniyomi_filters.dart';
 import '../aniyomi/aniyomi_provider.dart';
@@ -29,8 +29,23 @@ import '../provider/provider_manager.dart';
 import '../provider/provider_registry.dart';
 import '../provider/reading_provider.dart';
 import '../state/active_source_cubit.dart';
+import '../../services/auto_link_provider.dart';
 import 'catalogue_repository.dart';
 import 'source_domain_overrides.dart';
+
+@visibleForTesting
+List<HomeSection> combineDefaultRepoHomeSections({
+  required List<CloudStreamProvider> providers,
+  required List<List<HomeSection>> sectionsByProvider,
+}) => [
+  for (var i = 0; i < providers.length; i++)
+    for (final section in sectionsByProvider[i])
+      HomeSection(
+        title: '${providers[i].displayName} · ${section.title}',
+        items: section.items,
+        more: section.more,
+      ),
+];
 
 /// Facade over the active provider runtime for the UI layer.
 /// The active source is driven by [activeSource] so callers can switch at
@@ -44,6 +59,7 @@ class SourceRepository implements CatalogueRepository {
     required PlaybackPrefs prefs,
     MihonManager? mihonManager,
     LnReaderManager? lnrManager,
+    AutoLinkProvider? autoLinkProvider,
     // Optional so existing tests construct this unchanged; null simply means
     // "no language filtering", which is also the behaviour for a user who has
     // never picked a language set.
@@ -69,13 +85,15 @@ class SourceRepository implements CatalogueRepository {
        // instead. Omitting it yields the same "EMPTY registry" behaviour —
        // `lnr:` ids simply never resolve. The injector always passes the
        // real one.
-       _lnrManager = lnrManager;
+       _lnrManager = lnrManager,
+       _autoLinkProvider = autoLinkProvider;
 
   final ProviderManager _manager;
   final CloudStreamManager _csManager;
   final AniyomiManager _aniManager;
   final MihonManager _mihonManager;
   final LnReaderManager? _lnrManager;
+  final AutoLinkProvider? _autoLinkProvider;
   final ActiveSourceCubit _active;
   final PlaybackPrefs _prefs;
 
@@ -135,10 +153,11 @@ class SourceRepository implements CatalogueRepository {
   @override
   void syncSearchCache() {
     final sig = loadedSources.map((s) => s.id).join(',');
-    if (sig != _searchSourcesSig) {
+    final signature = '$sig|auto:${_autoLinkProvider?.revision ?? 0}';
+    if (signature != _searchSourcesSig) {
       _searchCache.clear();
       _searchInflight.clear();
-      _searchSourcesSig = sig;
+      _searchSourcesSig = signature;
     }
   }
 
@@ -158,6 +177,7 @@ class SourceRepository implements CatalogueRepository {
   /// [_isMihon] — its own prefix so `sourceTypeOf` can type it novel without
   /// disturbing the `mihon:`/`ani:` lines.
   static bool _isLnReader(String id) => id.startsWith('lnr:');
+  static bool _isAutoLink(String id) => id == AutoLinkProvider.id;
 
   /// The currently-active source identifier.
   @override
@@ -210,6 +230,7 @@ class SourceRepository implements CatalogueRepository {
     Object.hashAll(_aniManager.all.map((p) => p.sourceId)),
     Object.hashAll(_mihonManager.all.map((p) => p.sourceId)),
     Object.hashAll(_lnrManager?.installedSources.map((s) => s.id) ?? const []),
+    _autoLinkProvider?.revision ?? 0,
     // Both NSFW prefs filter the list, so a toggle has to invalidate it.
     _prefs.showNsfwAniyomi,
     _prefs.nsfwSources,
@@ -263,7 +284,8 @@ class SourceRepository implements CatalogueRepository {
   }
 
   @override
-  List<({String id, String name})> get loadedSources => _named(_rawLoadedSources);
+  List<({String id, String name})> get loadedSources =>
+      _named(_rawLoadedSources);
 
   /// Disambiguates same-named sources by appending their language code.
   ///
@@ -375,6 +397,12 @@ class SourceRepository implements CatalogueRepository {
       ..._lnrManager.installedSources.map(
         (s) => (id: s.id, name: s.name, lang: null),
       ),
+    if (_autoLinkProvider?.enabled == true)
+      (
+        id: AutoLinkProvider.id,
+        name: _autoLinkProvider!.displayName,
+        lang: null,
+      ),
   ];
 
   /// Base site URL for a source. For Mihon/Aniyomi/LNReader this turns a
@@ -450,8 +478,8 @@ class SourceRepository implements CatalogueRepository {
   /// test that never registers the store behaves exactly as before.
   String? _domainOverride(String sourceId) =>
       sl.isRegistered<SourceDomainOverrides>()
-          ? sl<SourceDomainOverrides>().get(sourceId)
-          : null;
+      ? sl<SourceDomainOverrides>().get(sourceId)
+      : null;
 
   /// Best-effort language code for a source (e.g. "en"), or null when the
   /// ecosystem doesn't report one. Only Aniyomi and Mihon carry a declared
@@ -492,6 +520,9 @@ class SourceRepository implements CatalogueRepository {
     if (_isLnReader(sourceId)) {
       return _lnrManager?.get(sourceId)?.displayName ?? sourceId;
     }
+    if (_isAutoLink(sourceId)) {
+      return _autoLinkProvider?.displayName ?? sourceId;
+    }
     return _manager.get(sourceId)?.displayName ?? sourceId;
   }
 
@@ -519,6 +550,9 @@ class SourceRepository implements CatalogueRepository {
     if (_isLnReader(sourceId)) {
       return _lnrManager?.get(sourceId) != null;
     }
+    if (_isAutoLink(sourceId)) {
+      return _autoLinkProvider?.enabled == true;
+    }
     // JS provider: check runtime first, then registry (TV: runtime may be
     // empty because loadAll was skipped).
     if (_manager.get(sourceId) != null) return true;
@@ -541,7 +575,8 @@ class SourceRepository implements CatalogueRepository {
     if (_isCloudStream(sourceId) ||
         _isAniyomi(sourceId) ||
         _isMihon(sourceId) ||
-        _isLnReader(sourceId)) {
+        _isLnReader(sourceId) ||
+        _isAutoLink(sourceId)) {
       return true; // non-JS sources are always available
     }
     if (_manager.get(sourceId) != null) return true; // already loaded
@@ -575,6 +610,8 @@ class SourceRepository implements CatalogueRepository {
       p = _mihonManager.get(resolved);
     } else if (_isLnReader(resolved)) {
       p = _lnrManager?.get(resolved);
+    } else if (_isAutoLink(resolved)) {
+      p = _autoLinkProvider;
     } else {
       p = _manager.get(resolved);
     }
@@ -608,24 +645,57 @@ class SourceRepository implements CatalogueRepository {
     int dateRange = 7,
     int page = 1,
     String? sourceId,
-  }) async => (await _providerReady(sourceId)).popular(
-    category: category,
-    dateRange: dateRange,
-    page: page,
-  );
+  }) async => (await _providerReady(
+    sourceId,
+  )).popular(category: category, dateRange: dateRange, page: page);
 
-  /// CloudStream-style Home: the active provider's own named rows. When the
-  /// provider defines `getHome` we render exactly what it returns (empty rows
-  /// dropped). When it doesn't, we synthesize the legacy three rows from
-  /// [popular] so older providers keep working. Each underlying fetch is
-  /// fail-safe — one broken row never kills the others.
+  /// CloudStream-style Home: the active provider's own named rows, or all
+  /// enabled providers from its default repository unless Home has a
+  /// source-specific override. When a provider defines `getHome` we render
+  /// exactly what it returns (empty rows dropped); otherwise use the legacy
+  /// rows from [popular].
   @override
   Future<List<HomeSection>> home({
     String category = 'sub',
     String? sourceId,
   }) async {
-    final provider = await _providerReady(sourceId);
+    final defaultRepoUrl = _csManager.defaultRepoUrl;
+    final homeSourceId = sourceId ?? _active.state;
+    final defaultRepoSources = _csManager.defaultRepoSources;
+    if (sourceId == null &&
+        defaultRepoUrl != null &&
+        _csManager.homeSourceOverrideId == null &&
+        defaultRepoSources.any(
+          (provider) => provider.sourceId == homeSourceId,
+        )) {
+      final providers = defaultRepoSources;
+      final providerSections = await Future.wait([
+        for (final provider in providers)
+          _homeSectionsForProvider(provider, category: category).catchError((
+            error,
+            stackTrace,
+          ) {
+            debugPrint(
+              '[source-repo] default repo Home failed · '
+              'source=${provider.sourceId} · $error\n$stackTrace',
+            );
+            return const <HomeSection>[];
+          }),
+      ]);
+      return combineDefaultRepoHomeSections(
+        providers: providers,
+        sectionsByProvider: providerSections,
+      );
+    }
 
+    final provider = await _providerReady(sourceId);
+    return _homeSectionsForProvider(provider, category: category);
+  }
+
+  Future<List<HomeSection>> _homeSectionsForProvider(
+    BaseProvider provider, {
+    required String category,
+  }) async {
     final sections = await provider.getHome(category: category);
     if (sections != null) {
       return sections.where((s) => s.items.isNotEmpty).toList();
@@ -651,8 +721,8 @@ class SourceRepository implements CatalogueRepository {
     return fallback.where((s) => s.items.isNotEmpty).toList();
   }
 
-  /// Fetches the next [page] of a paginable Home row (the "See all" grid's
-  /// infinite scroll), routing on [BrowseMore.kind]:
+  /// Fetches the next [page] of a paginable Home row, routing on
+  /// [BrowseMore.kind]:
   ///   * `ani_popular` → the Aniyomi/JS provider's `popular(page:)`
   ///   * `ani_latest`  → the Aniyomi provider's `latest(page:)`
   ///   * `mihon_popular` → the Mihon manga provider's `popular(page:)`
@@ -662,23 +732,24 @@ class SourceRepository implements CatalogueRepository {
   ///
   /// Never throws — any failure (unknown kind, wrong provider type, provider
   /// error) degrades to an empty list so the caller just stops the scroll.
+  @override
   Future<List<MediaItem>> browseMore(BrowseMore more, int page) async {
     try {
       final p = await _providerReady(more.sourceId);
       switch (more.kind) {
         case 'ani_popular':
-          return p.popular(page: page);
+          return await p.popular(page: page);
         case 'ani_latest':
-          return p is AniyomiProvider ? p.latest(page: page) : const [];
+          return p is AniyomiProvider ? await p.latest(page: page) : const [];
         case 'mihon_popular':
-          return p.popular(page: page);
+          return await p.popular(page: page);
         case 'mihon_latest':
-          return p is MihonProvider ? p.latest(page: page) : const [];
+          return p is MihonProvider ? await p.latest(page: page) : const [];
         case 'lnr_popular':
-          return p.popular(page: page);
+          return await p.popular(page: page);
         case 'cs_mainpage':
           return (p is CloudStreamProvider && more.categoryId != null)
-              ? p.browseMainPage(more.categoryId!, page)
+              ? await p.browseMainPage(more.categoryId!, page)
               : const [];
         default:
           return const [];
@@ -869,7 +940,9 @@ class SourceRepository implements CatalogueRepository {
   }) async {
     final sw = Stopwatch()..start();
     final sid = sourceId ?? _active.state;
-    AppLogger.instance.log('[detail] source fetch start sourceId=$sid url=$url');
+    AppLogger.instance.log(
+      '[detail] source fetch start sourceId=$sid url=$url',
+    );
     try {
       final p = await _providerReady(sourceId);
       // Only the JS providers share the serialized call queue this is meant to
@@ -969,10 +1042,9 @@ class SourceRepository implements CatalogueRepository {
       }
       return fresh;
     }
-    return (await _providerReady(sourceId)).getVideoSources(
-      episodeUrl,
-      fast: fast,
-    );
+    return (await _providerReady(
+      sourceId,
+    )).getVideoSources(episodeUrl, fast: fast);
   }
 
   /// Manga leaf — ordered page images for [chapterUrl]. No expiry cache here:

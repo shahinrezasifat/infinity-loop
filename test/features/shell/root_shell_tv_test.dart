@@ -1,7 +1,7 @@
 // ignore_for_file: invalid_use_of_protected_member
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -49,9 +49,9 @@ import 'package:watch_app/features/home/cubit/home_cubit.dart';
 import 'package:watch_app/features/shell/root_shell_tv.dart';
 
 MigrationBridge _fakeBridge() => MigrationBridge(
-      invoke: (_, __) async => const {'ok': false},
-      signInPassword: (_, __) async => false,
-      verifyOtp: (_, __) async => false,
+      invoke: (_, _) async => const {'ok': false},
+      signInPassword: (_, _) async => false,
+      verifyOtp: (_, _) async => false,
     );
 
 // ── Minimal fakes (no platform channels, no Hive) ──────────────────────────
@@ -506,7 +506,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final rail = find.byWidgetPredicate(
-        (w) => w is Focus && (w as Focus).focusNode?.debugLabel == 'tv-rail-scope',
+        (w) => w is Focus && w.focusNode?.debugLabel == 'tv-rail-scope',
       );
       final settingsInRail = find.descendant(
         of: rail,

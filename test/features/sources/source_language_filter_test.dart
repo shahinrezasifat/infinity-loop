@@ -6,7 +6,7 @@
 // Uses an in-memory fake MangaLangPrefs registered in GetIt so no Hive box is
 // needed; the section reads `sl<MangaLangPrefs>()` and rebuilds off its
 // ChangeNotifier.
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:watch_app/core/aniyomi/aniyomi_repo.dart';

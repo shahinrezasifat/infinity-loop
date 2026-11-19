@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
+import '../../core/di/injector.dart';
+import '../../core/provider/cloudstream_provider.dart';
 import 'aniyomi_sources_screen.dart';
 import 'cloudstream_sources_screen.dart';
 import 'lnreader_sources_screen.dart';
@@ -23,7 +25,16 @@ import 'zangetsu_sources_screen.dart';
 /// Null for an id no screen owns, so a caller can hide the action rather than
 /// offer one that goes nowhere.
 Widget? manageSourceScreenFor(String sourceId) {
-  if (sourceId.startsWith('cs:')) return const CloudStreamSourcesScreen();
+  if (sourceId.startsWith('cs:')) {
+    final isAdult =
+        sl.isRegistered<CloudStreamManager>() &&
+        sl<CloudStreamManager>().repoGroups.any(
+          (group) =>
+              isAdultCloudStreamRepoUrl(group.url) &&
+              group.sources.any((source) => source.sourceId == sourceId),
+        );
+    return CloudStreamSourcesScreen(adultOnly: isAdult);
+  }
   if (sourceId.startsWith('ani:')) return const AniyomiSourcesScreen();
   if (sourceId.startsWith('mihon:')) return const MihonSourcesScreen();
   if (sourceId.startsWith('lnr:')) return const LnReaderSourcesScreen();

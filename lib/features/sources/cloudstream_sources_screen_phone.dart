@@ -1,13 +1,14 @@
 // CloudStream sources — phone UI.
 part of 'cloudstream_sources_screen.dart';
 
-
 // ---------------------------------------------------------------------------
 // Phone view
 // ---------------------------------------------------------------------------
 
 class _CsPhoneView extends StatefulWidget {
-  const _CsPhoneView();
+  const _CsPhoneView({required this.adultOnly});
+
+  final bool adultOnly;
 
   @override
   State<_CsPhoneView> createState() => _CsPhoneViewState();
@@ -16,6 +17,17 @@ class _CsPhoneView extends StatefulWidget {
 class _CsPhoneViewState extends State<_CsPhoneView> {
   final _searchCtrl = TextEditingController();
   String _query = '';
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      try {
+        await sl<CloudStreamManager>().ensureAdultRepoPreadded();
+      } catch (_) {}
+    });
+  }
 
   @override
   void dispose() {
@@ -30,7 +42,10 @@ class _CsPhoneViewState extends State<_CsPhoneView> {
       child: Scaffold(
         backgroundColor: AppColors.bg,
         appBar: AppBar(
-          title: Text(context.l10n.cloudStream, style: AppText.barTitle),
+          title: Text(
+            widget.adultOnly ? 'Adult' : context.l10n.cloudStream,
+            style: AppText.barTitle,
+          ),
           bottom: TabBar(
             indicatorColor: AppColors.accent,
             indicatorSize: TabBarIndicatorSize.label,
@@ -45,16 +60,18 @@ class _CsPhoneViewState extends State<_CsPhoneView> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: AppColors.accent,
-          foregroundColor: Colors.white,
-          onPressed: () => _showAddCsRepoDialog(context),
-          icon: const Icon(Icons.add),
-          label: Text(
-            context.l10n.addCloudStreamRepo,
-            style: AppText.button.copyWith(color: Colors.white),
-          ),
-        ),
+        floatingActionButton: widget.adultOnly
+            ? null
+            : FloatingActionButton.extended(
+                backgroundColor: AppColors.accent,
+                foregroundColor: Colors.white,
+                onPressed: () => _showAddCsRepoDialog(context),
+                icon: const Icon(Icons.add),
+                label: Text(
+                  context.l10n.addCloudStreamRepo,
+                  style: AppText.button.copyWith(color: Colors.white),
+                ),
+              ),
         // NOT const: a const TabBarView is canonicalized, so the outer
         // ListenableBuilder's rebuild would hand Flutter the identical subtree
         // and skip it — the install/enable state would never refresh. A fresh
@@ -71,8 +88,8 @@ class _CsPhoneViewState extends State<_CsPhoneView> {
             Expanded(
               child: TabBarView(
                 children: [
-                  _CsInstalledTab(query: _query),
-                  _CsReposTab(query: _query),
+                  _CsInstalledTab(query: _query, adultOnly: widget.adultOnly),
+                  _CsReposTab(query: _query, adultOnly: widget.adultOnly),
                 ],
               ),
             ),
@@ -85,13 +102,14 @@ class _CsPhoneViewState extends State<_CsPhoneView> {
 
 /// Installed tab body — CS sources grouped by origin repo.
 class _CsInstalledTab extends StatelessWidget {
-  const _CsInstalledTab({this.query = ''});
+  const _CsInstalledTab({this.query = '', this.adultOnly = false});
 
   final String query;
+  final bool adultOnly;
 
   @override
   Widget build(BuildContext context) {
-    final groups = sl<CloudStreamManager>().repoGroups;
+    final groups = _visibleCloudStreamGroups(adultOnly: adultOnly);
     // Search: keep only matching sources; drop groups left with none.
     final installedGroups = [
       for (final g in groups)
@@ -114,7 +132,9 @@ class _CsInstalledTab extends StatelessWidget {
           EmptyState(
             icon: Icons.dns_rounded,
             message: query.trim().isEmpty
-                ? context.l10n.noCloudStreamSourcesInstalled
+                ? (adultOnly
+                      ? 'No Adult sources installed yet.'
+                      : context.l10n.noCloudStreamSourcesInstalled)
                 : 'No installed sources match "${query.trim()}".',
           )
         else
@@ -133,21 +153,23 @@ class _CsInstalledTab extends StatelessWidget {
 
 /// Repositories tab body — add repo action + repo browse/install sections.
 class _CsReposTab extends StatelessWidget {
-  const _CsReposTab({this.query = ''});
+  const _CsReposTab({this.query = '', this.adultOnly = false});
 
   final String query;
+  final bool adultOnly;
 
   @override
   Widget build(BuildContext context) {
     final searching = query.trim().isNotEmpty;
-    final all = sl<CloudStreamManager>().repoGroups;
+    final all = _visibleCloudStreamGroups(adultOnly: adultOnly);
     // Search: keep only matching catalog plugins; drop repos left with none.
     final groups = !searching
         ? all
         : [
             for (final g in all)
-              if (g.catalog
-                  .any((m) => sourceSearchMatches(query, m.name, m.language)))
+              if (g.catalog.any(
+                (m) => sourceSearchMatches(query, m.name, m.language),
+              ))
                 CsRepoGroup(
                   url: g.url,
                   name: g.name,
@@ -162,12 +184,17 @@ class _CsReposTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 96),
       children: [
+        if (!searching && !adultOnly) const AutoLinkRepoSection(),
         if (groups.isEmpty)
           EmptyState(
             icon: Icons.cloud_outlined,
             message: searching
                 ? context.l10n.noExtensionsMatchQuery(query.trim())
-                : context.l10n.noCloudStreamReposAddedYetTap(context.l10n.addCSRepo),
+                : (adultOnly
+                      ? 'Adult repository is unavailable. Check your connection and try again.'
+                      : context.l10n.noCloudStreamReposAddedYetTap(
+                          context.l10n.addCSRepo,
+                        )),
           )
         else
           BlocBuilder<ActiveSourceCubit, String>(
@@ -215,7 +242,9 @@ Future<void> _showAddCsRepoDialog(BuildContext context) async {
   } catch (e) {
     messenger
       ..clearSnackBars()
-      ..showSnackBar(SnackBar(content: Text(context.l10n.failedToAddRepo('$e'))));
+      ..showSnackBar(
+        SnackBar(content: Text(context.l10n.failedToAddRepo('$e'))),
+      );
   }
 }
 
@@ -352,7 +381,9 @@ class _CsScreenSourceRow extends StatelessWidget {
         ScaffoldMessenger.of(context)
           ..clearSnackBars()
           ..showSnackBar(
-            SnackBar(content: Text(context.l10n.activeSourceColon(source.displayName))),
+            SnackBar(
+              content: Text(context.l10n.activeSourceColon(source.displayName)),
+            ),
           );
       },
       child: Padding(
@@ -420,7 +451,10 @@ class _CsScreenSourceRow extends StatelessWidget {
 
 /// Confirms then removes an entire CloudStream repo (its sources too) via
 /// [CloudStreamManager.deleteRepo]; shows a context.l10n.removed snackbar on success.
-Future<void> _confirmDeleteCsRepo(BuildContext context, CsRepoGroup group) async {
+Future<void> _confirmDeleteCsRepo(
+  BuildContext context,
+  CsRepoGroup group,
+) async {
   final messenger = ScaffoldMessenger.of(context);
   final ok = await AppDialog.confirm(
     context,
@@ -467,7 +501,10 @@ Future<void> _checkCsUpdates(BuildContext context, CsRepoGroup group) async {
 
 /// Applies all available updates for a repo (re-download newer `.cs3`s) via
 /// [CloudStreamManager.updateRepo], with progress + an honest result count.
-Future<void> _applyCsRepoUpdates(BuildContext context, CsRepoGroup group) async {
+Future<void> _applyCsRepoUpdates(
+  BuildContext context,
+  CsRepoGroup group,
+) async {
   final messenger = ScaffoldMessenger.of(context);
   messenger
     ..clearSnackBars()
@@ -479,7 +516,9 @@ Future<void> _applyCsRepoUpdates(BuildContext context, CsRepoGroup group) async 
       ..showSnackBar(
         SnackBar(
           content: Text(
-            count == 0 ? context.l10n.alreadyUpToDate : context.l10n.updatedNSources(count),
+            count == 0
+                ? context.l10n.alreadyUpToDate
+                : context.l10n.updatedNSources(count),
           ),
         ),
       );
@@ -564,7 +603,13 @@ class _CsScreenRepoSectionState extends State<_CsScreenRepoSection> {
   Widget build(BuildContext context) {
     final manager = sl<CloudStreamManager>();
     final isOther = group.url.isEmpty;
-    final updates = isOther ? const <CsUpdate>[] : manager.updatesFor(group.url);
+    final isDefault = !isOther && manager.defaultRepoUrl == group.url;
+    final hasEnabledSources = group.sources.any(
+      (source) => manager.isEnabled(source.sourceId),
+    );
+    final updates = isOther
+        ? const <CsUpdate>[]
+        : manager.updatesFor(group.url);
     final catalog = isOther ? _otherCatalog : group.catalog;
     final installedCount = isOther
         ? group.sources.length
@@ -642,8 +687,28 @@ class _CsScreenRepoSectionState extends State<_CsScreenRepoSection> {
                     ),
                   ),
                 ),
-                // "N updates" pill when this repo has installed plugins with a
-                // newer version available (tap → apply all).
+                // Show which repository feeds the Home screen.
+                if (isDefault)
+                  Container(
+                    margin: const EdgeInsets.only(right: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.accent.withValues(alpha: 0.16),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      'Default',
+                      style: AppText.caption.copyWith(
+                        color: AppColors.accent,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                // "N updates" pill when this repo has installed plugins with
+                // a newer version available (tap → apply all).
                 if (updates.isNotEmpty)
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
@@ -679,11 +744,42 @@ class _CsScreenRepoSectionState extends State<_CsScreenRepoSection> {
                     ),
                     color: AppColors.surface2,
                     onSelected: (v) {
+                      if (v == 'default') _setCsDefaultRepo(context, group);
                       if (v == 'check') _checkCsUpdates(context, group);
                       if (v == 'update') _applyCsRepoUpdates(context, group);
                       if (v == 'remove') _confirmDeleteCsRepo(context, group);
                     },
                     itemBuilder: (_) => [
+                      PopupMenuItem(
+                        value: 'default',
+                        enabled: !isDefault && hasEnabledSources,
+                        child: Row(
+                          children: [
+                            Icon(
+                              isDefault ? Icons.check : Icons.star_outline,
+                              size: 18,
+                              color: isDefault
+                                  ? AppColors.accent
+                                  : AppColors.textSecondary,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              isDefault
+                                  ? 'Default'
+                                  : hasEnabledSources
+                                  ? 'Set as default'
+                                  : group.sources.isEmpty
+                                  ? 'Install a source first'
+                                  : 'Enable a source first',
+                              style: AppText.body.copyWith(
+                                color: isDefault
+                                    ? AppColors.accent
+                                    : AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       PopupMenuItem(
                         value: 'check',
                         child: Text(
@@ -825,17 +921,23 @@ class _CsScreenPluginRowState extends State<_CsScreenPluginRow> {
     final messenger = ScaffoldMessenger.of(context);
     setState(() => _busy = true);
     try {
-      await sl<CloudStreamManager>()
-          .installPlugin(widget.plugin, repoUrl: widget.repoUrl);
+      await sl<CloudStreamManager>().installPlugin(
+        widget.plugin,
+        repoUrl: widget.repoUrl,
+      );
       messenger
         ..clearSnackBars()
         ..showSnackBar(
-          SnackBar(content: Text(context.l10n.installedName(widget.plugin.name))),
+          SnackBar(
+            content: Text(context.l10n.installedName(widget.plugin.name)),
+          ),
         );
     } catch (e) {
       messenger
         ..clearSnackBars()
-        ..showSnackBar(SnackBar(content: Text(context.l10n.installFailed('$e'))));
+        ..showSnackBar(
+          SnackBar(content: Text(context.l10n.installFailed('$e'))),
+        );
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -847,8 +949,10 @@ class _CsScreenPluginRowState extends State<_CsScreenPluginRow> {
     final messenger = ScaffoldMessenger.of(context);
     setState(() => _busy = true);
     try {
-      await sl<CloudStreamManager>()
-          .updatePlugin(update, repoUrl: widget.repoUrl);
+      await sl<CloudStreamManager>().updatePlugin(
+        update,
+        repoUrl: widget.repoUrl,
+      );
       messenger
         ..clearSnackBars()
         ..showSnackBar(
@@ -857,7 +961,9 @@ class _CsScreenPluginRowState extends State<_CsScreenPluginRow> {
     } catch (e) {
       messenger
         ..clearSnackBars()
-        ..showSnackBar(SnackBar(content: Text(context.l10n.updateFailed('$e'))));
+        ..showSnackBar(
+          SnackBar(content: Text(context.l10n.updateFailed('$e'))),
+        );
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -875,17 +981,23 @@ class _CsScreenPluginRowState extends State<_CsScreenPluginRow> {
     if (ok != true) return;
     setState(() => _busy = true);
     try {
-      await sl<CloudStreamManager>()
-          .uninstallPlugin(widget.plugin, repoUrl: widget.repoUrl);
+      await sl<CloudStreamManager>().uninstallPlugin(
+        widget.plugin,
+        repoUrl: widget.repoUrl,
+      );
       messenger
         ..clearSnackBars()
         ..showSnackBar(
-          SnackBar(content: Text(context.l10n.uninstalledName(widget.plugin.name))),
+          SnackBar(
+            content: Text(context.l10n.uninstalledName(widget.plugin.name)),
+          ),
         );
     } catch (e) {
       messenger
         ..clearSnackBars()
-        ..showSnackBar(SnackBar(content: Text(context.l10n.uninstallFailed('$e'))));
+        ..showSnackBar(
+          SnackBar(content: Text(context.l10n.uninstallFailed('$e'))),
+        );
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -896,8 +1008,10 @@ class _CsScreenPluginRowState extends State<_CsScreenPluginRow> {
     // Read live from the manager (not the parent-computed widget.installed) so
     // this row's own setState after _install/_uninstall reflects the new state
     // immediately, even if the parent group hasn't rebuilt.
-    final installed = sl<CloudStreamManager>()
-        .isPluginInstalled(widget.plugin.internalName, repoUrl: widget.repoUrl);
+    final installed = sl<CloudStreamManager>().isPluginInstalled(
+      widget.plugin.internalName,
+      repoUrl: widget.repoUrl,
+    );
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 12, 8),
       child: Row(
@@ -952,7 +1066,11 @@ class _CsScreenPluginRowState extends State<_CsScreenPluginRow> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text(context.l10n.updateArrowVersion('${widget.update!.onlineVersion}')),
+              child: Text(
+                context.l10n.updateArrowVersion(
+                  '${widget.update!.onlineVersion}',
+                ),
+              ),
             )
           else if (installed)
             OutlinedButton(
@@ -1002,8 +1120,7 @@ class _CsScreenAddRepoDialog extends StatefulWidget {
   const _CsScreenAddRepoDialog();
 
   @override
-  State<_CsScreenAddRepoDialog> createState() =>
-      _CsScreenAddRepoDialogState();
+  State<_CsScreenAddRepoDialog> createState() => _CsScreenAddRepoDialogState();
 }
 
 class _CsScreenAddRepoDialogState extends State<_CsScreenAddRepoDialog> {

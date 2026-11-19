@@ -168,6 +168,7 @@ class AniListCatalogue implements AnimeCatalogue {
   /// one per entry in [_rows] — instead of a round-trip per row. A malformed
   /// or partial response (missing alias, non-list `media`, or no response at
   /// all) just drops that row rather than throwing.
+  @override
   Future<List<HomeSection>> home(ZKind kind) async {
     final rows = _rows(kind);
     final query = rows.indexed
@@ -208,6 +209,7 @@ class AniListCatalogue implements AnimeCatalogue {
     return _itemsFromPage(data?['Page'], kind);
   }
 
+  @override
   Future<List<MediaItem>> search(String q, ZKind kind) =>
       searchFiltered(q, kind);
 
@@ -312,6 +314,7 @@ class AniListCatalogue implements AnimeCatalogue {
     MetaSort.title => 'TITLE_ROMAJI',
   };
 
+  @override
   Future<MediaDetail> detail(ZCanonical c) async {
     final (arg, vars) = _idArg(c);
     final q =
@@ -361,6 +364,7 @@ class AniListCatalogue implements AnimeCatalogue {
     );
   }
 
+  @override
   Future<List<Episode>> episodes(ZCanonical c) async =>
       (await detail(c)).episodes;
 

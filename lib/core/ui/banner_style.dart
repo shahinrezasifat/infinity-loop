@@ -34,6 +34,12 @@ class BannerStyle {
 
   static const String defaultId = 'card';
   static const String panelsId = 'panels';
+  static const String spotlightId = 'spotlight';
+  static const String showcaseId = 'showcase';
+  static const String compactId = 'compact';
+  static const String cinemaId = 'cinema';
+  static const String glassId = 'glass';
+  static const String editorialId = 'editorial';
 
   /// [defaultId] first, so the picker leads with what a fresh install wears.
   static const List<BannerStyleOption> options = [
@@ -42,7 +48,41 @@ class BannerStyle {
       label: 'Card',
       blurb: 'The banner you have now',
     ),
-    BannerStyleOption(id: panelsId, label: 'Panels', blurb: 'A manga spread'),
+    BannerStyleOption(
+      id: panelsId,
+      label: 'Panels',
+      blurb: 'A manga spread',
+    ),
+    BannerStyleOption(
+      id: spotlightId,
+      label: 'Spotlight',
+      blurb: 'Side-peeking cards',
+    ),
+    BannerStyleOption(
+      id: showcaseId,
+      label: 'Showcase',
+      blurb: 'Poster & synopsis',
+    ),
+    BannerStyleOption(
+      id: compactId,
+      label: 'Compact',
+      blurb: 'Low-profile strip',
+    ),
+    BannerStyleOption(
+      id: cinemaId,
+      label: 'Cinema',
+      blurb: 'Edge-to-edge canvas',
+    ),
+    BannerStyleOption(
+      id: glassId,
+      label: 'Glass',
+      blurb: 'Frosted acrylic panel',
+    ),
+    BannerStyleOption(
+      id: editorialId,
+      label: 'Editorial',
+      blurb: 'Minimalist magazine',
+    ),
   ];
 
   /// Falls back to [defaultId] for anything unknown, so a build that drops an

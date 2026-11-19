@@ -4,7 +4,7 @@
 // strips out — an empty grid with nothing saying why. The switch sits beside
 // this sheet, so following it is both safe and obvious.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/zmode/metadata_filters.dart';
 import 'package:watch_app/core/zmode/zmode_ids.dart';

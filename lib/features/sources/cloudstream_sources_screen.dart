@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/app_mode.dart';
@@ -21,6 +21,7 @@ import 'source_settings_screen.dart';
 import 'sources_search_field.dart';
 import '../../core/ui/app_dialog.dart';
 import '../../l10n/l10n.dart';
+import 'auto_link_sources_screen.dart';
 
 part 'cloudstream_sources_screen_phone.dart';
 part 'cloudstream_sources_screen_tv.dart';
@@ -37,7 +38,9 @@ part 'cloudstream_sources_screen_tv.dart';
 /// `repoGroups` is always empty, so both views fall through to their normal
 /// empty state ("No CloudStream repos added yet") — matching the old tab.
 class CloudStreamSourcesScreen extends StatelessWidget {
-  const CloudStreamSourcesScreen({super.key});
+  const CloudStreamSourcesScreen({super.key, this.adultOnly = false});
+
+  final bool adultOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +53,43 @@ class CloudStreamSourcesScreen extends StatelessWidget {
       // (scroll / collapse-expand / re-open). A fresh instance lets the manager's
       // notifications actually reach the Install/Installed buttons + counts.
       builder: (context, _) {
-        return sl<AppMode>().isTv ? _CsTvView() : _CsPhoneView();
+        return sl<AppMode>().isTv
+            ? _CsTvView(adultOnly: adultOnly)
+            : _CsPhoneView(adultOnly: adultOnly);
       },
     );
   }
+}
+
+List<CsRepoGroup> _visibleCloudStreamGroups({required bool adultOnly}) {
+  return sl<CloudStreamManager>().repoGroups.where((group) {
+    final isAdult = isAdultCloudStreamRepoUrl(group.url);
+    return adultOnly == isAdult;
+  }).toList();
+}
+
+Future<void> _setCsDefaultRepo(BuildContext context, CsRepoGroup group) async {
+  final manager = sl<CloudStreamManager>();
+  final messenger = ScaffoldMessenger.of(context);
+  try {
+    await manager.setDefaultRepo(group.url);
+  } catch (e) {
+    if (!context.mounted) return;
+    messenger
+      ..clearSnackBars()
+      ..showSnackBar(
+        SnackBar(content: Text('Could not set the default repository: $e')),
+      );
+    return;
+  }
+  if (!context.mounted) return;
+  final sources = manager.defaultRepoSources;
+  if (sources.isNotEmpty) {
+    context.read<ActiveSourceCubit>().setSource(sources.first.sourceId);
+  }
+  messenger
+    ..clearSnackBars()
+    ..showSnackBar(
+      SnackBar(content: Text('${group.name} is now the default Home repo.')),
+    );
 }

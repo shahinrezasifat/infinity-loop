@@ -21,6 +21,8 @@ class _Repo implements CatalogueRepository {
   String? lastFiltersJson;
   int? lastPage;
   Map<int, List<MediaItem>>? pages;
+  final Map<String, Map<int, List<MediaItem>>> cataloguePages = {};
+  final List<({String categoryId, int page})> catalogueRequests = [];
   String? filteredQuery;
   int homeCalls = 0;
   String? searchAskedFor;
@@ -72,10 +74,24 @@ class _Repo implements CatalogueRepository {
     }
     return (items: searchResults, outcome: SourceOutcome.ok);
   }
+
+  @override
+  Future<List<MediaItem>> browseMore(BrowseMore more, int page) async {
+    final categoryId = more.categoryId!;
+    catalogueRequests.add((categoryId: categoryId, page: page));
+    return cataloguePages[categoryId]?[page] ?? const [];
+  }
 }
 
-HomeSection _section(String title) =>
-    HomeSection(title: title, items: [_item('1', 'A show')]);
+HomeSection _section(
+  String title, {
+  BrowseMore? more,
+  List<MediaItem>? items,
+}) => HomeSection(
+  title: title,
+  items: items ?? [_item('1', 'A show')],
+  more: more,
+);
 
 MediaItem _item(String id, String title) => MediaItem(
   id: id,
@@ -305,14 +321,115 @@ void main() {
     expect(cubit.state.searchResults!.length, 1, reason: 'no duplicate card');
   });
 
-  test('the catalogue rows do not page', () async {
-    // Nothing is searched or filtered, so there is no page 2 to ask for.
-    final repo = _Repo([_section('Latest')]);
+  test(
+    'catalogue paging appends fresh items and preserves fixed rows',
+    () async {
+      const latest = BrowseMore(
+        sourceId: 'ani:1',
+        kind: 'cs_mainpage',
+        categoryId: 'latest',
+      );
+      const popular = BrowseMore(
+        sourceId: 'ani:1',
+        kind: 'cs_mainpage',
+        categoryId: 'popular',
+      );
+      final repo =
+          _Repo([
+              _section('Latest', more: latest),
+              _section('Popular', more: popular),
+              _section('Featured'),
+            ])
+            ..cataloguePages['latest'] = {
+              2: [_item('1', 'Duplicate'), _item('2', 'Two')],
+            }
+            ..cataloguePages['popular'] = {
+              2: [_item('3', 'Three')],
+            };
+      final cubit = BrowseSourceCubit(repo: repo, sourceId: 'ani:1');
+      await cubit.load();
+
+      await cubit.loadMore();
+
+      expect(repo.catalogueRequests, [
+        (categoryId: 'latest', page: 2),
+        (categoryId: 'popular', page: 2),
+      ]);
+      expect(cubit.state.sections[0].items.map((item) => item.title), [
+        'A show',
+        'Two',
+      ]);
+      expect(cubit.state.sections[1].items.map((item) => item.title), [
+        'A show',
+        'Three',
+      ]);
+      expect(cubit.state.sections[2].items, hasLength(1));
+      expect(cubit.state.atEnd, isFalse);
+      await cubit.close();
+    },
+  );
+
+  test('catalogue paging stops when all pages add no new items', () async {
+    const more = BrowseMore(
+      sourceId: 'ani:1',
+      kind: 'cs_mainpage',
+      categoryId: 'latest',
+    );
+    final repo = _Repo([_section('Latest', more: more)])
+      ..cataloguePages['latest'] = {
+        2: [_item('1', 'Repeated')],
+      };
     final cubit = BrowseSourceCubit(repo: repo, sourceId: 'ani:1');
     await cubit.load();
 
     await cubit.loadMore();
+    expect(cubit.state.atEnd, isTrue);
+    expect(cubit.state.sections.single.items, hasLength(1));
 
-    expect(repo.lastPage, isNull);
+    await cubit.loadMore();
+    expect(repo.catalogueRequests, [(categoryId: 'latest', page: 2)]);
+    await cubit.close();
+  });
+
+  test('an exhausted catalogue row does not stop other rows', () async {
+    const latest = BrowseMore(
+      sourceId: 'ani:1',
+      kind: 'cs_mainpage',
+      categoryId: 'latest',
+    );
+    const popular = BrowseMore(
+      sourceId: 'ani:1',
+      kind: 'cs_mainpage',
+      categoryId: 'popular',
+    );
+    final repo = _Repo([
+      _section('Latest', more: latest),
+      _section('Popular', more: popular),
+    ])
+      ..cataloguePages['latest'] = {
+        2: [_item('1', 'Repeated')],
+      }
+      ..cataloguePages['popular'] = {
+        2: [_item('4', 'Four')],
+        3: [_item('5', 'Five')],
+      };
+    final cubit = BrowseSourceCubit(repo: repo, sourceId: 'ani:1');
+    await cubit.load();
+
+    await cubit.loadMore();
+    expect(cubit.state.atEnd, isFalse);
+    await cubit.loadMore();
+
+    expect(repo.catalogueRequests, [
+      (categoryId: 'latest', page: 2),
+      (categoryId: 'popular', page: 2),
+      (categoryId: 'popular', page: 3),
+    ]);
+    expect(cubit.state.sections[1].items.map((item) => item.title), [
+      'A show',
+      'Four',
+      'Five',
+    ]);
+    await cubit.close();
   });
 }

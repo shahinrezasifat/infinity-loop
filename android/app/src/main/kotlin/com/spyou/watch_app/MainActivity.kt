@@ -615,6 +615,39 @@ class MainActivity : AppCompatActivity(), FlutterEngineConfigurator {
                             result.error("ICON", e.message, null)
                         }
                     }
+                    "pinCustomShortcut" -> {
+                        val path = call.argument<String>("path")
+                        if (path == null) {
+                            result.error("BAD_ARGS", "missing path", null)
+                            return@setMethodCallHandler
+                        }
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                val shortcutManager = getSystemService(android.content.pm.ShortcutManager::class.java)
+                                if (shortcutManager != null && shortcutManager.isRequestPinShortcutSupported) {
+                                    val bitmap = android.graphics.BitmapFactory.decodeFile(path)
+                                    if (bitmap != null) {
+                                        val shortcutIntent = Intent(Intent.ACTION_MAIN).apply {
+                                            setClassName(packageName, "com.spyou.watch_app.MainActivity")
+                                            addCategory(Intent.CATEGORY_LAUNCHER)
+                                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                                        }
+                                        val shortcutInfo = android.content.pm.ShortcutInfo.Builder(this, "custom_icon_shortcut")
+                                            .setShortLabel("infinity")
+                                            .setIcon(android.graphics.drawable.Icon.createWithBitmap(bitmap))
+                                            .setIntent(shortcutIntent)
+                                            .build()
+                                        shortcutManager.requestPinShortcut(shortcutInfo, null)
+                                        result.success(true)
+                                        return@setMethodCallHandler
+                                    }
+                                }
+                            }
+                            result.success(false)
+                        } catch (e: Exception) {
+                            result.error("SHORTCUT", e.message, null)
+                        }
+                    }
                     else -> result.notImplemented()
                 }
             }

@@ -13,7 +13,7 @@
 // below runs with ZERO source-related DI registered, which is itself part of
 // the regression proof: the anime path cannot depend on installed sources.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';

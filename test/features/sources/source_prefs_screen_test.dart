@@ -4,7 +4,7 @@
 // returns false), and a switch showing a state the source never took is worse
 // than no switch at all.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/models/source_pref.dart';
 import 'package:watch_app/features/sources/source_prefs_screen.dart';

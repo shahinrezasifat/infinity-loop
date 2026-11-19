@@ -135,8 +135,9 @@ class MyListStore {
     }
     var pushed = 0, failed = 0;
     for (final m in all()) {
-      if (cloudKeys.contains(_key(m)))
+      if (cloudKeys.contains(_key(m))) {
         continue; // already in cloud — don't clobber
+      }
       try {
         await _remote.upsert(_cloudRow(uid, m));
         pushed++;

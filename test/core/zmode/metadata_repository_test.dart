@@ -69,7 +69,7 @@ MetadataRepository _metaRepo({
     );
 
 class _Src implements SourceRepository {
-  _Src({this.streams = _stream});
+  _Src() : streams = _stream;
   final List<VideoSource> streams;
   final log = <String>[];
   @override
@@ -137,7 +137,7 @@ class _Src implements SourceRepository {
 }
 
 class _EpSrc implements SourceRepository {
-  _EpSrc(this._eps, {this.streams = _stream});
+  _EpSrc(this._eps) : streams = _stream;
   final List<Episode> _eps;
   final List<VideoSource> streams;
   final log = <String>[];

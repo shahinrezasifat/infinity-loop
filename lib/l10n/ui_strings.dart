@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../core/mode/content_mode.dart';
 import '../core/models/watch_status.dart';
@@ -6,7 +6,6 @@ import '../core/playback/search_prefs.dart';
 import '../core/playback/source_health_store.dart' show SourceOutcome;
 import '../core/theme/theme_controller.dart';
 import '../core/ui/nav_prefs.dart';
-import 'app_localizations.dart';
 import 'l10n.dart';
 
 /// Localized dock tab label (phone bottom bar).

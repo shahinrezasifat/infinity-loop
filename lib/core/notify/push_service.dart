@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../announce/announcement.dart';
@@ -35,7 +36,11 @@ class PushService {
   bool _inited = false;
 
   Future<void> init() async {
-    if (_inited || !(Platform.isAndroid || Platform.isIOS)) return;
+    if (_inited ||
+        Firebase.apps.isEmpty ||
+        !(Platform.isAndroid || Platform.isIOS)) {
+      return;
+    }
     _inited = true;
     final fm = FirebaseMessaging.instance;
     // Android 13+ POST_NOTIFICATIONS; on iOS this is the system prompt.
@@ -86,23 +91,26 @@ class PushService {
       final id = 'push_${m.messageId ?? m.hashCode}';
       if (store.has(id)) return;
       final rawLink = m.data['url'] ?? m.data['link'];
-      final link = rawLink is String &&
+      final link =
+          rawLink is String &&
               (rawLink.startsWith('http://') || rawLink.startsWith('https://'))
           ? rawLink
           : null;
-      unawaited(store.saveNew(
-        Announcement(
-          id: id,
-          title: n.title ?? 'Zangetsu',
-          body: n.body ?? '',
-          actionLabel: link != null ? 'Open' : null,
-          actionUrl: link,
-          date: _today(m.sentTime),
-          imageUrl: n.android?.imageUrl,
+      unawaited(
+        store.saveNew(
+          Announcement(
+            id: id,
+            title: n.title ?? 'Zangetsu',
+            body: n.body ?? '',
+            actionLabel: link != null ? 'Open' : null,
+            actionUrl: link,
+            date: _today(m.sentTime),
+            imageUrl: n.android?.imageUrl,
+          ),
+          m.sentTime?.millisecondsSinceEpoch ??
+              DateTime.now().millisecondsSinceEpoch,
         ),
-        m.sentTime?.millisecondsSinceEpoch ??
-            DateTime.now().millisecondsSinceEpoch,
-      ));
+      );
     } catch (_) {}
   }
 

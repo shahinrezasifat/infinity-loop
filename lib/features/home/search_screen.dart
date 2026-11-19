@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../search/meta_filter_sheet.dart';
@@ -83,6 +83,7 @@ class SearchScreen extends StatefulWidget {
     this.focusSignal,
     this.forceSources = false,
     this.forceMode,
+    this.fixedSourceId,
     this.initialFilters,
   });
 
@@ -98,12 +99,15 @@ class SearchScreen extends StatefulWidget {
   final ValueListenable<int>? focusSignal;
 
   /// Forces [_SearchScreenState._scope] to [SearchScope.sources] regardless
-  /// of [ZModePrefs.enabled]. Used by the sources destination (reached from
-  /// Home's header icon) to search across every installed source even while
-  /// Z Mode has Home/Search themselves on the metadata catalogue — the only
-  /// way in there since Sources stopped being a mode. Every other call site
-  /// leaves this off and is unaffected.
+  /// of [ZModePrefs.enabled]. Used by the Sources destination to search across
+  /// every installed source while Z Mode keeps the default Search scope on
+  /// metadata. Home source searches use [fixedSourceId] instead.
   final bool forceSources;
+
+  /// Pins a Home-launched source search to the source selected on Home.
+  /// Unlike the ordinary current-source scope, this cannot be switched to
+  /// another source or expanded to all sources from the Search screen.
+  final String? fixedSourceId;
 
   /// Overrides the content mode used to narrow which sources an all-sources
   /// search fans out over (see `SearchBloc.forceMode`), instead of the app's
@@ -127,7 +131,10 @@ class _SearchScreenState extends State<SearchScreen> {
   // source-driven (Z Mode off) or the caller forced it, Library otherwise.
   // Search no longer offers its own scope choice — it follows whatever Home
   // is browsing.
-  SearchScope get _scope => (widget.forceSources || !ZModePrefs.enabled)
+  SearchScope get _scope =>
+      (widget.fixedSourceId != null ||
+          widget.forceSources ||
+          !ZModePrefs.enabled)
       ? SearchScope.sources
       : SearchScope.library;
 
@@ -147,6 +154,7 @@ class _SearchScreenState extends State<SearchScreen> {
           repo: _repoForScope(scope),
           history: sl<SearchHistory>(),
           forceMode: widget.forceMode,
+          fixedSourceId: widget.fixedSourceId,
         );
         // SearchStarted only fetches the idle "Top picks" strip, which the
         // metadata search no longer shows — Home already carries Trending,
@@ -173,6 +181,7 @@ class _SearchScreenState extends State<SearchScreen> {
               history: sl<SearchHistory>(),
               scope: scope,
               forceMode: widget.forceMode,
+              fixedSourceId: widget.fixedSourceId,
             )
           : _SearchView(
               initialQuery: widget.initialQuery,
@@ -180,6 +189,7 @@ class _SearchScreenState extends State<SearchScreen> {
               focusSignal: widget.focusSignal,
               scope: scope,
               forceMode: widget.forceMode,
+              fixedSourceId: widget.fixedSourceId,
               initialFilters: widget.initialFilters,
             ),
     );
@@ -209,6 +219,7 @@ class _SearchView extends StatefulWidget {
     this.focusSignal,
     required this.scope,
     this.forceMode,
+    this.fixedSourceId,
     this.initialFilters,
   });
 
@@ -217,6 +228,7 @@ class _SearchView extends StatefulWidget {
   final ValueListenable<int>? focusSignal;
   final SearchScope scope;
   final ContentMode? forceMode;
+  final String? fixedSourceId;
   final MetaFilters? initialFilters;
 
   @override
@@ -262,8 +274,9 @@ class _SearchViewState extends State<_SearchView>
   TabController? _ecoTabController;
   List<SearchEcosystem> _ecoTabs = const [];
 
-  /// [_repo.loadedSources] narrowed to the active content mode, or
-  /// [_SearchView.forceMode] when set. Anime narrows too — it used to
+  /// [_repo.loadedSources] narrowed to the fixed Home source when set,
+  /// otherwise to the active content mode or [_SearchView.forceMode]. Anime
+  /// narrows too — it used to
   /// short-circuit to the unfiltered list, which meant manga (`mihon:`) and
   /// novel (`lnr:`) sources were searched and rendered while in anime mode.
   /// Keep this in step with `SearchBloc._modeSources` (same override), which
@@ -271,6 +284,12 @@ class _SearchViewState extends State<_SearchView>
   /// pending skeletons, so a mismatch shows up as skeletons for sources that
   /// are never queried.
   List<({String id, String name})> get _modeSources {
+    final fixedId = widget.fixedSourceId;
+    if (fixedId != null) {
+      return _repo.loadedSources
+          .where((source) => source.id == fixedId)
+          .toList();
+    }
     final mode = widget.forceMode ?? sl<ContentModeCubit>().state;
     return filterSourcesForMode(
       {for (final s in _repo.loadedSources) s.id: s},
@@ -287,7 +306,7 @@ class _SearchViewState extends State<_SearchView>
     // Arrived from a genre or tag chip: run that filtered browse straight
     // away, not a frame later. context.read is safe here, it subscribes to
     // nothing.
-    if (!(widget.initialFilters ?? const MetaFilters()).isEmpty) {
+    if ((widget.initialFilters ?? const MetaFilters()).isNotEmpty) {
       _applyMetaFilters();
     }
   }
@@ -875,12 +894,15 @@ class _SearchViewState extends State<_SearchView>
         final currentOnly = state.currentSourceOnly;
         return BlocBuilder<ActiveSourceCubit, String>(
           builder: (context, activeId) {
-            final value = currentOnly
+            final fixedId = widget.fixedSourceId;
+            final value = fixedId != null
+                ? _repo.displayName(fixedId)
+                : currentOnly
                 ? _repo.displayName(activeId)
                 : context.l10n.allSources;
             return GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => _openSourcePicker(context),
+              onTap: fixedId == null ? () => _openSourcePicker(context) : null,
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 // Tighter above than below: the search field already carries
@@ -912,11 +934,12 @@ class _SearchViewState extends State<_SearchView>
                       ),
                     ),
                     const SizedBox(width: 5),
-                    Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      size: 16,
-                      color: AppColors.textTertiary,
-                    ),
+                    if (fixedId == null)
+                      Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        size: 16,
+                        color: AppColors.textTertiary,
+                      ),
                   ],
                 ),
               ),
@@ -1804,18 +1827,10 @@ class _SearchViewState extends State<_SearchView>
         SizedBox(
           height: itemH,
           child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            // With a screen reader on, build every poster (not just the lazy
-            // window) so TalkBack can reach each one and the row auto-scrolls to
-            // it — otherwise swipe navigation stalls at the first few. Sighted
-            // users keep the lazy 600px window unchanged.
-            // `accessibleNavigationOf`, not `MediaQuery.of(...)`: the latter
-            // subscribes to every aspect including viewInsets, so each row
-            // rebuilt on every frame of the keyboard sliding in or out.
-            cacheExtent: MediaQuery.accessibleNavigationOf(context)
+            scrollCacheExtent: ScrollCacheExtent.pixels(MediaQuery.accessibleNavigationOf(context)
                 ? double.infinity
-                : 600,
+                : 600), scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: preview.length,
             itemBuilder: (context, i) {
               final item = preview[i];
@@ -2107,13 +2122,12 @@ class _SearchViewState extends State<_SearchView>
   // ── Flat results grid (single-source / vertical) ──────────────────────────
   Widget _resultsGrid(List<MediaItem> items, double cellW) {
     return GridView.builder(
-      padding: EdgeInsets.fromLTRB(
+      scrollCacheExtent: ScrollCacheExtent.pixels(800), padding: EdgeInsets.fromLTRB(
         16,
         6,
         16,
         MediaQuery.paddingOf(context).bottom,
       ),
-      cacheExtent: 800,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,

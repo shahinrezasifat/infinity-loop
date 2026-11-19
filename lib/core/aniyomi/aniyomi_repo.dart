@@ -46,12 +46,12 @@ class AniyomiRepoEntry {
     required String repoBaseUrl,
     String absoluteApkUrl = '',
     String absoluteIconUrl = '',
-  })  : apkUrl = absoluteApkUrl.startsWith('http')
-            ? absoluteApkUrl
-            : '${AniyomiRepo.normalizeBase(repoBaseUrl)}/apk/$apk',
-        iconUrl = absoluteIconUrl.startsWith('http')
-            ? absoluteIconUrl
-            : '${AniyomiRepo.normalizeBase(repoBaseUrl)}/icon/$pkg.png';
+  }) : apkUrl = absoluteApkUrl.startsWith('http')
+           ? absoluteApkUrl
+           : '${AniyomiRepo.normalizeBase(repoBaseUrl)}/apk/$apk',
+       iconUrl = absoluteIconUrl.startsWith('http')
+           ? absoluteIconUrl
+           : '${AniyomiRepo.normalizeBase(repoBaseUrl)}/icon/$pkg.png';
 
   final String name;
   final String pkg;
@@ -88,6 +88,10 @@ class AniyomiRepoEntry {
 
 /// Utilities for reading Aniyomi extension repository index files.
 class AniyomiRepo {
+  /// Wotaku's maintained Yuzono Aniyomi extension repository.
+  static const String wotakuRepoBaseUrl =
+      'https://raw.githubusercontent.com/yuzono/anime-repo/repo';
+
   /// Normalises a repo base URL to the DIRECTORY that holds `index.min.json`
   /// and the `apk/` folder. Users (and older saved repos) sometimes store the
   /// full index URL (`.../main/index.min.json`) instead of the directory
@@ -106,11 +110,7 @@ class AniyomiRepo {
     // here too — it's the file the fetcher now prefers, so it's the most
     // likely thing to be pasted; leaving it out meant the app asked for
     // `.../index.pb/index.pb` and the repo just 404'd.
-    for (final name in const [
-      '/index.min.json',
-      '/index.json',
-      '/index.pb',
-    ]) {
+    for (final name in const ['/index.min.json', '/index.json', '/index.pb']) {
       if (b.endsWith(name)) {
         b = b.substring(0, b.length - name.length);
         break;

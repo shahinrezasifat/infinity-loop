@@ -4,7 +4,7 @@
 // reach the row and never the gear, and source settings were unreachable on TV
 // entirely. The two have to be siblings.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/aniyomi/aniyomi_provider.dart';

@@ -1,5 +1,5 @@
 import 'package:background_downloader/background_downloader.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../core/di/injector.dart';
 import '../../core/download/download_manager.dart';

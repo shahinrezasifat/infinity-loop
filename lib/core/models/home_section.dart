@@ -11,16 +11,16 @@ class HomeSection {
   final String title;
   final List<MediaItem> items;
 
-  /// Optional paging descriptor. When non-null the "See all" grid for this row
-  /// can fetch further pages (infinite scroll) via [SourceRepository.browseMore].
+  /// Optional paging descriptor. When non-null, this row can fetch further
+  /// pages in source browsing and its "See all" grid via
+  /// [SourceRepository.browseMore].
   /// Null means the row is NOT paginable (search results, JS providers, the
-  /// synthesized fallback rows) → the "See all" grid stays a fixed list, exactly
-  /// as before this feature existed.
+  /// synthesized fallback rows) and stays a fixed list.
   final BrowseMore? more;
 }
 
-/// Describes how to fetch the NEXT page of a paginable [HomeSection], so the
-/// "See all" browse grid can append more items as the user scrolls.
+/// Describes how to fetch the NEXT page of a paginable [HomeSection], so source
+/// browsing and the "See all" grid can append items as the user scrolls.
 ///
 /// It's an opaque handle the repository knows how to route: [sourceId] selects
 /// the provider, [kind] selects the paging endpoint, and [categoryId] carries

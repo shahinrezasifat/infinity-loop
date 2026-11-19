@@ -33,6 +33,7 @@ class AppIconService {
   static const _ch = MethodChannel('zangetsu/app_icon');
   static const String boxName = 'app_prefs';
   static const String _key = 'appIconId';
+  static const String customAppIconPathKey = 'customAppIconPath';
 
   /// The icon a fresh install shows — i.e. the alias that ships
   /// `android:enabled="true"`. NOT the same thing as the option whose id
@@ -50,18 +51,8 @@ class AppIconService {
   static const List<AppIconOption> options = [
     AppIconOption(
       id: 'crescent',
-      label: 'Zangetsu',
-      asset: 'assets/icon/preview_crescent.png',
-    ),
-    AppIconOption(
-      id: 'default',
-      label: 'Katana',
-      asset: 'assets/icon/preview_default.png',
-    ),
-    AppIconOption(
-      id: 'classic',
-      label: 'Classic',
-      asset: 'assets/icon/preview_classic.png',
+      label: 'infinity',
+      asset: 'assets/icon/app_icon.png',
     ),
   ];
 
@@ -80,12 +71,44 @@ class AppIconService {
 
   Box get _box => Hive.box(boxName);
 
+  String? get customIconPath {
+    if (!Hive.isBoxOpen(boxName)) return null;
+    final v = _box.get(customAppIconPathKey);
+    if (v is String && File(v).existsSync()) return v;
+    return null;
+  }
+
+  Future<void> setCustomIconPath(String? path) async {
+    if (!Hive.isBoxOpen(boxName)) return;
+    if (path == null) {
+      await _box.delete(customAppIconPathKey);
+    } else {
+      await _box.put(customAppIconPathKey, path);
+    }
+  }
+
   /// The selected icon id. Falls back to [defaultId] for anything unknown, so a
   /// build that drops an option can't leave the UI with no selection.
   String get selectedId {
     final v = _box.get(_key);
+    if (v == 'custom' && customIconPath != null) return 'custom';
     if (v is String && options.any((o) => o.id == v)) return v;
     return defaultId;
+  }
+
+  Future<void> selectCustom() async {
+    if (!Hive.isBoxOpen(boxName)) return;
+    await _box.put(_key, 'custom');
+  }
+
+  Future<bool> pinCustomShortcut(String path) async {
+    if (!supported) return false;
+    try {
+      final res = await _ch.invokeMethod<bool>('pinCustomShortcut', {'path': path});
+      return res ?? false;
+    } catch (_) {
+      return false;
+    }
   }
 
   /// Applies [id] and remembers it.

@@ -10,7 +10,7 @@
 // and HomeLoadedEmptyView) so they're testable without pumping the full
 // _SearchFilterSheet, which needs a real SearchBloc/SourceRepository.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/mode/content_mode.dart';
 import 'package:watch_app/core/ui/source_switcher.dart';

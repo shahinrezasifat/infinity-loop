@@ -16,7 +16,7 @@
 //    specifically flagged as a risk);
 //  - the existing Zangetsu/CloudStream/Aniyomi rows and their counts are
 //    completely unaffected by the new row.
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';

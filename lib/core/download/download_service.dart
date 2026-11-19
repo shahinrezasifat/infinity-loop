@@ -81,6 +81,7 @@ void downloadServiceOnStart(ServiceInstance service) async {
   final hls = HlsDownloader(dio);
   final queue = <Map<String, dynamic>>[];
   final canceled = <String>{};
+  final paused = <String>{};
   // How many episodes download at once (from the user's setting; last job wins).
   var parallelLimit = 3;
   // Live worker count — [pump] tops it back up to [parallelLimit] as jobs arrive.
@@ -119,16 +120,37 @@ void downloadServiceOnStart(ServiceInstance service) async {
       preferredQuality: quality,
       connections: connections,
       onProgress: (p) {
-        service.invoke('progress', {'id': id, 'progress': p});
         final pct = (p * 100).floor();
         if (pct != lastPct) {
           lastPct = pct;
           setNotif('Downloading $showTitle', '$label · $pct%');
         }
       },
+      onDetailedProgress: (
+        p,
+        bytesDownloaded,
+        bytesTotal,
+        speedBps,
+        timeRemaining,
+      ) {
+        service.invoke('progress', {
+          'id': id,
+          'progress': p,
+          'bytesDownloaded': bytesDownloaded,
+          'bytesTotal': bytesTotal,
+          'speedBps': speedBps,
+          'remainingSec': timeRemaining?.inSeconds,
+        });
+      },
       canceled: () => canceled.contains(id),
+      paused: () => paused.contains(id),
     );
 
+    if (paused.remove(id) || failReason == 'paused') {
+      await _writeResult(id, status: 'paused');
+      service.invoke('paused', {'id': id});
+      return;
+    }
     if (canceled.remove(id)) {
       await _writeResult(id, status: 'canceled');
       service.invoke('failed', {'id': id, 'canceled': true});
@@ -209,9 +231,16 @@ void downloadServiceOnStart(ServiceInstance service) async {
       pump();
     }
   });
+  service.on('pause').listen((data) {
+    final id = data?['id'] as String?;
+    if (id != null) paused.add(id);
+  });
   service.on('cancel').listen((data) {
     final id = data?['id'] as String?;
-    if (id != null) canceled.add(id);
+    if (id != null) {
+      paused.remove(id);
+      canceled.add(id);
+    }
   });
   service.on('stop').listen((_) => service.stopSelf());
 }

@@ -1,7 +1,7 @@
 import 'browse_sources_screen_tv.dart';
 import '../../core/di/injector.dart';
 import '../../core/app_mode.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../core/mode/content_mode.dart';
 import '../../core/theme/app_colors.dart';

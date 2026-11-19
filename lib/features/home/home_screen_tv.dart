@@ -6,8 +6,7 @@ import 'cubit/home_rows_composer.dart';
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart' show debugPrint;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -47,7 +46,6 @@ import '../../core/ui/featured_hero.dart';
 import '../../core/ui/list_status_sheet.dart';
 import '../../core/ui/media_info_sheet.dart';
 import '../../core/ui/poster_card.dart';
-import '../auth/auth_cubit.dart';
 import '../../core/mode/content_mode.dart';
 import '../../core/mode/content_mode_cubit.dart';
 import '../../core/ui/source_switcher.dart';
@@ -547,9 +545,6 @@ class _HomeScreenTvState extends State<HomeScreenTv> {
       'loadedEmpty=$loadedEmpty noSourceForMode=$noSourceForMode',
     );
 
-    // Continue Watching — same login-gated local history the phone home uses.
-    final loggedIn = context.watch<AuthCubit>().state.isLoggedIn;
-
     if (noSourceForMode || loadedEmpty) {
       debugPrint(
         '[tv-home] build → HomeLoadedEmptyView '
@@ -587,7 +582,7 @@ class _HomeScreenTvState extends State<HomeScreenTv> {
       // host listens to [ZModePrefs.revision] itself and only toggles Offstage.
       return ValueListenableBuilder<int>(
         valueListenable: context.read<HomeCubit>().streamCatalogRevision,
-        builder: (context, _, __) {
+        builder: (context, _, _) {
           final cubit = context.read<HomeCubit>();
           final animeRows = cubit.sectionsFor(StreamKind.anime);
           final movieRows = cubit.sectionsFor(StreamKind.movie);
@@ -605,7 +600,7 @@ class _HomeScreenTvState extends State<HomeScreenTv> {
           }
           return ValueListenableBuilder<int>(
             valueListenable: ZModePrefs.revision,
-            builder: (context, _, __) {
+            builder: (context, _, _) {
               final kind = ZModePrefs.streamKind;
               final rows = cubit.sectionsFor(kind) ?? sections;
               // Filter Continue Watching to match the active stream kind.
@@ -637,8 +632,7 @@ class _HomeScreenTvState extends State<HomeScreenTv> {
       );
     }
 
-    final body =
-        (loggedIn && _historyLive && Hive.isBoxOpen(WatchHistory.boxName))
+    final body = (_historyLive && Hive.isBoxOpen(WatchHistory.boxName))
         ? ValueListenableBuilder(
             valueListenable: Hive.box<Map>(WatchHistory.boxName).listenable(),
             builder: (context, _, _) =>

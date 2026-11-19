@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:watch_app/core/hive/safe_box.dart';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 
@@ -26,7 +26,8 @@ import '../../core/tv/tv_focusable.dart';
 import '../../core/tv/tv_list_focusable.dart';
 import '../../core/tv/tv_text_field.dart';
 import '../../core/ui/states.dart';
-import 'aniyomi_repo_tab.dart' show kAniyomiReposBoxName, AniyomiAddRepoDialog, AniyomiRepoTab;
+import 'aniyomi_repo_tab.dart'
+    show kAniyomiReposBoxName, AniyomiAddRepoDialog, AniyomiRepoTab;
 import 'source_language_sheet.dart';
 import 'sources_search_field.dart';
 import '../../core/ui/app_dialog.dart';
@@ -70,6 +71,11 @@ class _AniyomiSourcesScreenState extends State<AniyomiSourcesScreen> {
       await openBoxSafely<String>(kAniyomiReposBoxName);
     }
     final box = Hive.box<String>(kAniyomiReposBoxName);
+    final existing = box.values.map(AniyomiRepo.normalizeBase).toSet();
+    final repoBase = AniyomiRepo.normalizeBase(AniyomiRepo.wotakuRepoBaseUrl);
+    if (Platform.isAndroid && existing.add(repoBase)) {
+      await box.add(repoBase);
+    }
     if (mounted) setState(() => _aniyomiRepoUrls = box.values.toList());
   }
 
@@ -86,7 +92,9 @@ class _AniyomiSourcesScreenState extends State<AniyomiSourcesScreen> {
   Future<void> _removeAniyomiRepo(String url) async {
     if (!Hive.isBoxOpen(kAniyomiReposBoxName)) return;
     final box = Hive.box<String>(kAniyomiReposBoxName);
-    final key = box.toMap().entries
+    final key = box
+        .toMap()
+        .entries
         .where((e) => e.value == url)
         .map((e) => e.key)
         .firstOrNull;

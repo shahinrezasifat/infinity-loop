@@ -6,7 +6,7 @@
 // regression coverage (actually rendered, mode-filtered) lives in
 // reading_home_test.dart's MyListScreen group.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/mode/content_mode.dart';
 import 'package:watch_app/features/home/my_list_screen.dart';

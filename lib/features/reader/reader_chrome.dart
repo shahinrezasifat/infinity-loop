@@ -4,7 +4,7 @@
 // player_screen.dart). Pure presentation: no reader state or behavior lives
 // here, callers wire every callback through unchanged.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text.dart';

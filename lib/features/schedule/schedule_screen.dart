@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -181,8 +181,9 @@ class _ScheduleBodyState extends State<ScheduleBody>
           vsync: this,
           initialIndex: ZModePrefs.streamKind == StreamKind.movie ? 1 : 0,
         )..addListener(() {
-          if (mounted)
+          if (mounted) {
             setState(() {}); // header (My List / busy) follows the tab
+          }
         });
     // Re-render every 30s so countdowns/“LIVE” stay current. Cancelled in
     // dispose, so no timer leaks in tests.

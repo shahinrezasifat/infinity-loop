@@ -18,6 +18,9 @@ abstract interface class CatalogueRepository {
 
   Future<List<HomeSection>> home({String category = 'sub', String? sourceId});
 
+  /// Fetches another page for a paginable Home section.
+  Future<List<MediaItem>> browseMore(BrowseMore more, int page);
+
   Future<List<MediaItem>> search(
     String query, {
     String category = 'sub',

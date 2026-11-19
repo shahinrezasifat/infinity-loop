@@ -1,5 +1,4 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/di/injector.dart';
@@ -65,8 +64,7 @@ class _FakeTracker extends ChangeNotifier implements Tracker {
     required this.name,
     this.connected = false,
     this.list = const [],
-    this.supportsReading = true,
-  });
+  }) : supportsReading = true;
 
   final String name;
   final bool connected;

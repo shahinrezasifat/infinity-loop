@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -2586,8 +2586,7 @@ class _TvExoPlayerScreenState extends State<TvExoPlayerScreen> {
                         valueListenable: _fillerEps,
                         builder: (context, fillers, _) {
                           return ListView.builder(
-                            primary: false,
-                            cacheExtent: 2000,
+                            scrollCacheExtent: ScrollCacheExtent.pixels(2000), primary: false,
                             itemCount: visibleCount,
                             itemBuilder: (context, localI) {
                               final i = visibleStart + localI;

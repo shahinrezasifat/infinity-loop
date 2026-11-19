@@ -61,6 +61,7 @@ class TmdbCatalogue implements VideoCatalogue {
   /// waits for the slowest row, not the sum of all of them. `Future.wait`
   /// keeps the results in the same order as [_rows] regardless of which
   /// finishes first.
+  @override
   Future<List<HomeSection>> home() async {
     final sections = await Future.wait(_rows.map(_fetchRow));
     return [for (final s in sections) ?s];
@@ -162,6 +163,7 @@ class TmdbCatalogue implements VideoCatalogue {
     return out;
   }
 
+  @override
   Future<List<MediaItem>> search(String q) async =>
       _items(await _get('/search/multi', {'query': q}), forcedTv: null);
 
@@ -233,6 +235,7 @@ class TmdbCatalogue implements VideoCatalogue {
         .toList(growable: false);
   }
 
+  @override
   Future<MediaDetail> detail(ZCanonical c) async {
     final isTv = c.kind == ZKind.tv;
     final id = c.id.split(':').last;

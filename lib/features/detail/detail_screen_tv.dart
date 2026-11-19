@@ -459,6 +459,8 @@ class _DetailScreenTvState extends State<DetailScreenTv> {
           ),
           builder: (_) => _SourcePickerSheet(
             title: ep.title.trim().isNotEmpty ? ep.title : detail.title,
+            groupByLanguage:
+                detail.type == ProviderType.movie && !detail.tmdbIsTv,
             resolve: () => sl<CatalogueRepository>().sources(
               ep.url,
               sourceId: item.sourceId,
@@ -481,6 +483,8 @@ class _DetailScreenTvState extends State<DetailScreenTv> {
         fallbacks: res.all,
         nowMs: DateTime.now().millisecondsSinceEpoch,
         malId: detail.malId ?? item.malId,
+        isMovie: (detail.type == ProviderType.movie && !detail.tmdbIsTv) ||
+            detail.episodes.length <= 1,
       ),
     );
     _snack(context.l10n.addedToDownloads);
@@ -506,6 +510,8 @@ class _DetailScreenTvState extends State<DetailScreenTv> {
         episodes: episodes,
         nowMs: DateTime.now().millisecondsSinceEpoch,
         malId: detail.malId ?? item.malId,
+        isMovie: (detail.type == ProviderType.movie && !detail.tmdbIsTv) ||
+            episodes.length <= 1,
       ),
     );
     _snack(

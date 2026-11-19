@@ -73,6 +73,8 @@ class BrowseSourceCubit extends Cubit<BrowseSourceState> {
 
   final CatalogueRepository _repo;
   final String sourceId;
+  final _cataloguePages = <({String sourceId, String kind, String? categoryId}), int>{};
+  final _endedCatalogueRows = <({String sourceId, String kind, String? categoryId})>{};
 
   /// How long a source gets before the screen gives up on it.
   ///
@@ -83,6 +85,8 @@ class BrowseSourceCubit extends Cubit<BrowseSourceState> {
   final Duration timeout;
 
   Future<void> load() async {
+    _cataloguePages.clear();
+    _endedCatalogueRows.clear();
     emit(const BrowseSourceState());
     try {
       final sections = await _repo.home(sourceId: sourceId).timeout(timeout);
@@ -179,6 +183,78 @@ class BrowseSourceCubit extends Cubit<BrowseSourceState> {
     }
   }
 
+  /// Loads the next page of every paginable catalogue row. Source browse
+  /// starts on the horizontal category rows; reaching the bottom of that
+  /// catalogue now appends the following page to each row instead of stopping
+  /// after the first main-page response.
+  Future<void> loadMoreCatalogue() async {
+    emit(
+      BrowseSourceState(
+        sections: state.sections,
+        loading: false,
+        loadingMore: true,
+        page: state.page,
+        atEnd: false,
+      ),
+    );
+    final page = state.page + 1;
+    final nextSections = <HomeSection>[];
+    for (final section in state.sections) {
+      final more = section.more;
+      if (more == null ||
+          _endedCatalogueRows.contains(_catalogueRowKey(more))) {
+        nextSections.add(section);
+        continue;
+      }
+      final key = _catalogueRowKey(more);
+      final nextPage = (_cataloguePages[key] ?? 1) + 1;
+      try {
+        final next = await _repo.browseMore(more, nextPage);
+        _cataloguePages[key] = nextPage;
+        final seen = {for (final item in section.items) item.url};
+        final fresh = [
+          for (final item in next)
+            if (seen.add(item.url)) item,
+        ];
+        if (fresh.isEmpty) {
+          _endedCatalogueRows.add(key);
+        }
+        nextSections.add(
+          HomeSection(
+            title: section.title,
+            items: [...section.items, ...fresh],
+            more: section.more,
+          ),
+        );
+      } catch (_) {
+        nextSections.add(section);
+      }
+    }
+    if (isClosed) return;
+    final hasMoreRows = nextSections.any(
+      (section) =>
+          section.more != null &&
+          !_endedCatalogueRows.contains(_catalogueRowKey(section.more!)),
+    );
+    emit(
+      BrowseSourceState(
+        sections: nextSections,
+        loading: false,
+        loadingMore: false,
+        page: page,
+        atEnd: !hasMoreRows,
+      ),
+    );
+  }
+
+  ({String sourceId, String kind, String? categoryId}) _catalogueRowKey(
+    BrowseMore more,
+  ) => (
+    sourceId: more.sourceId,
+    kind: more.kind,
+    categoryId: more.categoryId,
+  );
+
   /// Appends the next page of whatever is on screen — a filtered browse or a
   /// text search, both of which the source pages the same way.
   ///
@@ -186,7 +262,11 @@ class BrowseSourceCubit extends Cubit<BrowseSourceState> {
   /// how many pages exist, and several answer an out-of-range page with the
   /// first one again, which would otherwise scroll forever.
   Future<void> loadMore() async {
-    if (state.loadingMore || state.atEnd || !state.isSearchActive) return;
+    if (state.loadingMore || state.atEnd) return;
+    if (!state.isSearchActive) {
+      await loadMoreCatalogue();
+      return;
+    }
     final current = state.searchResults ?? const [];
     emit(_copy(loadingMore: true));
     try {

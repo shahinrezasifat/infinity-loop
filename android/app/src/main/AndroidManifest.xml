@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.spyou.watch_app">
     <!-- Network: Flutter only auto-adds INTERNET to debug builds, so it MUST be
          declared here or release builds have no network at all (streaming,
          providers, downloads). -->
@@ -32,9 +33,9 @@
          So it names the current mark and stays there — someone who picks Katana
          or Classic changes their home screen, not this. -->
     <application
-        android:label="Zangetsu"
+        android:label="infinity"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher_crescent"
+        android:icon="@mipmap/ic_launcher"
         android:banner="@drawable/tv_banner"
         android:networkSecurityConfig="@xml/network_security_config"
         android:enableOnBackInvokedCallback="false">
@@ -120,7 +121,7 @@
                  purpose: within one filter Android ORs the schemes with the
                  mime types, so merging them would also claim zangetsu://*
                  video/* and, worse, every file:// host for the tracker hosts. -->
-            <intent-filter android:label="Zangetsu">
+            <intent-filter android:label="infinity">
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
@@ -148,7 +149,8 @@
             android:exported="true"
             android:enabled="true"
             android:icon="@mipmap/ic_launcher_crescent"
-            android:label="Zangetsu">
+            android:roundIcon="@mipmap/ic_launcher_crescent"
+            android:label="infinity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -160,7 +162,8 @@
             android:exported="true"
             android:enabled="false"
             android:icon="@mipmap/ic_launcher"
-            android:label="Zangetsu">
+            android:roundIcon="@mipmap/ic_launcher"
+            android:label="infinity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -172,7 +175,8 @@
             android:exported="true"
             android:enabled="false"
             android:icon="@mipmap/ic_launcher_classic"
-            android:label="Zangetsu">
+            android:roundIcon="@mipmap/ic_launcher_classic"
+            android:label="infinity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

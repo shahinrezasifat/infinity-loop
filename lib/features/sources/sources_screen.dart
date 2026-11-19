@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 
@@ -301,7 +301,7 @@ class _AniSourceRowState extends State<_AniSourceRow> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
-          child: Text(context.l10n.updateArrowVersion('${update.availableVersion}')),
+          child: Text(context.l10n.updateArrowVersion(update.availableVersion)),
         ),
       );
     }

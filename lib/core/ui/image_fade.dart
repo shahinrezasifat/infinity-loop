@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A [frameBuilder] for [Image] that fades the picture in as it decodes, so
 /// image-provider images (Aniyomi/Cloudflare sources, the hero) match the smooth

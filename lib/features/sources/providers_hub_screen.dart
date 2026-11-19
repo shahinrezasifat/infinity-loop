@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+import 'auto_link_sources_screen.dart';
 import '../../core/ui/settings_widgets.dart';
 
 import '../../core/app_mode.dart';
@@ -18,6 +19,7 @@ import '../../core/theme/app_text.dart';
 import '../../core/tv/tv_back_button.dart';
 import '../../core/tv/tv_list_focusable.dart';
 import '../../core/ui/source_switcher.dart';
+import '../../services/auto_link_provider.dart';
 import 'aniyomi_sources_screen.dart';
 import 'bloc/sources_state.dart';
 import 'cloudstream_sources_screen.dart';
@@ -37,11 +39,10 @@ const Widget _kChevron = Icon(
 const _csBlue = Color(0xFF4D9DFF);
 const _aniGreen = Color(0xFF4DD68C);
 
-/// Providers hub — lists the three provider ecosystems (Zangetsu always,
-/// CloudStream/Aniyomi on Android only), each row pushing its dedicated
-/// ecosystem screen (Tasks 1-3). Stateful only so counts refresh when the
-/// user returns from an ecosystem screen (install/remove there is reflected
-/// here without re-entering the hub).
+/// Providers hub — lists the available source ecosystems, each row pushing its
+/// dedicated ecosystem screen. Stateful only so counts refresh when the user
+/// returns from an ecosystem screen (install/remove there is reflected here
+/// without re-entering the hub).
 ///
 /// Reached via `SourcesScreen` (Settings → Providers), on both phone and TV.
 class ProvidersHubScreen extends StatefulWidget {
@@ -101,8 +102,26 @@ class _HubPhoneView extends StatelessWidget {
     final showLnReader = sl.isRegistered<LnReaderManager>();
 
     final csGroups = sl<CloudStreamManager>().repoGroups;
-    final csInstalled = csGroups.fold<int>(0, (s, g) => s + g.sources.length);
-    final csRepos = csGroups.length;
+    final adultGroups = csGroups
+        .where((g) => isAdultCloudStreamRepoUrl(g.url))
+        .toList();
+    final adultInstalled = adultGroups.fold<int>(
+      0,
+      (s, g) => s + g.sources.length,
+    );
+    final regularCsGroups = csGroups
+        .where((g) => !isAdultCloudStreamRepoUrl(g.url))
+        .toList();
+    final csInstalled = regularCsGroups.fold<int>(
+      0,
+      (s, g) => s + g.sources.length,
+    );
+    final csTotalInstalled = csInstalled + adultInstalled;
+    final csRepos = regularCsGroups.length;
+    final adultUpdates = CloudStreamManager.adultRepoUrls.fold<int>(
+      0,
+      (sum, url) => sum + sl<CloudStreamManager>().updatesFor(url).length,
+    );
     final aniCount = sl<AniyomiManager>().all.length;
     final mihonCount = sl<MihonManager>().all.length;
     final lnrCount = showLnReader
@@ -117,14 +136,22 @@ class _HubPhoneView extends StatelessWidget {
       installed: sl<ProviderRegistry>().getAll(),
       repos: sl<ProviderReposRegistry>().getAll(),
     ).updatableKeys.length;
-    final csUpdates = showCs ? sl<CloudStreamManager>().updateCount : 0;
+    final csUpdates = showCs
+        ? sl<CloudStreamManager>().updateCount - adultUpdates
+        : 0;
     final aniUpdates = showAniyomi ? sl<AniyomiManager>().updateCount : 0;
     final mihonUpdates = showMihon ? sl<MihonManager>().updateCount : 0;
-    final totalUpdates = zUpdates + csUpdates + aniUpdates + mihonUpdates;
+    final totalUpdates =
+        zUpdates + csUpdates + adultUpdates + aniUpdates + mihonUpdates;
+
+    final autoLinkCount = sl.isRegistered<AutoLinkProvider>()
+        ? sl<AutoLinkProvider>().linkCount
+        : 0;
 
     final total =
         zangetsuCount +
-        (showCs ? csInstalled : 0) +
+        autoLinkCount +
+        (showCs ? csTotalInstalled : 0) +
         (showAniyomi ? aniCount : 0) +
         (showMihon ? mihonCount : 0) +
         (showLnReader ? lnrCount : 0);
@@ -135,12 +162,20 @@ class _HubPhoneView extends StatelessWidget {
     final activeName = activeId.isEmpty
         ? context.l10n.subtitleOutlineNone
         : _activeSourceLabel(activeId);
+    final activeIsAutoLink = activeId == AutoLinkProvider.id;
     final activeIsCs = activeId.startsWith('cs:');
+    final activeIsAdult = adultGroups.any(
+      (g) => g.sources.any((source) => source.sourceId == activeId),
+    );
     final activeIsAni = activeId.startsWith('ani:');
     final activeIsMihon = activeId.startsWith('mihon:');
     final activeIsLnReader = activeId.startsWith('lnr:');
     final activeIsZangetsu =
-        activeId.isNotEmpty && !activeIsCs && !activeIsAni && !activeIsMihon;
+        activeId.isNotEmpty &&
+        !activeIsCs &&
+        !activeIsAni &&
+        !activeIsMihon &&
+        !activeIsAutoLink;
 
     // Manga/novel sources are also Zangetsu JS providers under the hood, but
     // get their own hub entry (Task E3) so reading sources read as visibly
@@ -164,15 +199,26 @@ class _HubPhoneView extends StatelessWidget {
           _HubHeader(
             total: total,
             // +1 for the always-shown Manga & Novel row — not a separate
-            // ecosystem count (ecoCount itself is untouched, still just
-            // Zangetsu/CS/Aniyomi/Mihon), just the header copy matching
-            // what's on screen.
-            ecoCount: ecoCount + 1,
+            // ecosystem count (ecoCount itself counts the core provider rows),
+            // just the header copy matching what's on screen.
+            ecoCount: ecoCount + 1 + (showCs ? 1 : 0),
             activeName: activeName,
             totalUpdates: totalUpdates,
           ),
           const SizedBox(height: 24),
           const _SectionLabel('STREAMING'),
+          const SizedBox(height: 12),
+          const AutoRepoButton(),
+          const SizedBox(height: 12),
+          _EcoRow(
+            icon: Icons.link_rounded,
+            title: 'Link Repo',
+            desc: 'Custom streams & website links',
+            info: '$autoLinkCount source${autoLinkCount == 1 ? '' : 's'}',
+            active: activeIsAutoLink,
+            updateCount: 0,
+            onTap: () => open(const AutoLinkSourcesScreen()),
+          ),
           const SizedBox(height: 12),
           _EcoRow(
             icon: Icons.dns_rounded,
@@ -196,9 +242,21 @@ class _HubPhoneView extends StatelessWidget {
               desc: 'CloudStream extensions',
               info:
                   '$csInstalled sources · $csRepos repo${csRepos == 1 ? '' : 's'}',
-              active: activeIsCs,
+              active: activeIsCs && !activeIsAdult,
               updateCount: csUpdates,
               onTap: () => open(const CloudStreamSourcesScreen()),
+            ),
+            const SizedBox(height: 12),
+            _EcoRow(
+              icon: Icons.visibility_off_outlined,
+              title: 'Adult',
+              desc: 'Adult CloudStream extensions',
+              info:
+                  '$adultInstalled sources · ${adultGroups.length} repo${adultGroups.length == 1 ? '' : 's'}',
+              active: activeIsAdult,
+              updateCount: adultUpdates,
+              onTap: () =>
+                  open(const CloudStreamSourcesScreen(adultOnly: true)),
             ),
           ],
           if (showAniyomi) ...[
@@ -273,6 +331,7 @@ class _SectionLabel extends StatelessWidget {
 /// Resolves an active-source id to its display name, mirroring the Settings
 /// screen's `_activeLabel` (cs:/ani: prefixes route to their managers).
 String _activeSourceLabel(String id) {
+  if (id == AutoLinkProvider.id) return 'Link Repo';
   if (id.startsWith('cs:')) {
     return sl<CloudStreamManager>().get(id)?.displayName ?? id;
   }
@@ -314,14 +373,14 @@ class _HubHeader extends StatelessWidget {
         Container(
           width: 54,
           height: 54,
-          padding: const EdgeInsets.all(6),
+          padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
             color: AppColors.surface2,
             borderRadius: BorderRadius.circular(15),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.asset('assets/icon/app_icon.png', fit: BoxFit.cover),
+            child: Image.asset('assets/icon/app_icon.png', fit: BoxFit.contain),
           ),
         ),
         const SizedBox(width: 14),
@@ -496,7 +555,9 @@ class _EcoRow extends StatelessWidget {
 }
 
 String _csSubtitle() {
-  final groups = sl<CloudStreamManager>().repoGroups;
+  final groups = sl<CloudStreamManager>().repoGroups.where(
+    (g) => !isAdultCloudStreamRepoUrl(g.url),
+  );
   final installed = groups.fold<int>(0, (sum, g) => sum + g.sources.length);
   return '$installed installed · ${groups.length} repo${groups.length == 1 ? '' : 's'}';
 }
@@ -542,6 +603,13 @@ class _HubTvViewState extends State<_HubTvView> {
     final zangetsuCount = sl<ProviderRegistry>().getAll().length;
     final showCs = Platform.isAndroid;
     final showAniyomi = Platform.isAndroid;
+    final adultGroups = sl<CloudStreamManager>().repoGroups
+        .where((g) => isAdultCloudStreamRepoUrl(g.url))
+        .toList();
+    final adultInstalled = adultGroups.fold<int>(
+      0,
+      (s, g) => s + g.sources.length,
+    );
     var autofocusAssigned = false;
 
     Widget row({
@@ -636,6 +704,20 @@ class _HubTvViewState extends State<_HubTvView> {
                   padding: const EdgeInsets.fromLTRB(40, 0, 40, 48),
                   children: [
                     row(
+                      icon: Icons.link_rounded,
+                      title: 'Link Repo',
+                      subtitle: 'Your saved streams and websites',
+                      tint: AppColors.accent,
+                      onTap: () => _open(const AutoLinkSourcesScreen()),
+                    ),
+                    row(
+                      icon: Icons.add_link_rounded,
+                      title: 'Add to Link Repo',
+                      subtitle: 'Add a stream or website link',
+                      tint: AppColors.accent,
+                      onTap: () => showAutoRepoDialog(context),
+                    ),
+                    row(
                       icon: Icons.dns_rounded,
                       title: context.l10n.zangetsuProviders,
                       subtitle: '$zangetsuCount installed',
@@ -649,6 +731,17 @@ class _HubTvViewState extends State<_HubTvView> {
                         subtitle: _csSubtitle(),
                         tint: _csBlue,
                         onTap: () => _open(const CloudStreamSourcesScreen()),
+                      ),
+                    if (showCs)
+                      row(
+                        icon: Icons.visibility_off_outlined,
+                        title: 'Adult',
+                        subtitle:
+                            '$adultInstalled installed · ${adultGroups.length} repo${adultGroups.length == 1 ? '' : 's'}',
+                        tint: _csBlue,
+                        onTap: () => _open(
+                          const CloudStreamSourcesScreen(adultOnly: true),
+                        ),
                       ),
                     if (showAniyomi)
                       row(

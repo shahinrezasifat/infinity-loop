@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -561,30 +561,55 @@ class _BrowseSourceViewState extends State<_BrowseSourceView> {
                       : () => context.read<BrowseSourceCubit>().load(),
                 );
               }
-              return ListView.builder(
-                padding: const EdgeInsets.only(bottom: 24),
-                itemCount: state.sections.length,
-                itemBuilder: (_, i) {
-                  final section = state.sections[i];
-                  final items = section.items;
-                  return ContentRow(
-                    title: section.title,
-                    itemWidth: 116,
-                    itemHeight: 216,
-                    itemCount: items.length,
-                    onSeeAll: () => _openSeeAll(context, section),
-                    itemBuilder: (c, j) => PosterCard(
-                      title: items[j].title,
-                      imageUrl: items[j].cover,
-                      headers: items[j].coverHeaders,
-                      cellWidth: 116,
-                      qualityBadge: items[j].quality,
-                      scoreBadge: items[j].score,
-                      dubBadge: items[j].dubBadge,
-                      onTap: () => _openDetail(context, items[j]),
-                    ),
-                  );
+              final cubit = context.read<BrowseSourceCubit>();
+              return NotificationListener<ScrollNotification>(
+                onNotification: (n) {
+                  if (n.metrics.axis == Axis.vertical &&
+                      n.metrics.pixels >=
+                      n.metrics.maxScrollExtent -
+                          n.metrics.viewportDimension) {
+                    cubit.loadMore();
+                  }
+                  return false;
                 },
+                child: ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  itemCount:
+                      state.sections.length + (state.loadingMore ? 1 : 0),
+                  itemBuilder: (_, i) {
+                    if (i == state.sections.length) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: Center(
+                          child: SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        ),
+                      );
+                    }
+                    final section = state.sections[i];
+                    final items = section.items;
+                    return ContentRow(
+                      title: section.title,
+                      itemWidth: 116,
+                      itemHeight: 216,
+                      itemCount: items.length,
+                      onSeeAll: () => _openSeeAll(context, section),
+                      itemBuilder: (c, j) => PosterCard(
+                        title: items[j].title,
+                        imageUrl: items[j].cover,
+                        headers: items[j].coverHeaders,
+                        cellWidth: 116,
+                        qualityBadge: items[j].quality,
+                        scoreBadge: items[j].score,
+                        dubBadge: items[j].dubBadge,
+                        onTap: () => _openDetail(context, items[j]),
+                      ),
+                    );
+                  },
+                ),
               );
             },
           ),

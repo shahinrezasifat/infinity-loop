@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:watch_app/core/hive/safe_box.dart';
 import 'package:watch_app/core/hive/source_icon_store.dart';
@@ -62,6 +63,8 @@ import '../zmode/zmode_ids.dart';
 import '../zmode/zmode_prefs.dart';
 import '../theme/app_font_prefs.dart';
 import '../theme/theme_controller.dart';
+import '../../services/auto_link_provider.dart';
+import '../../services/auto_repo_service.dart';
 import '../metadata/episode_metadata_service.dart';
 import '../metadata/metadata_enrichment.dart';
 import '../metadata/people_service.dart';
@@ -123,6 +126,93 @@ import '../supabase/supabase_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show OtpType;
 
 final GetIt sl = GetIt.instance;
+
+Future<void> _seedExistingProviderEcosystems(
+  ProviderReposRegistry repos,
+) async {
+  try {
+    final raw = await rootBundle.loadString('assets/preloaded_repos.json');
+    final entries = (jsonDecode(raw) as List).cast<Map<String, dynamic>>();
+
+    if (Platform.isAndroid && sl.isRegistered<CloudStreamManager>()) {
+      try {
+        await sl<CloudStreamManager>().ensureAdultRepoPreadded();
+      } catch (e) {
+        debugPrint('[boot] adult CloudStream repository seed failed: $e');
+      }
+
+      // First-run source: install and select AllMovieLand from Phisher Repo.
+      // This keeps Home source-backed instead of mixing in metadata/tracker rows.
+      const allMovieRepo =
+          'https://raw.githubusercontent.com/phisher98/cloudstream-extensions-phisher/refs/heads/builds/repo.json';
+      try {
+        final manager = sl<CloudStreamManager>();
+        if (!manager.hasRepo(allMovieRepo)) {
+          await manager.addRepo(allMovieRepo);
+        }
+        final group = manager.repoGroups
+            .where((g) => g.url == allMovieRepo)
+            .firstOrNull;
+        final plugin = group?.catalog
+            .where((p) => p.internalName == 'AllMovieLandProvider')
+            .firstOrNull;
+        if (plugin != null) {
+          var provider = group?.sources
+              .where(
+                (p) =>
+                    p.sourcePlugin?.startsWith('AllMovieLandProvider@') ??
+                    false,
+              )
+              .firstOrNull;
+          if (provider == null) {
+            await manager.installPlugin(plugin, repoUrl: allMovieRepo);
+            provider = manager.repoGroups
+                .where((g) => g.url == allMovieRepo)
+                .expand((g) => g.sources)
+                .where(
+                  (p) =>
+                      p.sourcePlugin?.startsWith('AllMovieLandProvider@') ??
+                      false,
+                )
+                .firstOrNull;
+          }
+          if (provider != null) {
+            await manager.setEnabled(provider.sourceId, true);
+            await manager.setDefaultRepo(allMovieRepo);
+            await manager.setHomeSourceOverride(provider.sourceId);
+            if (sl.isRegistered<ActiveSourceCubit>()) {
+              sl<ActiveSourceCubit>().setSource(provider.sourceId);
+            }
+          }
+        }
+      } catch (e) {
+        debugPrint('[boot] AllMovieLand preinstall failed: $e');
+      }
+    }
+
+    for (final entry in entries) {
+      final ecosystem = entry['ecosystem'] as String?;
+      final url = entry['manifestUrl'] as String?;
+      if (url == null || url.isEmpty) continue;
+
+      if (ecosystem == 'zangetsuJs' && !repos.has(url)) {
+        await repos.fetchAndCache(url, customName: entry['name'] as String?);
+        continue;
+      }
+
+      if (ecosystem == 'cloudstream' && Platform.isAndroid) {
+        if (!sl.isRegistered<CloudStreamManager>()) continue;
+        try {
+          await sl<CloudStreamManager>().addRepo(url);
+        } catch (e) {
+          debugPrint('[boot] CloudStream repository seed failed: $url · $e');
+        }
+      }
+    }
+  } catch (e) {
+    debugPrint('[boot] preloaded repository seeding failed: $e');
+  }
+}
 
 /// TV-only deferred boot work. Must not run during [initDependencies] on
 /// Apple TV (splash wedge). Android TV skips [loadAll] entirely — metadata
@@ -190,7 +280,6 @@ const MethodChannel _novelHttp = MethodChannel('zangetsu/novel_http');
 /// repo-installed providers), and the bundled extractors.
 const _deviceChannel = MethodChannel('com.spyou.watch_app/device');
 
-
 /// Simkl requires these on every request — the API and the static data files
 /// alike. Without them our traffic doesn't appear in their debug log at all,
 /// so when something breaks on their side they have nothing to look at. The
@@ -250,18 +339,18 @@ Future<void> initDependencies() async {
   sl.registerSingleton<MigrationBridge>(
     MigrationBridge(
       invoke: (name, body) async {
-        final r = await sl<SupabaseService>()
-            .client
-            .functions
-            .invoke(name, body: body);
+        final r = await sl<SupabaseService>().client.functions.invoke(
+          name,
+          body: body,
+        );
         return (r.data as Map).cast<String, dynamic>();
       },
       signInPassword: (email, pw) async {
         try {
-          await sl<SupabaseService>()
-              .client
-              .auth
-              .signInWithPassword(email: email, password: pw);
+          await sl<SupabaseService>().client.auth.signInWithPassword(
+            email: email,
+            password: pw,
+          );
           return sl<SupabaseService>().client.auth.currentUser != null;
         } catch (_) {
           return false;
@@ -270,10 +359,10 @@ Future<void> initDependencies() async {
       verifyOtp: (email, token) async {
         try {
           await sl<SupabaseService>().client.auth.verifyOTP(
-                email: email,
-                token: token,
-                type: OtpType.email,
-              );
+            email: email,
+            token: token,
+            type: OtpType.email,
+          );
           return sl<SupabaseService>().client.auth.currentUser != null;
         } catch (_) {
           return false;
@@ -294,7 +383,9 @@ Future<void> initDependencies() async {
   sl.registerSingleton<ReadHistory>(
     ReadHistory(sl<SupabaseService>(), currentUserId),
   );
-  sl.registerSingleton<WatchRoomService>(WatchRoomService(sl<SupabaseService>()));
+  sl.registerSingleton<WatchRoomService>(
+    WatchRoomService(sl<SupabaseService>()),
+  );
   sl.registerSingleton<WatchTogetherController>(
     WatchTogetherController(sl<WatchRoomService>()),
   );
@@ -446,7 +537,8 @@ Future<void> initDependencies() async {
   // Pass the AniList token (lazily — AniListService is registered below) so the
   // enrichment's searches authenticate; AniList now 403s anonymous API calls.
   sl.registerSingleton<MetadataEnrichment>(
-      MetadataEnrichment(dio, () => sl<AniListService>().store.token));
+    MetadataEnrichment(dio, () => sl<AniListService>().store.token),
+  );
 
   // Per-episode descriptions for the episode list (AniZip for anime, TMDB
   // season for movie-source TV series). Best-effort; shares the TMDB-keyed dio.
@@ -496,24 +588,19 @@ Future<void> initDependencies() async {
   await TrackerBindingStore.init();
   sl.registerSingleton<TrackerBindingStore>(TrackerBindingStore());
   // TV relay: packs/unpacks tracker sessions to move a login from phone to TV.
-  sl.registerLazySingleton<TrackerRelay>(() => TrackerRelay({
-        'anilist': sl<AniListService>(),
-        'mal': sl<MalService>(),
-        'simkl': sl<SimklService>(),
-        'mangabaka': sl<MangaBakaService>(),
-      }));
+  sl.registerLazySingleton<TrackerRelay>(
+    () => TrackerRelay({
+      'anilist': sl<AniListService>(),
+      'mal': sl<MalService>(),
+      'simkl': sl<SimklService>(),
+      'mangabaka': sl<MangaBakaService>(),
+    }),
+  );
 
   // Share deep links (zangetsu://open?…): opens a shared title's Detail, or
   // reports an uninstalled source. Eager so its AppLinks listener is live from
   // boot; navigation is deferred until the root Navigator exists.
   sl.registerSingleton<OpenLinkService>(OpenLinkService());
-
-  // AuthCubit is global so any widget can gate on login. SupabaseService,
-  // AppwriteService (mintJwt for migration) and MigrationBridge are already
-  // registered above.
-  sl.registerSingleton<AuthCubit>(
-    AuthCubit(sl<SupabaseService>(), sl<AppwriteService>(), sl<MigrationBridge>()),
-  );
 
   final manager = ProviderManager(dio: dio);
   sl.registerSingleton<ProviderManager>(manager);
@@ -600,9 +687,7 @@ Future<void> initDependencies() async {
             {
               'url': url,
               'method': method,
-              'headers': mergedHeaders.map(
-                (k, v) => MapEntry(k, v.toString()),
-              ),
+              'headers': mergedHeaders.map((k, v) => MapEntry(k, v.toString())),
               'body': init['body'] is String
                   ? init['body'] as String
                   : init['body']?.toString(),
@@ -651,9 +736,7 @@ Future<void> initDependencies() async {
         url: res.realUri.toString(),
         // Dio hands back a list per header (a name may repeat); join them the
         // way HTTP does rather than keeping only the first.
-        headers: res.headers.map.map(
-          (k, v) => MapEntry(k, v.join(', ')),
-        ),
+        headers: res.headers.map.map((k, v) => MapEntry(k, v.join(', '))),
       );
     },
   );
@@ -683,15 +766,21 @@ Future<void> initDependencies() async {
   sl.registerSingleton<ProviderReposRegistry>(repos);
   sl.registerSingleton<ProviderSettingsRepository>(settings);
   sl.registerSingleton<ProviderRegistry>(registry);
-  sl.registerSingleton<BackupService>(BackupService(
-    SourcesBackup(sl<ProviderReposRegistry>(), sl<ProviderRegistry>(),
+  unawaited(_seedExistingProviderEcosystems(repos));
+  sl.registerSingleton<BackupService>(
+    BackupService(
+      SourcesBackup(
+        sl<ProviderReposRegistry>(),
+        sl<ProviderRegistry>(),
         sl.isRegistered<CloudStreamManager>() ? sl<CloudStreamManager>() : null,
         aniyomi: AniyomiExtensionService(),
         mihon: MihonExtensionService(),
-        lnreader: lnrService),
-    LibraryBackup(),
-    SettingsBackup(),
-  ));
+        lnreader: lnrService,
+      ),
+      LibraryBackup(),
+      SettingsBackup(),
+    ),
+  );
 
   // Load bundled extractor BEFORE the providers so getVideoSources can resolve.
   // Extractors are NOT providers — they stay loaded directly on the manager.
@@ -727,8 +816,9 @@ Future<void> initDependencies() async {
   void onProviderLoadFinished() {
     void apply() {
       if (sl.isRegistered<ActiveSourceCubit>()) {
-        sl<ActiveSourceCubit>()
-            .reapplySaved((id) => manager.installedIds.contains(id));
+        sl<ActiveSourceCubit>().reapplySaved(
+          (id) => manager.installedIds.contains(id),
+        );
       }
       // Metadata home on TV loads from AniList/TMDB — no JS providers needed.
       // Reloading here after a slow background loadAll only blocks toggles.
@@ -739,6 +829,7 @@ Future<void> initDependencies() async {
         sl<HomeCubit>().load();
       }
     }
+
     apply();
   }
 
@@ -750,8 +841,10 @@ Future<void> initDependencies() async {
     await providerLoad.timeout(
       const Duration(seconds: 8),
       onTimeout: () {
-        debugPrint('[boot] provider load exceeded 8s — booting now; '
-            'remaining providers finish in the background');
+        debugPrint(
+          '[boot] provider load exceeded 8s — booting now; '
+          'remaining providers finish in the background',
+        );
         return const <String>[];
       },
     );
@@ -919,6 +1012,9 @@ Future<void> initDependencies() async {
   // Hive box and restores it on launch, validated against the providers that
   // actually loaded (so a removed/disabled source falls back to allanime).
   await ActiveSourceCubit.init();
+  final autoLinkProvider = AutoLinkProvider(AutoRepoService(dio: sl<Dio>()));
+  await autoLinkProvider.initialize();
+  sl.registerSingleton<AutoLinkProvider>(autoLinkProvider);
   sl.registerSingleton<ActiveSourceCubit>(
     ActiveSourceCubit(
       box: Hive.box(ActiveSourceCubit.boxName),
@@ -932,6 +1028,7 @@ Future<void> initDependencies() async {
         ...manager.installedIds,
         ...csManager.all.map((p) => p.sourceId),
         ...lnrManager.installedSources.map((s) => s.id),
+        if (autoLinkProvider.enabled) AutoLinkProvider.id,
       },
     ),
   );
@@ -951,6 +1048,7 @@ Future<void> initDependencies() async {
       aniManager: aniyomiManager,
       mihonManager: mihonManager,
       lnrManager: lnrManager,
+      autoLinkProvider: autoLinkProvider,
       activeSource: sl<ActiveSourceCubit>(),
       prefs: sl<PlaybackPrefs>(),
       // The language sets the sources screens already filter their lists by.
@@ -1032,17 +1130,16 @@ Future<void> initDependencies() async {
   // started only when a cast hand-off actually happens.
   sl.registerLazySingleton<CastProxyServer>(() => CastProxyServer());
 
-  // Home data cubit as a singleton so the splash can warm it (preload the
-  // rows for the active source) while the intro animation plays — Home then
-  // appears already populated instead of flashing skeletons.
+  // Home data cubit as a singleton so boot can warm the active source rows.
   sl.registerLazySingleton<HomeCubit>(
     () => HomeCubit(sl<CatalogueRepository>()),
   );
 
   sl<MetadataRepository>().onStreamHomeCached = (kind, rows) {
     if (!sl.isRegistered<HomeCubit>()) return;
-    final streamKind =
-        kind == ZKind.movie ? StreamKind.movie : StreamKind.anime;
+    final streamKind = kind == ZKind.movie
+        ? StreamKind.movie
+        : StreamKind.anime;
     sl<HomeCubit>().rememberStreamKindRows(streamKind, rows);
   };
 
@@ -1059,8 +1156,9 @@ Future<void> initDependencies() async {
       // when the saved id is now valid — it never resets an already-restored
       // source — so this composes cleanly with the Aniyomi step above.
       if (sl.isRegistered<ActiveSourceCubit>()) {
-        final changed = sl<ActiveSourceCubit>()
-            .reapplySaved((id) => csManager.get(id) != null);
+        final changed = sl<ActiveSourceCubit>().reapplySaved(
+          (id) => csManager.get(id) != null,
+        );
         if (changed && sl.isRegistered<HomeCubit>()) {
           sl<HomeCubit>().load(); // reload Home for the restored source
         }

@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' show ImageFilter;
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart' show SystemNavigator;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,7 +20,6 @@ import '../../l10n/l10n.dart';
 import '../../core/ui/nav_prefs.dart';
 import '../downloads/downloads_screen.dart';
 import '../history/history_screen.dart';
-import '../auth/auth_cubit.dart';
 import '../home/cubit/home_cubit.dart';
 import '../home/home_screen.dart';
 import '../home/my_list_screen.dart';
@@ -663,8 +661,22 @@ class _DockItem extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: _FloatingDock._tapMin),
             child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
+                constraints: const BoxConstraints(minHeight: 44),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                decoration: BoxDecoration(
+                  color: selected
+                      ? AppColors.accent.withValues(alpha: 0.12)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: selected
+                        ? AppColors.accent.withValues(alpha: 0.16)
+                        : Colors.transparent,
+                  ),
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -757,8 +769,22 @@ class _ProfileDockItem extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: _FloatingDock._tapMin),
             child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
+                constraints: const BoxConstraints(minHeight: 44),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                decoration: BoxDecoration(
+                  color: selected
+                      ? AppColors.accent.withValues(alpha: 0.12)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: selected
+                        ? AppColors.accent.withValues(alpha: 0.16)
+                        : Colors.transparent,
+                  ),
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -767,66 +793,23 @@ class _ProfileDockItem extends StatelessWidget {
                       child: Center(
                         child: _DockPop(
                           selected: selected,
-                          child: BlocBuilder<AuthCubit, AuthState>(
-                            builder: (context, auth) {
-                              final ring = selected
+                          child: Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: selected
                                   ? Border.all(
                                       color: AppColors.accent,
                                       width: 1.8,
                                     )
-                                  : null;
-                              if (auth.isLoggedIn) {
-                                final initial = auth.displayName.isNotEmpty
-                                    ? auth.displayName[0].toUpperCase()
-                                    : '?';
-                                return Container(
-                                  width: 24,
-                                  height: 24,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: ring,
-                                    color: AppColors.surface2,
-                                    image: auth.avatarUrl != null
-                                        ? DecorationImage(
-                                            image: CachedNetworkImageProvider(
-                                              auth.avatarUrl!,
-                                            ),
-                                            fit: BoxFit.cover,
-                                          )
-                                        : null,
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: auth.avatarUrl == null
-                                      ? Text(
-                                          initial,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w800,
-                                            color: selected
-                                                ? AppColors.accent
-                                                : AppColors.textPrimary,
-                                          ),
-                                        )
-                                      : null,
-                                );
-                              }
-                              // Signed out — quiet person glyph in a hairline circle.
-                              return Container(
-                                width: 24,
-                                height: 24,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border:
-                                      ring ??
-                                      Border.all(color: color, width: 1.4),
-                                ),
-                                child: Icon(
-                                  Icons.person_outline,
-                                  size: 15,
-                                  color: color,
-                                ),
-                              );
-                            },
+                                  : Border.all(color: color, width: 1.4),
+                            ),
+                            child: Icon(
+                              Icons.person_outline,
+                              size: 15,
+                              color: color,
+                            ),
                           ),
                         ),
                       ),

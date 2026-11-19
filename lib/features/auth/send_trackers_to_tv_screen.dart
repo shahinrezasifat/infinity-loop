@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../core/anilist/anilist_service.dart';
 import '../../core/di/injector.dart';

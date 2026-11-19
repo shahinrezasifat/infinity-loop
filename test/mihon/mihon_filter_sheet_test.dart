@@ -3,7 +3,7 @@
 // the sheet renders (select, text, checkbox, tristate, sort, group) plus
 // Apply/Cancel and the selection-JSON round trip via MihonFilters.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/mihon/mihon_filters.dart';
 import 'package:watch_app/features/mihon/mihon_filter_sheet.dart';

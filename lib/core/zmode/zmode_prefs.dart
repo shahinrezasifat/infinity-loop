@@ -24,29 +24,18 @@ class ZModePrefs {
 
   static Future<void> init() async {
     if (!Hive.isBoxOpen(boxName)) await openBoxSafely(boxName);
-    // Anyone who turned the mode OFF while the toggle existed still has that
-    // false on disk, and the default only applies to an absent key — so
-    // without this they would be stranded in the source-only app with no
-    // control left to bring them back. Clearing the key once puts them on the
-    // same footing as a fresh install.
-    final box = _boxOrNull;
-    if (box != null && box.get(_kEnabled) == false) {
-      await box.delete(_kEnabled);
-      revision.value++;
-    }
+    // Source-only is the default. Keep an explicit stored preference intact
+    // so this setting is stable across restarts and upgrades.
+    revision.value++;
   }
 
   static Box? get _boxOrNull =>
       Hive.isBoxOpen(boxName) ? Hive.box(boxName) : null;
 
-  /// On for everyone. The metadata catalogue is how the app browses now, and
-  /// the Settings toggle that used to turn it off is gone.
-  ///
-  /// The stored key is still read by [setEnabled] so tests can exercise the
-  /// source-only path, which still exists underneath — but nothing in the UI
-  /// can reach it, so a fresh install and an upgrade both land here.
+  /// Source-only Home is the default. Z Mode is disabled unless explicitly
+  /// enabled by code or a compatible upgrade preference.
   static bool get enabled =>
-      (_boxOrNull?.get(_kEnabled, defaultValue: true) as bool?) ?? true;
+      (_boxOrNull?.get(_kEnabled, defaultValue: false) as bool?) ?? false;
 
   static Future<void> setEnabled(bool value) async {
     if (value == enabled) return;

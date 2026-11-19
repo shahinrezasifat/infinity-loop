@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:watch_app/core/hive/safe_box.dart';
 import 'package:hive/hive.dart';
 
@@ -19,24 +19,21 @@ class ThemeController {
   static const String _amoledKey = 'amoled';
   static const String _materialYouKey = 'materialYou';
 
-  /// Near-black palette used when AMOLED is on (bg + card surfaces).
-  static const Color amoledBg = Color(0xFF000000);
-  static const Color amoledSurface = Color(0xFF0D0D11);
-  static const Color amoledSurface2 = Color(0xFF17171C);
+  /// Strict dark-blue palette used when AMOLED is on.
+  static const Color amoledBg = Color(0xFF070D19);
+  static const Color amoledSurface = Color(0xFF0F1A30);
+  static const Color amoledSurface2 = Color(0xFF162442);
 
   /// Bumped whenever the accent changes, so listeners (root app, shell) rebuild.
   static final ValueNotifier<int> revision = ValueNotifier<int>(0);
 
   /// Selectable accents. First entry is the default coral.
   static const List<(String, Color)> accentPresets = [
-    ('Coral', AppColors.defaultAccent),
-    ('Blue', Color(0xFF4D8DFF)),
-    ('Violet', Color(0xFF9B6DFF)),
-    ('Emerald', Color(0xFF32D583)),
-    ('Amber', Color(0xFFFFB020)),
-    ('Rose', Color(0xFFFF5FA2)),
-    ('Cyan', Color(0xFF3DD6D0)),
-    ('Crimson', Color(0xFFF04438)),
+    ('Royal Blue', AppColors.defaultAccent),
+    ('Sky Blue', Color(0xFF38BDF8)),
+    ('Deep Blue', Color(0xFF1D4ED8)),
+    ('Indigo', Color(0xFF4F46E5)),
+    ('Slate Blue', Color(0xFF64748B)),
   ];
 
   static Box get _box => Hive.box(boxName);

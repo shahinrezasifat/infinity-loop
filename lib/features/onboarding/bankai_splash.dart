@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../core/brand/zangetsu_mark.dart';
 
@@ -41,8 +41,8 @@ class BankaiPainter extends CustomPainter {
 
   /// The energy colour. Deliberately the artwork's own red rather than a
   /// dimmer "ember" — the brighter burn is what reads at splash size.
-  static const Color _energy = Color(0xFFF80C19);
-  static const Color _slashRed = Color(0xFFF80C19);
+  static const Color _energy = Color(0xFF2563EB);
+  static const Color _slashRed = Color(0xFF38BDF8);
 
   @override
   void paint(Canvas canvas, Size size) {

@@ -1,8 +1,7 @@
 // lib/features/watch_together/ui/watch_party_lobby_screen.dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../core/di/injector.dart';
-import '../../auth/auth_cubit.dart';
 import '../model/room_state.dart';
 import '../watch_together_controller.dart';
 import 'host_choosing_screen.dart';
@@ -29,23 +28,10 @@ class _WatchPartyLobbyScreenState extends State<WatchPartyLobbyScreen> {
 
   // ── helpers ──────────────────────────────────────────────────────────────
 
-  bool _isLoggedIn() => sl<AuthCubit>().state.user != null;
-
-  void _showNotLoggedIn() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.l10n.signInToUseWatchParty)),
-    );
-  }
-
   // ── Create ────────────────────────────────────────────────────────────────
 
   Future<void> _onCreate() async {
     if (_busy) return;
-    if (!_isLoggedIn()) {
-      _showNotLoggedIn();
-      return;
-    }
-
     final controller = sl<WatchTogetherController>();
     final messenger = ScaffoldMessenger.of(context);
     if (controller.room != null) {
@@ -58,29 +44,31 @@ class _WatchPartyLobbyScreenState extends State<WatchPartyLobbyScreen> {
     final nav = Navigator.of(context);
     setState(() => _busy = true);
     try {
-      await controller.host(const RoomState(
-        code: '',
-        hostId: '',
-        hostName: '',
-        hostAvatar: '',
-        sourceId: '',
-        sourceLabel: '',
-        showUrl: '',
-        showTitle: '',
-        cover: '',
-        episodeId: '',
-        episodeNumber: null,
-        episodeUrl: '',
-        category: 'sub',
-        malId: null,
-        tmdbId: null,
-        positionMs: 0,
-        playing: false,
-        rate: 1.0,
-        updatedAt: 0,
-        status: 'active',
-        mode: 'lobby',
-      ));
+      await controller.host(
+        const RoomState(
+          code: '',
+          hostId: '',
+          hostName: '',
+          hostAvatar: '',
+          sourceId: '',
+          sourceLabel: '',
+          showUrl: '',
+          showTitle: '',
+          cover: '',
+          episodeId: '',
+          episodeNumber: null,
+          episodeUrl: '',
+          category: 'sub',
+          malId: null,
+          tmdbId: null,
+          positionMs: 0,
+          playing: false,
+          rate: 1.0,
+          updatedAt: 0,
+          status: 'active',
+          mode: 'lobby',
+        ),
+      );
     } catch (e) {
       // host() can throw inside _enter() AFTER the room was created — in that
       // case room != null and we still proceed to pop below. Only surface an
@@ -102,10 +90,6 @@ class _WatchPartyLobbyScreenState extends State<WatchPartyLobbyScreen> {
 
   Future<void> _onJoin() async {
     if (_busy) return;
-    if (!_isLoggedIn()) {
-      _showNotLoggedIn();
-      return;
-    }
 
     final code = await _askCode(context);
     if (code == null || code.trim().isEmpty) return;
@@ -138,7 +122,8 @@ class _WatchPartyLobbyScreenState extends State<WatchPartyLobbyScreen> {
         backgroundColor: const Color(0xFF0E0E0E),
         foregroundColor: Colors.white,
         elevation: 0,
-        title: Text(context.l10n.watchParty,
+        title: Text(
+          context.l10n.watchParty,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w700,
@@ -169,7 +154,8 @@ class _WatchPartyLobbyScreenState extends State<WatchPartyLobbyScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                Text(context.l10n.watchTogether2,
+                Text(
+                  context.l10n.watchTogether2,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 22,
@@ -179,7 +165,10 @@ class _WatchPartyLobbyScreenState extends State<WatchPartyLobbyScreen> {
                 ),
                 const SizedBox(height: 10),
 
-                Text(context.l10n.createAPartyAndInviteFriendsOrJoinAnExistingOneWithACode,
+                Text(
+                  context
+                      .l10n
+                      .createAPartyAndInviteFriendsOrJoinAnExistingOneWithACode,
                   style: TextStyle(
                     color: Colors.white54,
                     fontSize: 14,
@@ -254,9 +243,7 @@ Future<void> routeAfterJoin(
   if (controller.room == null) return;
 
   final nav = Navigator.of(context, rootNavigator: true);
-  nav.push(MaterialPageRoute(
-    builder: (_) => const HostChoosingScreen(),
-  ));
+  nav.push(MaterialPageRoute(builder: (_) => const HostChoosingScreen()));
   controller.refollow();
 }
 
@@ -275,7 +262,7 @@ Future<String?> _askCode(BuildContext context) {
         autofocus: true,
         textCapitalization: TextCapitalization.characters,
         decoration: InputDecoration(hintText: context.l10n.eGABC234),
-              ),
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(ctx),

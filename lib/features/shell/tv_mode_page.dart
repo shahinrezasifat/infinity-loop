@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/tv/tv_focusable.dart';
@@ -27,7 +27,7 @@ class TvStreamKindRailToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int>(
       valueListenable: ZModePrefs.revision,
-      builder: (context, _, __) {
+      builder: (context, _, _) {
         final l10n = context.l10n;
         final isAnime = ZModePrefs.streamKind == StreamKind.anime;
         final icon = isAnime ? Icons.play_circle_rounded : Icons.movie;

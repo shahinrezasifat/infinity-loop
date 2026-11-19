@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -46,6 +46,7 @@ class SearchScreenTv extends StatefulWidget {
     this.history,
     required this.scope,
     this.forceMode,
+    this.fixedSourceId,
   });
 
   final String? initialQuery;
@@ -59,6 +60,9 @@ class SearchScreenTv extends StatefulWidget {
 
   /// Tab-scoped source search from browse-sources; null on the main Search tab.
   final ContentMode? forceMode;
+
+  /// Home-launched search pinned to the source selected on Home.
+  final String? fixedSourceId;
 
   @override
   State<SearchScreenTv> createState() => _SearchScreenTvState();
@@ -425,6 +429,7 @@ class _SearchScreenTvState extends State<SearchScreenTv> {
   }
 
   Widget _sourcesScopeChips() {
+    if (widget.fixedSourceId != null) return const SizedBox.shrink();
     return BlocBuilder<SearchBloc, SearchState>(
       buildWhen: (a, b) => a.currentSourceOnly != b.currentSourceOnly,
       builder: (context, state) {

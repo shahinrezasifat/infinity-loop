@@ -87,8 +87,13 @@ class _FakeSearchHistory extends SearchHistory {
 class _FakeSuggestions extends TitleSuggestionService {
   _FakeSuggestions() : super(Dio());
 
+  final List<String> queries = [];
+
   @override
-  Future<List<String>> suggest(String query, {int limit = 8}) async => [];
+  Future<List<String>> suggest(String query, {int limit = 8}) async {
+    queries.add(query);
+    return [];
+  }
 }
 
 /// Every source participates in search — the exclusion pref isn't what this
@@ -129,6 +134,7 @@ class _FakeRepo implements SourceRepository {
 
   /// Every sourceId `searchStatus` was actually called with.
   final List<String> searchedSourceIds = [];
+  final List<String?> homeSourceIds = [];
 
   @override
   Future<({List<MediaItem> items, SourceOutcome outcome})> searchStatus(
@@ -178,8 +184,13 @@ class _FakeRepo implements SourceRepository {
   }) => throw UnimplementedError();
 
   @override
-  Future<List<HomeSection>> home({String category = 'sub', String? sourceId}) =>
-      throw UnimplementedError();
+  Future<List<HomeSection>> home({
+    String category = 'sub',
+    String? sourceId,
+  }) async {
+    homeSourceIds.add(sourceId);
+    return [];
+  }
 
   @override
   Future<List<MediaItem>> search(
@@ -400,6 +411,42 @@ void main() {
               'with no forceMode, the global content mode (manga here) still '
               'decides the fan-out exactly as before this fix',
         );
+      },
+    );
+  });
+
+  group('SearchBloc.fixedSourceId (search opened from Home)', () {
+    test(
+      'pins search to the selected source despite saved scope and mode',
+      () async {
+        await modeCubit.setMode(ContentMode.anime);
+        final suggestions = _FakeSuggestions();
+        final pinned = SearchBloc(
+          repo: repo,
+          history: _FakeSearchHistory(),
+          prefs: _FakeSearchPrefs(),
+          suggestions: suggestions,
+          fixedSourceId: 'mihon:1',
+        );
+        addTearDown(pinned.close);
+
+        expect(pinned.state.currentSourceOnly, isTrue);
+        pinned.add(const SearchStarted());
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        expect(repo.homeSourceIds, ['mihon:1']);
+
+        pinned.add(const SearchQueryChanged('naruto'));
+        await Future<void>.delayed(const Duration(milliseconds: 300));
+        expect(suggestions.queries, isEmpty);
+
+        pinned.add(const SearchScopeChanged(false));
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        expect(pinned.state.currentSourceOnly, isTrue);
+
+        pinned.add(const SearchRunRequested('naruto'));
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+
+        expect(repo.searchedSourceIds.toSet(), {'mihon:1'});
       },
     );
   });

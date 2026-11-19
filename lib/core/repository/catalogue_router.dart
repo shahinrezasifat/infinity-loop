@@ -57,6 +57,10 @@ class CatalogueRouter implements CatalogueRepository {
       _browse.home(category: category, sourceId: sourceId);
 
   @override
+  Future<List<MediaItem>> browseMore(BrowseMore more, int page) =>
+      _browse.browseMore(more, page);
+
+  @override
   Future<List<MediaItem>> search(
     String query, {
     String category = 'sub',

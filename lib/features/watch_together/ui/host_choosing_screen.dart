@@ -1,5 +1,5 @@
 // lib/features/watch_together/ui/host_choosing_screen.dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../../../core/app_mode.dart';
 import '../../../core/di/injector.dart';
 import '../../../core/tv/tv_focusable.dart';

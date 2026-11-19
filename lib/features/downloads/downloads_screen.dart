@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hive/hive.dart';
 import '../../core/ui/app_dialog.dart';
 import '../../core/ui/settings_widgets.dart';
@@ -50,6 +51,42 @@ class _DownloadsScreenState extends State<DownloadsScreen>
   /// Show ids the user has expanded. Empty = all collapsed (the default).
   final Set<String> _expanded = <String>{};
 
+  /// Record ids selected for batch actions (e.g. deletion).
+  final Set<String> _selectedIds = <String>{};
+  bool get _isSelectionMode => _selectedIds.isNotEmpty;
+
+  void _toggleSelection(String id) {
+    setState(() {
+      if (_selectedIds.contains(id)) {
+        _selectedIds.remove(id);
+      } else {
+        _selectedIds.add(id);
+      }
+    });
+  }
+
+  Future<void> _deleteSelected(DownloadManager manager) async {
+    final count = _selectedIds.length;
+    if (count == 0) return;
+    final l10n = context.l10n;
+    final ok = await AppDialog.confirm(
+      context,
+      title: l10n.delete,
+      message: 'Delete $count selected download${count > 1 ? 's' : ''}?',
+      confirmLabel: l10n.delete,
+      destructive: true,
+    );
+    if (ok == true) {
+      final toDelete = manager.all
+          .where((r) => _selectedIds.contains(r.id))
+          .toList();
+      await manager.deleteAll(toDelete);
+      setState(() {
+        _selectedIds.clear();
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -89,51 +126,102 @@ class _DownloadsScreenState extends State<DownloadsScreen>
       publicFallback: l10n.downloadsZangetsu,
     );
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 6, 8, 2),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.folder_outlined,
-            size: 18,
-            color: AppColors.textSecondary,
+      padding: const EdgeInsets.fromLTRB(16, 6, 16, 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: AppColors.surface.withValues(alpha: 0.65),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.06),
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  l10n.savingTo,
-                  style: AppText.caption.copyWith(color: AppColors.textTertiary),
-                ),
-                Text(
-                  label,
-                  style: AppText.body,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => const DownloadLocationScreen(),
-                ),
-              );
-              if (mounted) setState(() {}); // refresh the shown folder
-            },
-            child: Text(
-              l10n.change,
-              style: AppText.body.copyWith(
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                color: AppColors.accent.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.folder_open_rounded,
+                size: 18,
                 color: AppColors.accent,
-                fontWeight: FontWeight.w600,
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    l10n.savingTo,
+                    style: AppText.caption.copyWith(
+                      color: AppColors.textTertiary,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 1),
+                  Text(
+                    label,
+                    style: AppText.body.copyWith(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13.5,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const DownloadLocationScreen(),
+                  ),
+                );
+                if (mounted) setState(() {}); // refresh the shown folder
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.surface2,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.05),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      l10n.change,
+                      style: AppText.caption.copyWith(
+                        color: AppColors.accent,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      size: 14,
+                      color: AppColors.accent,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -173,9 +261,12 @@ class _DownloadsScreenState extends State<DownloadsScreen>
                   child: Row(
                     children: [
                       Expanded(child: Text(title, style: AppText.headline)),
-                      Text('$value', style: AppText.headline.copyWith(
-                        color: AppColors.accent,
-                      )),
+                      Text(
+                        '$value',
+                        style: AppText.headline.copyWith(
+                          color: AppColors.accent,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -229,10 +320,7 @@ class _DownloadsScreenState extends State<DownloadsScreen>
                   // On release: persist + apply live to both paths (MP4 queue +
                   // HLS service). Raising it starts queued episodes immediately;
                   // lowering it just stops new ones spawning.
-                  onCommit: (n) {
-                    prefs.setParallelDownloads(n);
-                    sl<DownloadManager>().setParallel(n);
-                  },
+                  onCommit: (n) => sl<DownloadManager>().setParallel(n),
                 ),
                 const SizedBox(height: 8),
                 slider(
@@ -258,41 +346,78 @@ class _DownloadsScreenState extends State<DownloadsScreen>
     if (sl<AppMode>().isTv) return const DownloadsScreenTv();
     final manager = sl<DownloadManager>();
     final store = sl<ChapterDownloadStore>();
-    return Scaffold(
-      backgroundColor: AppColors.bg,
-      appBar: settingsAppBar(
-        showBack: widget.showBack,
-        context.l10n.downloads,
-        actions: [
-          IconButton(
-            tooltip: context.l10n.downloadSettings,
-            icon: const Icon(Icons.tune_rounded),
-            onPressed: _openDownloadSettings,
-          ),
-        ],
-      ),
-      body: ListenableBuilder(
-        listenable: manager,
-        builder: (context, _) {
-          final groups = manager.byShow;
-          return Column(
-            children: [
-              _locationHeader(),
-              _chapterLinks(store),
-              if (groups.isEmpty)
-                Expanded(
-                  child: EmptyState(
-                    icon: Icons.download_outlined,
-                    message: context.l10n.episodesYouDownloadAppearHere,
+    return PopScope(
+      canPop: !_isSelectionMode,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop && _isSelectionMode) {
+          setState(() => _selectedIds.clear());
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.bg,
+        appBar: _isSelectionMode
+            ? AppBar(
+                backgroundColor: AppColors.surface,
+                elevation: 0,
+                leading: IconButton(
+                  icon: const Icon(Icons.close_rounded),
+                  onPressed: () => setState(() => _selectedIds.clear()),
+                ),
+                title: Text(
+                  '${_selectedIds.length} selected',
+                  style: AppText.headline.copyWith(fontSize: 18),
+                ),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.select_all_rounded),
+                    tooltip: 'Select all',
+                    onPressed: () {
+                      setState(() {
+                        _selectedIds.addAll(manager.all.map((r) => r.id));
+                      });
+                    },
                   ),
-                )
-              else ...[
-                _searchField(),
-                Expanded(child: _list(groups, manager)),
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline_rounded,
+                        color: Colors.redAccent),
+                    tooltip: 'Delete',
+                    onPressed: () => _deleteSelected(manager),
+                  ),
+                ],
+              )
+            : settingsAppBar(
+                showBack: widget.showBack,
+                context.l10n.downloads,
+                actions: [
+                  IconButton(
+                    tooltip: context.l10n.downloadSettings,
+                    icon: const Icon(Icons.tune_rounded),
+                    onPressed: _openDownloadSettings,
+                  ),
+                ],
+              ),
+        body: ListenableBuilder(
+          listenable: manager,
+          builder: (context, _) {
+            final groups = manager.byShow;
+            return Column(
+              children: [
+                _locationHeader(),
+                _chapterLinks(store),
+                if (groups.isEmpty)
+                  Expanded(
+                    child: _DownloadsEmptyState(
+                      message: context.l10n.episodesYouDownloadAppearHere,
+                    ),
+                  )
+                else ...[
+                  _searchField(),
+                  Expanded(child: _list(groups, manager)),
+                ],
               ],
-            ],
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -329,8 +454,8 @@ class _DownloadsScreenState extends State<DownloadsScreen>
     final novel = mode == ContentMode.novel;
     final l10n = context.l10n;
     return Material(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(12),
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(14),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () => Navigator.of(context).push(
@@ -338,11 +463,30 @@ class _DownloadsScreenState extends State<DownloadsScreen>
             builder: (_) => ChapterDownloadsScreen(mode: mode),
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 11, 10, 11),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.surface.withValues(alpha: 0.75),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.06),
+            ),
+          ),
           child: Row(
             children: [
-              Icon(chapterIcon(mode), color: AppColors.accent, size: 20),
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: AppColors.accent.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  chapterIcon(mode),
+                  color: AppColors.accent,
+                  size: 20,
+                ),
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
@@ -353,14 +497,23 @@ class _DownloadsScreenState extends State<DownloadsScreen>
                       novel ? l10n.novels : l10n.modeManga,
                       style: AppText.body.copyWith(
                         color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    const SizedBox(height: 1),
                     Text(
                       l10n.chapterCount(count),
-                      style: AppText.caption,
+                      style: AppText.caption.copyWith(
+                        color: count > 0
+                            ? AppColors.accent
+                            : AppColors.textTertiary,
+                        fontWeight:
+                            count > 0 ? FontWeight.w600 : FontWeight.w500,
+                        fontSize: 12,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -368,9 +521,9 @@ class _DownloadsScreenState extends State<DownloadsScreen>
                 ),
               ),
               const Icon(
-                Icons.chevron_right_rounded,
+                Icons.arrow_forward_ios_rounded,
                 color: AppColors.textTertiary,
-                size: 20,
+                size: 13,
               ),
             ],
           ),
@@ -381,37 +534,70 @@ class _DownloadsScreenState extends State<DownloadsScreen>
 
   Widget _searchField() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 4, 16, 6),
-      child: TextField(
-        controller: _searchCtrl,
-        onChanged: (v) => setState(() => _query = v),
-        style: AppText.body.copyWith(color: AppColors.textPrimary),
-        decoration: InputDecoration(
-          isDense: true,
-          hintText: context.l10n.searchDownloads,
-          hintStyle: AppText.body.copyWith(color: AppColors.textTertiary),
-          prefixIcon: const Icon(
-            Icons.search_rounded,
-            color: AppColors.textTertiary,
-          ),
-          suffixIcon: _query.isEmpty
-              ? null
-              : IconButton(
-                  icon: const Icon(
-                    Icons.close_rounded,
-                    color: AppColors.textTertiary,
+      padding: const EdgeInsets.fromLTRB(16, 2, 16, 8),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.15),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: TextField(
+          controller: _searchCtrl,
+          onChanged: (v) => setState(() => _query = v),
+          style: AppText.body.copyWith(color: AppColors.textPrimary),
+          decoration: InputDecoration(
+            isDense: true,
+            hintText: context.l10n.searchDownloads,
+            hintStyle: AppText.body.copyWith(
+              color: AppColors.textTertiary,
+              fontSize: 14,
+            ),
+            prefixIcon: const Icon(
+              Icons.search_rounded,
+              color: AppColors.textTertiary,
+              size: 22,
+            ),
+            suffixIcon: _query.isEmpty
+                ? null
+                : IconButton(
+                    icon: const Icon(
+                      Icons.cancel_rounded,
+                      color: AppColors.textTertiary,
+                      size: 18,
+                    ),
+                    onPressed: () {
+                      _searchCtrl.clear();
+                      setState(() => _query = '');
+                    },
                   ),
-                  onPressed: () {
-                    _searchCtrl.clear();
-                    setState(() => _query = '');
-                  },
-                ),
-          filled: true,
-          fillColor: AppColors.surface,
-          contentPadding: const EdgeInsets.symmetric(vertical: 12),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+            filled: true,
+            fillColor: AppColors.surface,
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: BorderSide(
+                color: Colors.white.withValues(alpha: 0.06),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: BorderSide(
+                color: Colors.white.withValues(alpha: 0.06),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: BorderSide(
+                color: AppColors.accent.withValues(alpha: 0.6),
+                width: 1.5,
+              ),
+            ),
           ),
         ),
       ),
@@ -430,8 +616,9 @@ class _DownloadsScreenState extends State<DownloadsScreen>
     final showIds = groups.keys.toList();
     final rows = <Widget>[];
     for (final id in showIds) {
-      final recs = [...groups[id]!]
-        ..sort((a, b) => (a.episodeNumber ?? 0).compareTo(b.episodeNumber ?? 0));
+      final recs = [
+        ...groups[id]!,
+      ]..sort((a, b) => (a.episodeNumber ?? 0).compareTo(b.episodeNumber ?? 0));
       final head = recs.first;
 
       List<DownloadRecord> episodes = recs;
@@ -447,15 +634,34 @@ class _DownloadsScreenState extends State<DownloadsScreen>
         forceExpand = true; // reveal matches while searching
       }
 
-      rows.add(
-        _ShowGroup(
-          records: recs,
-          episodes: episodes,
-          manager: manager,
-          expanded: forceExpand || _expanded.contains(id),
-          onToggle: () => _toggle(id),
-        ),
-      );
+      final isMovie = recs.length == 1 &&
+          (head.isMovie ||
+              head.episodeNumber == null ||
+              head.episodeNumber == 1);
+      if (isMovie) {
+        rows.add(
+          _MovieDownloadTile(
+            record: head,
+            manager: manager,
+            isSelected: _selectedIds.contains(head.id),
+            isSelectionMode: _isSelectionMode,
+            onSelect: () => _toggleSelection(head.id),
+          ),
+        );
+      } else {
+        rows.add(
+          _ShowGroup(
+            records: recs,
+            episodes: episodes,
+            manager: manager,
+            expanded: forceExpand || _expanded.contains(id),
+            onToggle: () => _toggle(id),
+            selectedIds: _selectedIds,
+            isSelectionMode: _isSelectionMode,
+            onToggleSelect: _toggleSelection,
+          ),
+        );
+      }
     }
 
     if (rows.isEmpty) {
@@ -469,9 +675,7 @@ class _DownloadsScreenState extends State<DownloadsScreen>
     return ListView(
       // Clear the floating dock, which overlays content (this tab has no
       // reserved space of its own for it).
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.paddingOf(context).bottom,
-      ),
+      padding: EdgeInsets.only(bottom: MediaQuery.paddingOf(context).bottom),
       children: [
         _summaryStrip(
           count: done.length,
@@ -497,31 +701,74 @@ class _DownloadsScreenState extends State<DownloadsScreen>
     required VoidCallback onToggleAll,
   }) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 8, 2),
+      padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
       child: Row(
         children: [
-          const Icon(
-            Icons.folder_outlined,
-            size: 15,
-            color: AppColors.textTertiary,
-          ),
-          const SizedBox(width: 6),
-          Text(
-            context.l10n.downloadedSummary(count, fmtDownloadSize(bytes)),
-            style: AppText.caption,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(9),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.05),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.offline_pin_rounded,
+                  size: 14,
+                  color: AppColors.accent,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  context.l10n.downloadedSummary(count, fmtDownloadSize(bytes)),
+                  style: AppText.caption.copyWith(
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
           ),
           const Spacer(),
-          TextButton(
-            onPressed: onToggleAll,
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.accent,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              minimumSize: const Size(0, 0),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            child: Text(
-              anyExpanded ? context.l10n.collapseAll : context.l10n.expandAll,
-              style: AppText.caption.copyWith(color: AppColors.accent),
+          InkWell(
+            borderRadius: BorderRadius.circular(9),
+            onTap: onToggleAll,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: AppColors.accent.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(9),
+                border: Border.all(
+                  color: AppColors.accent.withValues(alpha: 0.2),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    anyExpanded
+                        ? Icons.unfold_less_rounded
+                        : Icons.unfold_more_rounded,
+                    size: 14,
+                    color: AppColors.accent,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    anyExpanded
+                        ? context.l10n.collapseAll
+                        : context.l10n.expandAll,
+                    style: AppText.caption.copyWith(
+                      color: AppColors.accent,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -530,10 +777,109 @@ class _DownloadsScreenState extends State<DownloadsScreen>
   }
 }
 
+String formatDownloadSpeed(double bps) {
+  if (bps <= 0) return '';
+  final mbps = bps / (1024 * 1024);
+  if (mbps >= 1.0) {
+    return '${mbps.toStringAsFixed(1)} MB/s';
+  }
+  final kbps = bps / 1024;
+  if (kbps >= 1.0) {
+    return '${kbps.toStringAsFixed(0)} KB/s';
+  }
+  return '${bps.round()} B/s';
+}
+
+String formatEta(Duration? d) {
+  if (d == null || d.inSeconds <= 0) return '';
+  final hours = d.inHours;
+  final minutes = d.inMinutes.remainder(60);
+  final seconds = d.inSeconds.remainder(60);
+  if (hours > 0) {
+    return '${hours}h ${minutes}m left';
+  }
+  if (minutes > 0) {
+    return '${minutes}m ${seconds}s left';
+  }
+  return '${seconds}s left';
+}
+
 /// Lowercased text a download is matched against when searching.
 String _episodeSearchText(DownloadRecord r) {
   final n = r.episodeNumber?.toInt();
   return 'e${n ?? ''} ${r.episodeTitle}'.toLowerCase();
+}
+
+/// Tactile, modern circular action button with subtle borders and shadows.
+class _CircularActionButton extends StatelessWidget {
+  const _CircularActionButton({
+    required this.icon,
+    required this.onTap,
+    this.tooltip,
+    this.color,
+    this.backgroundColor,
+    this.borderColor,
+    this.size = 38,
+    this.iconSize = 20,
+    this.glow = false,
+  });
+
+  final IconData icon;
+  final VoidCallback onTap;
+  final String? tooltip;
+  final Color? color;
+  final Color? backgroundColor;
+  final Color? borderColor;
+  final double size;
+  final double iconSize;
+  final bool glow;
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveBg = backgroundColor ?? AppColors.surface2;
+    final effectiveColor = color ?? AppColors.textPrimary;
+    Widget btn = Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(size / 2),
+        child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: effectiveBg,
+            border: Border.all(
+              color: borderColor ?? Colors.white.withValues(alpha: 0.08),
+              width: 1,
+            ),
+            boxShadow: glow
+                ? [
+                    BoxShadow(
+                      color:
+                          (color ?? AppColors.accent).withValues(alpha: 0.35),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Center(
+            child: Icon(
+              icon,
+              size: iconSize,
+              color: effectiveColor,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    if (tooltip != null) {
+      return Tooltip(message: tooltip!, child: btn);
+    }
+    return btn;
+  }
 }
 
 class _ShowGroup extends StatelessWidget {
@@ -543,6 +889,9 @@ class _ShowGroup extends StatelessWidget {
     required this.manager,
     required this.expanded,
     required this.onToggle,
+    this.selectedIds = const {},
+    this.isSelectionMode = false,
+    this.onToggleSelect,
   });
 
   /// The full group — drives the "done of total" count and the group size.
@@ -554,86 +903,172 @@ class _ShowGroup extends StatelessWidget {
   final DownloadManager manager;
   final bool expanded;
   final VoidCallback onToggle;
+  final Set<String> selectedIds;
+  final bool isSelectionMode;
+  final ValueChanged<String>? onToggleSelect;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final head = records.first;
-    final doneRecs =
-        records.where((r) => r.status == DownloadStatus.done).toList();
+    final doneRecs = records
+        .where((r) => r.status == DownloadStatus.done)
+        .toList();
     final groupBytes = doneRecs.fold<int>(0, (s, r) => s + r.bytesTotal);
-    final sizeSuffix = groupBytes > 0 ? ' · ${fmtDownloadSize(groupBytes)}' : '';
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        InkWell(
-          onTap: onToggle,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 12, 8),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: SizedBox(
-                    width: 44,
-                    height: 62,
-                    child: (head.cover != null && head.cover!.isNotEmpty)
-                        ? CachedNetworkImage(
-                            imageUrl: head.cover!,
-                            httpHeaders: head.coverHeaders,
-                            fit: BoxFit.cover,
-                            errorWidget: (c, u, e) =>
-                                ColoredBox(color: AppColors.surface2),
-                          )
-                        : ColoredBox(color: AppColors.surface2),
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.06),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.16),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: onToggle,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: SizedBox(
+                      width: 48,
+                      height: 68,
+                      child: (head.cover != null && head.cover!.isNotEmpty)
+                          ? CachedNetworkImage(
+                              imageUrl: head.cover!,
+                              httpHeaders: head.coverHeaders,
+                              fit: BoxFit.cover,
+                              errorWidget: (c, u, e) =>
+                                  ColoredBox(color: AppColors.surface2),
+                            )
+                          : ColoredBox(color: AppColors.surface2),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        head.showTitle,
-                        style: AppText.headline,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        l10n.ofTotalDownloaded(doneRecs.length, records.length) +
-                            sizeSuffix,
-                        style: AppText.caption,
-                      ),
-                    ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          head.showTitle,
+                          style: AppText.headline.copyWith(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 7, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: AppColors.surface2,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                '${doneRecs.length}/${records.length} ep',
+                                style: AppText.caption.copyWith(
+                                  color: AppColors.textSecondary,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ),
+                            if (groupBytes > 0) ...[
+                              const SizedBox(width: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 7, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color:
+                                      AppColors.accent.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  fmtDownloadSize(groupBytes),
+                                  style: AppText.caption.copyWith(
+                                    color: AppColors.accent,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                IconButton(
-                  visualDensity: VisualDensity.compact,
-                  icon: const Icon(
-                    Icons.delete_outline_rounded,
+                  _CircularActionButton(
+                    icon: Icons.delete_outline_rounded,
+                    tooltip: l10n.deleteAllEpisodesTooltip,
                     color: AppColors.textTertiary,
-                    size: 22,
+                    size: 34,
+                    iconSize: 18,
+                    onTap: () => _confirmDeleteAll(context),
                   ),
-                  tooltip: l10n.deleteAllEpisodesTooltip,
-                  onPressed: () => _confirmDeleteAll(context),
-                ),
-                AnimatedRotation(
-                  turns: expanded ? 0.25 : 0.0,
-                  duration: const Duration(milliseconds: 180),
-                  child: const Icon(
-                    Icons.chevron_right_rounded,
-                    color: AppColors.textTertiary,
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 34,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      color: AppColors.surface2,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.05),
+                      ),
+                    ),
+                    child: Center(
+                      child: AnimatedRotation(
+                        turns: expanded ? 0.25 : 0.0,
+                        duration: const Duration(milliseconds: 180),
+                        child: const Icon(
+                          Icons.chevron_right_rounded,
+                          size: 20,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        if (expanded)
-          for (final r in episodes) DownloadTile(record: r, manager: manager),
-        const SizedBox(height: 6),
-      ],
+          if (expanded) ...[
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: Colors.white.withValues(alpha: 0.05),
+            ),
+            for (final r in episodes)
+              DownloadTile(
+                record: r,
+                manager: manager,
+                isSelected: selectedIds.contains(r.id),
+                isSelectionMode: isSelectionMode,
+                onSelect: () => onToggleSelect?.call(r.id),
+              ),
+          ],
+        ],
+      ),
     );
   }
 
@@ -731,11 +1166,23 @@ Future<void> launchDownloadedEpisode(
 }
 
 class DownloadTile extends StatelessWidget {
-  const DownloadTile({super.key, required this.record, required this.manager});
+  const DownloadTile({
+    super.key,
+    required this.record,
+    required this.manager,
+    this.isSelected = false,
+    this.isSelectionMode = false,
+    this.onSelect,
+  });
+
   final DownloadRecord record;
   final DownloadManager manager;
+  final bool isSelected;
+  final bool isSelectionMode;
+  final VoidCallback? onSelect;
 
   String _epLabel(AppLocalizations l10n) {
+    if (record.isMovie) return '';
     final n = record.episodeNumber?.toInt();
     final t = record.episodeTitle.trim();
     if (n != null) {
@@ -743,8 +1190,10 @@ class DownloadTile extends StatelessWidget {
       if (t.isEmpty || t == short || t == l10n.episodeLabel(n)) return short;
       return l10n.episodeWithTitleDot(n, t);
     }
-    final generic =
-        l10n.episodeSemantic(1).replaceFirst(' 1', '').replaceFirst('1', '');
+    final generic = l10n
+        .episodeSemantic(1)
+        .replaceFirst(' 1', '')
+        .replaceFirst('1', '');
     return (t.isEmpty || t == generic) ? generic : '$generic · $t';
   }
 
@@ -755,22 +1204,48 @@ class DownloadTile extends StatelessWidget {
       return l10n.savingToYourFolder;
     }
     final pct = (record.progress * 100).round();
+    final stats = manager.liveStats[record.id];
+    final speedStr = stats != null && stats.speedBps > 0
+        ? formatDownloadSpeed(stats.speedBps)
+        : '';
+    final etaStr = stats?.timeRemaining != null
+        ? formatEta(stats!.timeRemaining)
+        : '';
+    var totalBytes = stats != null && stats.bytesTotal > 0
+        ? stats.bytesTotal
+        : record.bytesTotal;
+    var dlBytes = stats != null && stats.bytesDownloaded > 0
+        ? stats.bytesDownloaded
+        : (totalBytes > 0 ? (totalBytes * record.progress).round() : 0);
+
+    if (totalBytes <= 0 && record.progress > 0) {
+      totalBytes = record.isMovie ? 1200 * 1024 * 1024 : 350 * 1024 * 1024;
+      dlBytes = (totalBytes * record.progress).round();
+    }
+
     return switch (record.status) {
-      DownloadStatus.done => record.bytesTotal > 0
-          ? fmtDownloadSize(record.bytesTotal)
-          : l10n.downloaded,
-      DownloadStatus.downloading => record.bytesTotal > 0
-          ? l10n.downloadProgressPercentOfSize(
-              pct,
-              fmtDownloadSize(record.bytesTotal),
-            ) + _torrentSuffix(l10n)
-          : l10n.downloadProgressPercent(pct) + _torrentSuffix(l10n),
+      DownloadStatus.done =>
+        record.bytesTotal > 0
+            ? fmtDownloadSize(record.bytesTotal)
+            : l10n.downloaded,
+      DownloadStatus.downloading => [
+          if (totalBytes > 0)
+            '$pct% · ${fmtDownloadSize(dlBytes)} of ${fmtDownloadSize(totalBytes)}'
+          else if (dlBytes > 0)
+            '$pct% · ${fmtDownloadSize(dlBytes)}'
+          else
+            l10n.downloadProgressPercent(pct),
+          if (speedStr.isNotEmpty)
+            speedStr
+          else
+            'Measuring speed...',
+          if (etaStr.isNotEmpty) etaStr,
+        ].join(' · ') + _torrentSuffix(l10n),
       DownloadStatus.paused => l10n.downloadPausedProgress(pct),
       DownloadStatus.finalizing => l10n.downloadFinalizing,
       DownloadStatus.queued => l10n.downloadQueued,
       DownloadStatus.resolving => l10n.downloadPreparing,
-      DownloadStatus.unsupported =>
-        record.error ?? l10n.notAvailableOfflineYet,
+      DownloadStatus.unsupported => record.error ?? l10n.notAvailableOfflineYet,
       DownloadStatus.failed => record.error ?? l10n.downloadFailedStatus,
       DownloadStatus.canceled => l10n.downloadCanceled,
     };
@@ -785,9 +1260,11 @@ class DownloadTile extends StatelessWidget {
     if (p.peers > 0) parts.add(l10n.peerCount(p.peers));
     if (p.downSpeedBps > 0) {
       final mb = p.downSpeedBps / (1024 * 1024);
-      parts.add(mb >= 1
-          ? l10n.downloadSpeedMbps(mb.toStringAsFixed(1))
-          : l10n.downloadSpeedKbps((p.downSpeedBps / 1024).round()));
+      parts.add(
+        mb >= 1
+            ? l10n.downloadSpeedMbps(mb.toStringAsFixed(1))
+            : l10n.downloadSpeedKbps((p.downSpeedBps / 1024).round()),
+      );
     }
     return parts.isEmpty ? '' : ' · ${parts.join(' · ')}';
   }
@@ -799,36 +1276,163 @@ class DownloadTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isDone = record.status == DownloadStatus.done;
+    final isDownloading = record.status == DownloadStatus.downloading;
+    final isPaused = record.status == DownloadStatus.paused;
+    final isFailed = record.status == DownloadStatus.failed;
+
     return ListTile(
-      contentPadding: const EdgeInsets.fromLTRB(16, 0, 8, 0),
-      onTap: isDone ? () => _play(context) : null,
-      leading: _StatusGlyph(record: record),
-      title: Text(
-        _epLabel(l10n),
-        style: AppText.body.copyWith(color: AppColors.textPrimary),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
+      contentPadding: const EdgeInsets.fromLTRB(16, 4, 12, 4),
+      selected: isSelected,
+      selectedTileColor: AppColors.accent.withValues(alpha: 0.1),
+      onTap: isSelectionMode
+          ? onSelect
+          : (isDone
+              ? () => _play(context)
+              : (isFailed ? () => unawaited(manager.retry(record)) : null)),
+      onLongPress: () {
+        HapticFeedback.mediumImpact();
+        onSelect?.call();
+      },
+      leading: isSelectionMode
+          ? Icon(
+              isSelected
+                  ? Icons.check_circle_rounded
+                  : Icons.radio_button_unchecked_rounded,
+              color: isSelected ? AppColors.accent : AppColors.textTertiary,
+              size: 24,
+            )
+          : _StatusGlyph(record: record),
+      title: record.isMovie
+          ? null
+          : Text(
+              _epLabel(l10n),
+              style: AppText.body.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w600,
+                fontSize: 13.5,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(_subtitle(l10n), style: AppText.caption),
+          const SizedBox(height: 2),
+          Text(_subtitle(l10n), style: AppText.caption.copyWith(fontSize: 11.5)),
           if (record.status == DownloadStatus.downloading ||
               record.status == DownloadStatus.paused) ...[
             const SizedBox(height: 6),
             ClipRRect(
-              borderRadius: BorderRadius.circular(2),
+              borderRadius: BorderRadius.circular(3),
               child: LinearProgressIndicator(
                 value: record.progress > 0 ? record.progress : null,
-                minHeight: 3,
-                color: AppColors.accent,
+                minHeight: 3.5,
+                color: isPaused ? AppColors.textTertiary : AppColors.accent,
                 backgroundColor: AppColors.surface2,
               ),
             ),
           ],
         ],
       ),
-      trailing: _TileMenu(record: record, manager: manager),
+      trailing: isSelectionMode
+          ? null
+          : (isDownloading
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _CircularActionButton(
+                      icon: Icons.pause_rounded,
+                      tooltip: l10n.pause,
+                      size: 34,
+                      iconSize: 18,
+                      color: AppColors.textPrimary,
+                      onTap: () => unawaited(manager.pause(record)),
+                    ),
+                    const SizedBox(width: 6),
+                    _CircularActionButton(
+                      icon: Icons.close_rounded,
+                      tooltip: l10n.cancel,
+                      size: 34,
+                      iconSize: 18,
+                      color: AppColors.textTertiary,
+                      onTap: () => unawaited(manager.cancel(record)),
+                    ),
+                  ],
+                )
+              : (isPaused
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _CircularActionButton(
+                          icon: Icons.play_arrow_rounded,
+                          tooltip: l10n.resume,
+                          size: 34,
+                          iconSize: 20,
+                          color: AppColors.accent,
+                          backgroundColor:
+                              AppColors.accent.withValues(alpha: 0.15),
+                          borderColor:
+                              AppColors.accent.withValues(alpha: 0.3),
+                          onTap: () => unawaited(manager.resume(record)),
+                        ),
+                        const SizedBox(width: 6),
+                        _CircularActionButton(
+                          icon: Icons.close_rounded,
+                          tooltip: l10n.cancel,
+                          size: 34,
+                          iconSize: 18,
+                          color: AppColors.textTertiary,
+                          onTap: () => unawaited(manager.cancel(record)),
+                        ),
+                      ],
+                    )
+                  : (isDone
+                      ? _CircularActionButton(
+                          icon: Icons.play_arrow_rounded,
+                          tooltip: 'Play',
+                          size: 36,
+                          iconSize: 22,
+                          color: Colors.white,
+                          backgroundColor: AppColors.accent,
+                          glow: true,
+                          onTap: () => _play(context),
+                        )
+                      : (isFailed
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _CircularActionButton(
+                                  icon: Icons.refresh_rounded,
+                                  tooltip: 'Retry',
+                                  size: 34,
+                                  iconSize: 18,
+                                  color: Colors.redAccent,
+                                  backgroundColor:
+                                      Colors.redAccent.withValues(alpha: 0.15),
+                                  onTap: () =>
+                                      unawaited(manager.retry(record)),
+                                ),
+                                const SizedBox(width: 6),
+                                _CircularActionButton(
+                                  icon: Icons.close_rounded,
+                                  tooltip: l10n.cancel,
+                                  size: 34,
+                                  iconSize: 18,
+                                  color: AppColors.textTertiary,
+                                  onTap: () =>
+                                      unawaited(manager.cancel(record)),
+                                ),
+                              ],
+                            )
+                          : _CircularActionButton(
+                              icon: Icons.close_rounded,
+                              tooltip: l10n.cancel,
+                              size: 34,
+                              iconSize: 18,
+                              color: AppColors.textTertiary,
+                              onTap: () =>
+                                  unawaited(manager.cancel(record)),
+                            ))))),
     );
   }
 }
@@ -904,55 +1508,677 @@ class _StatusGlyph extends StatelessWidget {
   }
 }
 
-class _TileMenu extends StatelessWidget {
-  const _TileMenu({required this.record, required this.manager});
+/// A direct single-card presentation for a downloaded/downloading movie.
+/// Shows the movie poster directly on the left and title, live speed,
+/// downloaded/total size, and ETA beside it — with no expandable episode list!
+class _MovieDownloadTile extends StatelessWidget {
+  const _MovieDownloadTile({
+    required this.record,
+    required this.manager,
+    this.isSelected = false,
+    this.isSelectionMode = false,
+    this.onSelect,
+  });
+
   final DownloadRecord record;
   final DownloadManager manager;
+  final bool isSelected;
+  final bool isSelectionMode;
+  final VoidCallback? onSelect;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final r = record;
-    return PopupMenuButton<String>(
-      icon: const Icon(Icons.more_vert_rounded, color: AppColors.textSecondary),
-      color: AppColors.surface2,
-      onSelected: (v) {
-        switch (v) {
-          case 'pause':
-            unawaited(manager.pause(r));
-          case 'resume':
-            unawaited(manager.resume(r));
-          case 'retry':
-            unawaited(manager.retry(r));
-          // Cancel an in-flight download = stop it AND remove it from the list
-          // (delete cancels the task, drops the record, and clears fallbacks).
-          case 'cancel':
-          case 'delete':
-            unawaited(manager.delete(r));
-        }
-      },
-      itemBuilder: (context) => [
-        if (r.status == DownloadStatus.downloading)
-          _item('pause', Icons.pause_rounded, l10n.pause),
-        if (r.status == DownloadStatus.paused)
-          _item('resume', Icons.play_arrow_rounded, l10n.resume),
-        if (r.status == DownloadStatus.failed && !r.isTorrent)
-          _item('retry', Icons.refresh_rounded, l10n.retry),
-        if (r.isActive) _item('cancel', Icons.close_rounded, l10n.cancel),
-        _item('delete', Icons.delete_outline_rounded, l10n.delete),
-      ],
+    final isDone = record.status == DownloadStatus.done;
+    final isDownloading = record.status == DownloadStatus.downloading;
+    final isPaused = record.status == DownloadStatus.paused;
+    final isFailed = record.status == DownloadStatus.failed;
+    final stats = manager.liveStats[record.id];
+
+    final pct = (record.progress * 100).round();
+    var totalBytes = stats != null && stats.bytesTotal > 0
+        ? stats.bytesTotal
+        : record.bytesTotal;
+    var dlBytes = stats != null && stats.bytesDownloaded > 0
+        ? stats.bytesDownloaded
+        : (totalBytes > 0 ? (totalBytes * record.progress).round() : 0);
+
+    if (totalBytes <= 0 && record.progress > 0) {
+      totalBytes = 1200 * 1024 * 1024;
+      dlBytes = (totalBytes * record.progress).round();
+    }
+
+    final speedStr = stats != null && stats.speedBps > 0
+        ? formatDownloadSpeed(stats.speedBps)
+        : '';
+    final etaStr = stats?.timeRemaining != null
+        ? formatEta(stats!.timeRemaining)
+        : '';
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      decoration: BoxDecoration(
+        color: isSelected
+            ? AppColors.accent.withValues(alpha: 0.12)
+            : AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isSelected
+              ? AppColors.accent
+              : Colors.white.withValues(alpha: 0.06),
+          width: isSelected ? 1.5 : 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.18),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: isSelectionMode
+            ? onSelect
+            : (isDone
+                ? () => launchDownloadedEpisode(context, record)
+                : (isFailed ? () => unawaited(manager.retry(record)) : null)),
+        onLongPress: () {
+          HapticFeedback.mediumImpact();
+          onSelect?.call();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Movie poster / thumbnail
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: SizedBox(
+                      width: 64,
+                      height: 92,
+                      child: (record.cover != null && record.cover!.isNotEmpty)
+                          ? CachedNetworkImage(
+                              imageUrl: record.cover!,
+                              httpHeaders: record.coverHeaders,
+                              fit: BoxFit.cover,
+                              errorWidget: (c, u, e) =>
+                                  ColoredBox(color: AppColors.surface2),
+                            )
+                          : ColoredBox(color: AppColors.surface2),
+                    ),
+                  ),
+                  if (isSelected)
+                    Container(
+                      width: 64,
+                      height: 92,
+                      decoration: BoxDecoration(
+                        color: AppColors.accent.withValues(alpha: 0.65),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.check_circle_rounded,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                    )
+                  else if (isDone)
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.6),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.15),
+                        ),
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.play_arrow_rounded,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                    )
+                  else if (isDownloading)
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.7),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.15),
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SizedBox(
+                            width: 32,
+                            height: 32,
+                            child: CircularProgressIndicator(
+                              value:
+                                  record.progress > 0 ? record.progress : null,
+                              strokeWidth: 2.5,
+                              color: AppColors.accent,
+                              backgroundColor: Colors.white24,
+                            ),
+                          ),
+                          Text(
+                            '$pct%',
+                            style: const TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else if (isPaused)
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.7),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.amberAccent.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.pause_rounded,
+                          color: Colors.amberAccent,
+                          size: 22,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(width: 14),
+
+              // Details column beside thumbnail
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      record.showTitle,
+                      style: AppText.headline.copyWith(
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 5),
+
+                    // Badges row: "Movie" · "1080p" · "DOWNLOADING"
+                    Wrap(
+                      spacing: 5,
+                      runSpacing: 3,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 1.5),
+                          decoration: BoxDecoration(
+                            color: AppColors.accent.withValues(alpha: 0.14),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            'Movie',
+                            style: AppText.caption.copyWith(
+                              color: AppColors.accent,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        if (record.quality.isNotEmpty &&
+                            record.quality != 'auto')
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 1.5),
+                            decoration: BoxDecoration(
+                              color: AppColors.surface2,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              record.quality,
+                              style: AppText.caption.copyWith(
+                                color: AppColors.textSecondary,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        if (isDownloading)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 1.5),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF0284C7)
+                                  .withValues(alpha: 0.18),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 4.5,
+                                  height: 4.5,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Color(0xFF38BDF8),
+                                  ),
+                                ),
+                                const SizedBox(width: 3.5),
+                                const Text(
+                                  'DOWNLOADING',
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    color: Color(0xFF38BDF8),
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        else if (isPaused)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 1.5),
+                            decoration: BoxDecoration(
+                              color: Colors.amber.withValues(alpha: 0.18),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: const Text(
+                              'PAUSED',
+                              style: TextStyle(
+                                fontSize: 9,
+                                color: Colors.amberAccent,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          )
+                        else if (isDone)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 1.5),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF10B981)
+                                  .withValues(alpha: 0.18),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: const Text(
+                              'READY',
+                              style: TextStyle(
+                                fontSize: 9,
+                                color: Color(0xFF34D399),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 7),
+
+                    if (isDownloading) ...[
+                      // Size & progress
+                      Row(
+                        children: [
+                          Text(
+                            '$pct%',
+                            style: AppText.caption.copyWith(
+                              color: AppColors.accent,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          Expanded(
+                            child: Text(
+                              totalBytes > 0
+                                  ? '· ${fmtDownloadSize(dlBytes)} of ${fmtDownloadSize(totalBytes)}'
+                                  : (dlBytes > 0
+                                      ? '· ${fmtDownloadSize(dlBytes)}'
+                                      : '· downloading'),
+                              style: AppText.caption.copyWith(
+                                color: AppColors.textSecondary,
+                                fontSize: 11.5,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 3),
+                      // Speed & ETA
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.speed_rounded,
+                            size: 13,
+                            color: AppColors.accent,
+                          ),
+                          const SizedBox(width: 3),
+                          Flexible(
+                            child: Text(
+                              speedStr.isNotEmpty
+                                  ? speedStr
+                                  : 'Measuring speed...',
+                              style: AppText.caption.copyWith(
+                                color: AppColors.accent,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 11.5,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (etaStr.isNotEmpty) ...[
+                            const SizedBox(width: 6),
+                            Text(
+                              '·',
+                              style: AppText.caption.copyWith(
+                                color: AppColors.textTertiary,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            const Icon(
+                              Icons.timer_outlined,
+                              size: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
+                              etaStr,
+                              style: AppText.caption.copyWith(
+                                color: AppColors.textSecondary,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 7),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: record.progress > 0 ? record.progress : null,
+                          minHeight: 4,
+                          color: AppColors.accent,
+                          backgroundColor: AppColors.surface2,
+                        ),
+                      ),
+                    ] else if (isDone) ...[
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.check_circle_rounded,
+                            size: 14,
+                            color: Color(0xFF10B981),
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            record.bytesTotal > 0
+                                ? '${fmtDownloadSize(record.bytesTotal)} · Ready to watch'
+                                : 'Ready to watch',
+                            style: AppText.caption.copyWith(
+                              color: AppColors.textSecondary,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ] else if (isPaused) ...[
+                      Text(
+                        'Paused at ${fmtDownloadSize(dlBytes)} ($pct%)',
+                        style: AppText.caption.copyWith(
+                          color: Colors.amberAccent.withValues(alpha: 0.9),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: record.progress > 0 ? record.progress : null,
+                          minHeight: 3.5,
+                          color: AppColors.textTertiary,
+                          backgroundColor: AppColors.surface2,
+                        ),
+                      ),
+                    ] else if (isFailed) ...[
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.error_outline_rounded,
+                            size: 14,
+                            color: Colors.redAccent,
+                          ),
+                          const SizedBox(width: 5),
+                          Expanded(
+                            child: Text(
+                              record.error ?? 'Download failed · Tap to retry',
+                              style: AppText.caption.copyWith(
+                                color: Colors.redAccent,
+                                fontSize: 11.5,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ] else ...[
+                      Text(
+                        switch (record.status) {
+                          DownloadStatus.queued => 'Queued...',
+                          DownloadStatus.resolving => 'Preparing stream...',
+                          DownloadStatus.finalizing =>
+                            'Finalizing video file...',
+                          DownloadStatus.unsupported => 'Not supported',
+                          DownloadStatus.canceled => 'Canceled',
+                          _ => 'Loading...',
+                        },
+                        style: AppText.caption.copyWith(
+                          color: AppColors.textTertiary,
+                          fontSize: 11.5,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+
+              // Action buttons
+              if (isSelectionMode) ...[
+                Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isSelected ? AppColors.accent : Colors.transparent,
+                    border: Border.all(
+                      color: isSelected
+                          ? AppColors.accent
+                          : AppColors.textTertiary,
+                      width: 2,
+                    ),
+                  ),
+                  child: isSelected
+                      ? const Icon(Icons.check, size: 18, color: Colors.white)
+                      : null,
+                ),
+              ] else if (isDownloading) ...[
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _CircularActionButton(
+                      icon: Icons.pause_rounded,
+                      tooltip: l10n.pause,
+                      size: 36,
+                      iconSize: 18,
+                      color: AppColors.textPrimary,
+                      onTap: () => unawaited(manager.pause(record)),
+                    ),
+                    const SizedBox(width: 8),
+                    _CircularActionButton(
+                      icon: Icons.close_rounded,
+                      tooltip: l10n.cancel,
+                      size: 36,
+                      iconSize: 18,
+                      color: AppColors.textTertiary,
+                      onTap: () => unawaited(manager.cancel(record)),
+                    ),
+                  ],
+                ),
+              ] else if (isPaused) ...[
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _CircularActionButton(
+                      icon: Icons.play_arrow_rounded,
+                      tooltip: l10n.resume,
+                      size: 36,
+                      iconSize: 22,
+                      color: AppColors.accent,
+                      backgroundColor:
+                          AppColors.accent.withValues(alpha: 0.15),
+                      borderColor: AppColors.accent.withValues(alpha: 0.3),
+                      onTap: () => unawaited(manager.resume(record)),
+                    ),
+                    const SizedBox(width: 8),
+                    _CircularActionButton(
+                      icon: Icons.close_rounded,
+                      tooltip: l10n.cancel,
+                      size: 36,
+                      iconSize: 18,
+                      color: AppColors.textTertiary,
+                      onTap: () => unawaited(manager.cancel(record)),
+                    ),
+                  ],
+                ),
+              ] else if (isDone) ...[
+                _CircularActionButton(
+                  icon: Icons.play_arrow_rounded,
+                  tooltip: 'Play',
+                  size: 40,
+                  iconSize: 24,
+                  color: Colors.white,
+                  backgroundColor: AppColors.accent,
+                  glow: true,
+                  onTap: () => launchDownloadedEpisode(context, record),
+                ),
+              ] else if (isFailed) ...[
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _CircularActionButton(
+                      icon: Icons.refresh_rounded,
+                      tooltip: 'Retry',
+                      size: 36,
+                      iconSize: 18,
+                      color: Colors.redAccent,
+                      backgroundColor:
+                          Colors.redAccent.withValues(alpha: 0.15),
+                      onTap: () => unawaited(manager.retry(record)),
+                    ),
+                    const SizedBox(width: 8),
+                    _CircularActionButton(
+                      icon: Icons.close_rounded,
+                      tooltip: l10n.cancel,
+                      size: 36,
+                      iconSize: 18,
+                      color: AppColors.textTertiary,
+                      onTap: () => unawaited(manager.cancel(record)),
+                    ),
+                  ],
+                ),
+              ] else ...[
+                _CircularActionButton(
+                  icon: Icons.close_rounded,
+                  tooltip: l10n.cancel,
+                  size: 36,
+                  iconSize: 18,
+                  color: AppColors.textTertiary,
+                  onTap: () => unawaited(manager.cancel(record)),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
     );
   }
+}
 
-  PopupMenuItem<String> _item(String value, IconData icon, String label) =>
-      PopupMenuItem<String>(
-        value: value,
-        child: Row(
+class _DownloadsEmptyState extends StatelessWidget {
+  const _DownloadsEmptyState({required this.message});
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 20, color: AppColors.textPrimary),
-            const SizedBox(width: 12),
-            Text(label, style: AppText.body.copyWith(color: AppColors.textPrimary)),
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: AppColors.accent.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppColors.accent.withValues(alpha: 0.25),
+                  width: 1.5,
+                ),
+              ),
+              child: Icon(
+                Icons.cloud_download_outlined,
+                size: 40,
+                color: AppColors.accent,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'No Downloads Yet',
+              style: AppText.headline.copyWith(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: AppText.caption.copyWith(
+                fontSize: 13,
+                color: AppColors.textTertiary,
+                height: 1.4,
+              ),
+            ),
           ],
         ),
-      );
+      ),
+    );
+  }
 }

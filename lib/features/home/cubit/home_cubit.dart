@@ -17,6 +17,7 @@ import '../../../core/models/media_item.dart';
 import '../../../core/mode/content_mode.dart';
 import '../../../core/mode/content_mode_cubit.dart';
 import '../../../core/platform/apple_tv.dart';
+import '../../../core/provider/cloudstream_provider.dart';
 import '../../../core/repository/catalogue_repository.dart';
 import '../../../core/tracker/tracker.dart';
 import '../../../core/tracker/tracker_hub.dart';
@@ -56,7 +57,8 @@ class HomeState extends Equatable {
     this.rows,
   });
 
-  /// The provider's named home rows, in order. Null until the first load.
+  /// The active provider's named home rows, or the selected CloudStream repo's
+  /// combined rows when no Home source override is active. Null until first load.
   final List<HomeSection>? sections;
 
   /// True while the rows are being (re)fetched.
@@ -128,9 +130,10 @@ class HomeState extends Equatable {
 }
 
 /// Owns the Home rows. Delegates entirely to [SourceRepository.home], which
-/// returns the active provider's own sections (or a default set for providers
-/// without `getHome`). No `sourceId` is passed — `home` uses the active source
-/// by design, so a source switch simply re-runs [load].
+/// returns the active provider's sections or the default CloudStream repo's
+/// combined sections. Home's source picker can override that grouping. No
+/// `sourceId` is passed — `home` uses the active source by design, so a source
+/// switch simply re-runs [load].
 ///
 /// The tracker library for the tracker-driven rows is read through
 /// [TrackerHub] (optional so existing tests and DI setups keep working) and
@@ -139,13 +142,40 @@ class HomeState extends Equatable {
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this._repo, {TrackerHub? trackerHub})
     : _hub = trackerHub,
-      super(const HomeState());
+      super(const HomeState()) {
+    _watchCloudStreamHome();
+  }
 
   final CatalogueRepository _repo;
   final TrackerHub? _hub;
+  CloudStreamManager? _watchedCloudStream;
+  String _cloudStreamHomeSignature = '';
 
   TrackerHub? get _hubOrNull =>
       _hub ?? (_sl.isRegistered<TrackerHub>() ? _sl<TrackerHub>() : null);
+
+  void _watchCloudStreamHome() {
+    if (!_sl.isRegistered<CloudStreamManager>()) return;
+    final manager = _sl<CloudStreamManager>();
+    _watchedCloudStream = manager;
+    _cloudStreamHomeSignature = manager.defaultHomeSignature;
+    manager.addListener(_onCloudStreamChanged);
+  }
+
+  void _onCloudStreamChanged() {
+    final manager = _watchedCloudStream;
+    if (manager == null || isClosed) return;
+    final signature = manager.defaultHomeSignature;
+    if (signature == _cloudStreamHomeSignature) return;
+    _cloudStreamHomeSignature = signature;
+    if (!ZModePrefs.enabled) unawaited(load(reset: true));
+  }
+
+  @override
+  Future<void> close() {
+    _watchedCloudStream?.removeListener(_onCloudStreamChanged);
+    return super.close();
+  }
 
   /// Monotonic load id. Each [load] bumps it; a fetch only emits its result if
   /// it's still the latest. This makes source switches "latest wins" — a slow
@@ -221,7 +251,19 @@ class HomeCubit extends Cubit<HomeState> {
     if (reset) _trackerCache = null;
     final sourceId = _repo.sourceId;
     final kind = _browseKind;
-    final cacheKey = kind?.name ?? 'all';
+    final defaultRepoUrl = _sl.isRegistered<CloudStreamManager>()
+        ? _sl<CloudStreamManager>().defaultRepoUrl
+        : null;
+    final manager = _sl.isRegistered<CloudStreamManager>()
+        ? _sl<CloudStreamManager>()
+        : null;
+    final usesDefaultRepo =
+        manager != null &&
+        defaultRepoUrl != null &&
+        manager.homeSourceOverrideId == null &&
+        manager.defaultRepoSources.any((p) => p.sourceId == sourceId);
+    final cacheKey =
+        '${kind?.name ?? 'all'}${usesDefaultRepo ? '|repo:$defaultRepoUrl' : ''}';
     // Cold start with a remembered home: paint it on the first frame and
     // refresh silently underneath. Same rows, same order — only the wait is
     // gone. A miss simply keeps the normal loading state.

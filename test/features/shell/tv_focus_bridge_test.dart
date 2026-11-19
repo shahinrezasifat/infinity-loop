@@ -10,7 +10,7 @@
 //   BUG-2: arrowRight from the rail must land on a real content leaf (not the
 //           bare FocusScopeNode, which leaves nothing visually highlighted).
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 

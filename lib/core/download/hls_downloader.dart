@@ -43,7 +43,15 @@ class HlsDownloader {
     required String outputPath,
     required String preferredQuality,
     required void Function(double progress) onProgress,
+    void Function(
+      double progress,
+      int bytesDownloaded,
+      int bytesTotal,
+      double speedBps,
+      Duration? timeRemaining,
+    )? onDetailedProgress,
     required bool Function() canceled,
+    bool Function()? paused,
     int? connections,
   }) async {
     // Segment-fetch parallelism for THIS download (clamped); defaults to 4.
@@ -67,24 +75,48 @@ class HlsDownloader {
 
     // 4. Download segments with bounded parallelism, writing strictly in order.
     final file = File(outputPath);
+    final metaFile = File('$outputPath.meta');
     await file.parent.create(recursive: true);
-    final sink = file.openWrite();
+
+    var resumeSegment = 0;
+    if (await file.exists() && await metaFile.exists()) {
+      try {
+        final saved = int.tryParse((await metaFile.readAsString()).trim());
+        if (saved != null && saved > 0 && saved < pl.segments.length) {
+          resumeSegment = saved;
+        }
+      } catch (_) {}
+    }
+
+    final sink = file.openWrite(
+      mode: resumeSegment > 0 ? FileMode.append : FileMode.write,
+    );
     final pending = <int, Uint8List>{};
     final total = pl.segments.length;
-    var nextIndex = 0;
-    var nextWrite = 0;
-    var done = 0;
+    var nextIndex = resumeSegment;
+    var nextWrite = resumeSegment;
+    var done = resumeSegment;
+    var bytesWritten = resumeSegment > 0 && await file.exists()
+        ? await file.length()
+        : 0;
+    final stopwatch = Stopwatch()..start();
+    var lastSpeedTime = 0;
+    var lastSpeedBytes = bytesWritten;
+    double currentSpeedBps = 0.0;
     var failed = false;
     String? failReason;
 
     Future<void> worker() async {
       while (true) {
-        if (failed || canceled()) return;
+        if (failed || canceled() || (paused?.call() ?? false)) return;
         // Throttle so a slow early segment can't blow up the pending buffer.
-        while (nextIndex - nextWrite > _maxAhead && !failed && !canceled()) {
+        while (nextIndex - nextWrite > _maxAhead &&
+            !failed &&
+            !canceled() &&
+            !(paused?.call() ?? false)) {
           await Future<void>.delayed(const Duration(milliseconds: 40));
         }
-        if (failed || canceled()) return;
+        if (failed || canceled() || (paused?.call() ?? false)) return;
         final i = nextIndex++;
         if (i >= total) return;
 
@@ -118,10 +150,46 @@ class HlsDownloader {
         pending[i] = bytes;
         // Flush every now-contiguous segment (sync, no await → no interleave).
         while (pending.containsKey(nextWrite)) {
-          sink.add(pending.remove(nextWrite)!);
+          final segBytes = pending.remove(nextWrite)!;
+          sink.add(segBytes);
+          bytesWritten += segBytes.length;
           nextWrite++;
           done++;
-          onProgress(done / total);
+
+          final elapsedMs = stopwatch.elapsedMilliseconds;
+          if (elapsedMs - lastSpeedTime >= 500) {
+            final deltaBytes = bytesWritten - lastSpeedBytes;
+            final deltaSec = (elapsedMs - lastSpeedTime) / 1000.0;
+            if (deltaSec > 0) {
+              final instantSpeed = deltaBytes / deltaSec;
+              currentSpeedBps = currentSpeedBps == 0
+                  ? instantSpeed
+                  : (currentSpeedBps * 0.7 + instantSpeed * 0.3);
+            }
+            lastSpeedTime = elapsedMs;
+            lastSpeedBytes = bytesWritten;
+          }
+
+          final estTotalBytes =
+              done > 0 ? ((bytesWritten / done) * total).round() : 0;
+          final remainingBytes = estTotalBytes > bytesWritten
+              ? estTotalBytes - bytesWritten
+              : 0;
+          final remainingSec = currentSpeedBps > 0
+              ? (remainingBytes / currentSpeedBps).round()
+              : null;
+          final timeRemaining =
+              remainingSec != null ? Duration(seconds: remainingSec) : null;
+
+          final p = done / total;
+          onProgress(p);
+          onDetailedProgress?.call(
+            p,
+            bytesWritten,
+            estTotalBytes,
+            currentSpeedBps,
+            timeRemaining,
+          );
         }
       }
     }
@@ -146,13 +214,33 @@ class HlsDownloader {
     await sink.flush();
     await sink.close();
 
-    if (failed || canceled() || nextWrite < total) {
+    final isPaused = paused?.call() ?? false;
+    if (isPaused) {
+      try {
+        await metaFile.writeAsString('$nextWrite');
+      } catch (_) {}
+      return 'paused';
+    }
+
+    if (canceled()) {
       try {
         if (await file.exists()) await file.delete();
+        if (await metaFile.exists()) await metaFile.delete();
       } catch (_) {}
-      if (canceled()) return 'canceled';
+      return 'canceled';
+    }
+
+    if (failed || nextWrite < total) {
+      try {
+        if (await file.exists()) await file.delete();
+        if (await metaFile.exists()) await metaFile.delete();
+      } catch (_) {}
       return failReason ?? 'incomplete ($nextWrite/$total segments)';
     }
+
+    try {
+      if (await metaFile.exists()) await metaFile.delete();
+    } catch (_) {}
     return null;
   }
 
@@ -1013,7 +1101,7 @@ String hlsExtinfFingerprint(List<HlsMediaSegment> segs) {
   var bestAt = 0.0;
   for (var i = 0; i < segs.length; i++) {
     if (segs[i].discontinuity) {
-      discs.add('${t.toStringAsFixed(1)}s#${i}');
+      discs.add('${t.toStringAsFixed(1)}s#$i');
     }
     if (i > 0) {
       if ((durs[i] - durs[i - 1]).abs() <= 0.05) {

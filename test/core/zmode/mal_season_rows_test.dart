@@ -25,7 +25,7 @@ Map<String, dynamic> _node(int id, String title, String? start) => {
   'node': {
     'id': id,
     'title': title,
-    if (start != null) 'start_date': start,
+    'start_date': ?start,
     'main_picture': {'large': 'https://x/$id.jpg'},
   },
 };

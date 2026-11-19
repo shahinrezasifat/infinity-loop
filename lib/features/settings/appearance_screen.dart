@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../core/ui/settings_widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -105,7 +105,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
             // and tapping one takes you back to picking by hand.
             opacity: ThemeController.materialYou ? 0.4 : 1,
             child: SizedBox(
-              height: 100,
+              height: 118,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 // Align with SettingsCard's margin so the strip lines up with
@@ -119,10 +119,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
                     return _CustomCard(
                       selected: _accentIsCustom,
                       currentColor: AppColors.accent,
-                      onTap: () {
-                        if (_blockedByMaterialYou()) return;
-                        _pickCustom();
-                      },
+                      onTap: _pickCustom,
                     );
                   }
                   final (name, color) = presets[i];
@@ -447,10 +444,9 @@ class _AccentCard extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: 58, child: _preview(color, selected)),
-              const SizedBox(height: 8),
+              Expanded(child: _preview(color, selected)),
+              const SizedBox(height: 6),
               Text(
                 isDefault ? context.l10n.defaultLabel : name,
                 maxLines: 1,
@@ -501,24 +497,21 @@ class _CustomCard extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
-                height: 58,
+              Expanded(
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     gradient: const SweepGradient(
                       colors: [
-                        Color(0xFFFF4D57),
-                        Color(0xFFFFB020),
-                        Color(0xFF32D583),
-                        Color(0xFF3DD6D0),
-                        Color(0xFF4D8DFF),
-                        Color(0xFF9B6DFF),
-                        Color(0xFFFF5FA2),
-                        Color(0xFFFF4D57),
+                        Color(0xFF070D19),
+                        Color(0xFF1E293B),
+                        Color(0xFF2563EB),
+                        Color(0xFF38BDF8),
+                        Color(0xFF1D4ED8),
+                        Color(0xFF2563EB),
+                        Color(0xFF070D19),
                       ],
                     ),
                   ),
@@ -538,7 +531,7 @@ class _CustomCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Text(
                 context.l10n.custom,
                 maxLines: 1,

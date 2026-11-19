@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui' show ImageFilter;
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/tracker/tracker_item_url.dart';
@@ -27,13 +27,10 @@ import '../../core/theme/app_text.dart';
 import '../../l10n/l10n.dart';
 import '../../core/tracker/tracker.dart';
 import '../../core/tracker/tracker_hub.dart';
-import '../../core/ui/buttons.dart';
 import '../../core/ui/list_status_sheet.dart';
 import '../../core/ui/poster_card.dart';
 import '../../core/ui/states.dart';
 import '../../core/ui/tracker_entry_sheet.dart';
-import '../auth/auth_cubit.dart';
-import '../auth/auth_screens.dart';
 import '../detail/detail_screen.dart';
 import 'cubit/my_list_cubit.dart';
 import 'library_tabs.dart';
@@ -688,11 +685,7 @@ class _MyListViewState extends State<_MyListView> with WidgetsBindingObserver {
   /// and yours on My List. 30px — big enough to read as a face, small enough
   /// that the capsule stays one line.
   Widget _headerAvatar(BuildContext context, Tracker? pinned) {
-    final url = pinned != null
-        ? pinned.viewerAvatar
-        : (sl.isRegistered<AuthCubit>()
-              ? sl<AuthCubit>().state.avatarUrl
-              : null);
+    final url = pinned?.viewerAvatar;
     final letter = pinned?.displayName.isNotEmpty == true
         ? pinned!.displayName[0]
         : 'Z';
@@ -1034,7 +1027,7 @@ class _MyListViewState extends State<_MyListView> with WidgetsBindingObserver {
           );
         }
         return GridView.builder(
-          key: ValueKey('${view.id}|${_sort?.name}|$_sortDesc'),
+          scrollCacheExtent: ScrollCacheExtent.pixels(800), key: ValueKey('${view.id}|${_sort?.name}|$_sortDesc'),
           // Bottom: clear the floating dock, which overlays content
           // (extendBody reserves it no space of its own).
           padding: EdgeInsets.fromLTRB(
@@ -1044,7 +1037,6 @@ class _MyListViewState extends State<_MyListView> with WidgetsBindingObserver {
             MediaQuery.paddingOf(context).bottom,
           ),
           physics: const AlwaysScrollableScrollPhysics(),
-          cacheExtent: 800,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
             childAspectRatio: posterGridAspect(context),
@@ -1188,43 +1180,9 @@ class _MyListViewState extends State<_MyListView> with WidgetsBindingObserver {
     };
   }
 
-  // ── Empty / sign-in ────────────────────────────────────────────────────────
+  // ── Empty state ────────────────────────────────────────────────────────────
 
   Widget _empty(BuildContext context) {
-    final auth = context.watch<AuthCubit>().state;
-    if (!auth.isLoggedIn) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.bookmark_outline,
-                size: 56,
-                color: AppColors.textTertiary,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                context.l10n.signInToBuildYourList,
-                style: AppText.body,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: 180,
-                child: PrimaryButton(
-                  label: context.l10n.signIn,
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const LoginScreen()),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
     return EmptyState(
       icon: Icons.bookmark_outline,
       message: myListEmptyMessage(context.l10n, sl<ContentModeCubit>().state),

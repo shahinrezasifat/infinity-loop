@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../core/models/media_item.dart';
 import '../../core/theme/app_colors.dart';
@@ -153,9 +153,8 @@ class _SeeAllScreenTvState extends State<SeeAllScreenTv> {
       body: Stack(
         children: [
           GridView.builder(
-            controller: paginating ? _controller : null,
+            scrollCacheExtent: ScrollCacheExtent.pixels(800), controller: paginating ? _controller : null,
             padding: const EdgeInsets.fromLTRB(40, 8, 40, 40),
-            cacheExtent: 800,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: _crossAxisCount,
               // Poster art + title below (outline hugs the art).

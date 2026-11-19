@@ -2,7 +2,7 @@
 // Schedule card, so the thing worth pinning is that it stops depending on the
 // mode: every connected tracker is listed no matter which mode you arrived in.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/di/injector.dart' show sl;
 import 'package:watch_app/core/tracker/tracker.dart';

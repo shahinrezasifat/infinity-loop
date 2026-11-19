@@ -6,7 +6,9 @@ part of 'cloudstream_sources_screen.dart';
 // ---------------------------------------------------------------------------
 
 class _CsTvView extends StatefulWidget {
-  const _CsTvView();
+  const _CsTvView({required this.adultOnly});
+
+  final bool adultOnly;
 
   @override
   State<_CsTvView> createState() => _CsTvViewState();
@@ -16,6 +18,17 @@ class _CsTvViewState extends State<_CsTvView> {
   int _tab = 0;
   final _searchCtrl = TextEditingController();
   String _query = '';
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      try {
+        await sl<CloudStreamManager>().ensureAdultRepoPreadded();
+      } catch (_) {}
+    });
+  }
 
   @override
   void dispose() {
@@ -96,7 +109,7 @@ class _CsTvViewState extends State<_CsTvView> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: Text(
-                      context.l10n.cloudStream,
+                      widget.adultOnly ? 'Adult' : context.l10n.cloudStream,
                       style: AppText.largeTitle,
                     ),
                   ),
@@ -131,7 +144,7 @@ class _CsTvViewState extends State<_CsTvView> {
               ),
             ),
             // Add-repo above the list — see zangetsu_sources_screen_tv.
-            if (_tab == 1)
+            if (_tab == 1 && !widget.adultOnly)
               Padding(
                 padding: const EdgeInsets.fromLTRB(40, 0, 40, 12),
                 child: TvListFocusable(
@@ -150,11 +163,7 @@ class _CsTvViewState extends State<_CsTvView> {
                       ),
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.add,
-                            color: AppColors.accent,
-                            size: 18,
-                          ),
+                          Icon(Icons.add, color: AppColors.accent, size: 18),
                           const SizedBox(width: 8),
                           Text(
                             context.l10n.addCSRepo,
@@ -174,9 +183,15 @@ class _CsTvViewState extends State<_CsTvView> {
                 padding: const EdgeInsets.fromLTRB(40, 0, 40, 48),
                 children: [
                   if (_tab == 0)
-                    _CsScreenTvInstalledContent(query: _query)
+                    _CsScreenTvInstalledContent(
+                      query: _query,
+                      adultOnly: widget.adultOnly,
+                    )
                   else
-                    _CsScreenTvReposContent(query: _query),
+                    _CsScreenTvReposContent(
+                      query: _query,
+                      adultOnly: widget.adultOnly,
+                    ),
                 ],
               ),
             ),
@@ -245,15 +260,16 @@ class _CsTvTabChip extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _CsScreenTvInstalledContent extends StatelessWidget {
-  const _CsScreenTvInstalledContent({this.query = ''});
+  const _CsScreenTvInstalledContent({this.query = '', this.adultOnly = false});
 
   final String query;
+  final bool adultOnly;
 
   @override
   Widget build(BuildContext context) {
     // Search: keep only matching sources; drop groups left with none.
     final groups = [
-      for (final g in sl<CloudStreamManager>().repoGroups)
+      for (final g in _visibleCloudStreamGroups(adultOnly: adultOnly))
         if (g.sources.any((s) => sourceSearchMatches(query, s.displayName)))
           CsRepoGroup(
             url: g.url,
@@ -272,7 +288,9 @@ class _CsScreenTvInstalledContent extends StatelessWidget {
         child: EmptyState(
           icon: Icons.dns_rounded,
           message: query.trim().isEmpty
-              ? context.l10n.noCloudStreamSourcesInstalled
+              ? (adultOnly
+                    ? 'No Adult sources installed yet.'
+                    : context.l10n.noCloudStreamSourcesInstalled)
               : 'No installed sources match "${query.trim()}".',
         ),
       );
@@ -519,14 +537,15 @@ class _CsScreenTvSourceRow extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _CsScreenTvReposContent extends StatelessWidget {
-  const _CsScreenTvReposContent({this.query = ''});
+  const _CsScreenTvReposContent({this.query = '', this.adultOnly = false});
 
   final String query;
+  final bool adultOnly;
 
   @override
   Widget build(BuildContext context) {
     final searching = query.trim().isNotEmpty;
-    final all = sl<CloudStreamManager>().repoGroups;
+    final all = _visibleCloudStreamGroups(adultOnly: adultOnly);
     // Search: keep only matching catalog plugins; drop repos left with none.
     final groups = !searching
         ? all
@@ -546,31 +565,39 @@ class _CsScreenTvReposContent extends StatelessWidget {
                   sources: g.sources,
                 ),
           ];
-    if (groups.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        child: EmptyState(
-          icon: Icons.cloud_outlined,
-          message: searching
-              ? context.l10n.noExtensionsMatchQuery(query.trim())
-              : context.l10n.noCloudStreamReposAddedYetPress(
-                  context.l10n.addCSRepo,
-                ),
-        ),
-      );
-    }
-    return BlocBuilder<ActiveSourceCubit, String>(
-      builder: (context, activeId) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (final group in groups)
-            _CsScreenTvRepoSection(
-              group: group,
-              activeId: activeId,
-              searching: searching,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (!searching && !adultOnly) const AutoLinkRepoSection(),
+        if (groups.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: EmptyState(
+              icon: Icons.cloud_outlined,
+              message: searching
+                  ? context.l10n.noExtensionsMatchQuery(query.trim())
+                  : (adultOnly
+                        ? 'Adult repository is unavailable. Check your connection and try again.'
+                        : context.l10n.noCloudStreamReposAddedYetPress(
+                            context.l10n.addCSRepo,
+                          )),
             ),
-        ],
-      ),
+          )
+        else
+          BlocBuilder<ActiveSourceCubit, String>(
+            builder: (context, activeId) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final group in groups)
+                  _CsScreenTvRepoSection(
+                    group: group,
+                    activeId: activeId,
+                    searching: searching,
+                  ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }
@@ -702,6 +729,10 @@ class _CsScreenTvRepoSectionState extends State<_CsScreenTvRepoSection> {
   Widget build(BuildContext context) {
     final manager = sl<CloudStreamManager>();
     final isOther = group.url.isEmpty;
+    final isDefault = !isOther && manager.defaultRepoUrl == group.url;
+    final hasEnabledSources = group.sources.any(
+      (source) => manager.isEnabled(source.sourceId),
+    );
     final updates = isOther
         ? const <CsUpdate>[]
         : manager.updatesFor(group.url);
@@ -795,6 +826,66 @@ class _CsScreenTvRepoSectionState extends State<_CsScreenTvRepoSection> {
                       spacing: 8,
                       runSpacing: 4,
                       children: [
+                        if (isDefault)
+                          ExcludeSemantics(
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 6,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.accent.withValues(alpha: 0.16),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                'Default',
+                                style: AppText.caption.copyWith(
+                                  color: AppColors.accent,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (!isDefault && hasEnabledSources)
+                          TvListFocusable(
+                            onTap: () => _setCsDefaultRepo(context, group),
+                            semanticLabel: '$title, set as default Home repo',
+                            child: ExcludeSemantics(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
+                                ),
+                                child: Text(
+                                  'Set as default',
+                                  style: AppText.caption.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (!isDefault && !hasEnabledSources && !isOther)
+                          ExcludeSemantics(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 6,
+                              ),
+                              child: Text(
+                                group.sources.isEmpty
+                                    ? 'Install a source first'
+                                    : 'Enable a source first',
+                                style: AppText.caption.copyWith(
+                                  color: AppColors.textTertiary,
+                                ),
+                              ),
+                            ),
+                          ),
                         if (updates.isNotEmpty)
                           TvListFocusable(
                             onTap: _applyUpdates,

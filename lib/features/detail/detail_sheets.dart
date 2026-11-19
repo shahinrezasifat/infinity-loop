@@ -1,7 +1,6 @@
 // Source picker and download sheets.
 part of 'detail_screen.dart';
 
-
 /// A readable name for a source row. Providers like 4khdhub set a rich [label];
 /// AllAnime sets neither label nor quality, so fall back to the host (or a
 /// numbered server) instead of rendering a blank row.
@@ -20,10 +19,15 @@ String _sourceName(AppLocalizations l10n, VideoSource s, int index) {
 // and lists them so the user downloads a specific, real link. Returns the
 // chosen VideoSource via pop. HLS sources are shown disabled (phase 2).
 class _SourcePickerSheet extends StatefulWidget {
-  const _SourcePickerSheet({required this.title, required this.resolve});
+  const _SourcePickerSheet({
+    required this.title,
+    required this.resolve,
+    this.groupByLanguage = false,
+  });
 
   final String title;
   final Future<List<VideoSource>> Function() resolve;
+  final bool groupByLanguage;
 
   @override
   State<_SourcePickerSheet> createState() => _SourcePickerSheetState();
@@ -33,6 +37,7 @@ class _SourcePickerSheetState extends State<_SourcePickerSheet> {
   List<VideoSource>? _sources;
   bool _loading = true;
   bool _loadFailed = false;
+  String? _selectedLanguage;
 
   @override
   void initState() {
@@ -54,6 +59,53 @@ class _SourcePickerSheetState extends State<_SourcePickerSheet> {
   bool _isHls(VideoSource s) =>
       s.container == SourceContainer.hls ||
       (Uri.tryParse(s.url)?.path ?? s.url).toLowerCase().endsWith('.m3u8');
+
+  String? _languageOf(VideoSource s) {
+    final direct = s.audioLang?.trim();
+    if (direct != null && direct.isNotEmpty) return direct;
+    final text = '${s.label ?? ''} ${s.quality ?? ''}'.toLowerCase();
+    const languages = <String>[
+      'bengali',
+      'bangla',
+      'hindi',
+      'english',
+      'tamil',
+      'telugu',
+      'malayalam',
+      'kannada',
+      'marathi',
+      'punjabi',
+      'urdu',
+      'japanese',
+      'korean',
+      'chinese',
+    ];
+    for (final language in languages) {
+      if (text.contains(language)) {
+        if (language == 'bangla') return 'Bengali';
+        return language[0].toUpperCase() + language.substring(1);
+      }
+    }
+    return null;
+  }
+
+  List<String> get _languages {
+    if (_sources == null) return const [];
+    final values = <String>{};
+    for (final source in _sources!) {
+      final language = _languageOf(source);
+      if (language != null) values.add(language);
+    }
+    final result = values.toList()..sort();
+    return result;
+  }
+
+  List<VideoSource> get _resolutionSources {
+    if (_selectedLanguage == null) return const [];
+    return _sources!
+        .where((source) => _languageOf(source) == _selectedLanguage)
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +131,10 @@ class _SourcePickerSheetState extends State<_SourcePickerSheet> {
             ),
             Padding(
               padding: const EdgeInsets.only(right: 8),
-              child: Text(context.l10n.downloadChooseServer, style: AppText.title),
+              child: Text(
+                context.l10n.downloadChooseServer,
+                style: AppText.title,
+              ),
             ),
             const SizedBox(height: 4),
             Padding(
@@ -91,6 +146,20 @@ class _SourcePickerSheetState extends State<_SourcePickerSheet> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
+            if (_selectedLanguage != null) ...[
+              const SizedBox(height: 6),
+              TextButton.icon(
+                onPressed: () => setState(() => _selectedLanguage = null),
+                icon: const Icon(Icons.arrow_back_rounded, size: 18),
+                label: Text(
+                  _selectedLanguage!,
+                  style: AppText.caption.copyWith(
+                    color: AppColors.accent,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
             const SizedBox(height: 12),
             if (_loading)
               Padding(
@@ -119,11 +188,60 @@ class _SourcePickerSheetState extends State<_SourcePickerSheet> {
             else
               ConstrainedBox(
                 constraints: BoxConstraints(maxHeight: maxH),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: _sources!.length,
-                  itemBuilder: (context, i) => _row(_sources![i], i),
-                ),
+                child:
+                    widget.groupByLanguage &&
+                        _languages.length > 1 &&
+                        _selectedLanguage == null
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _languages.length,
+                        itemBuilder: (context, i) {
+                          final language = _languages[i];
+                          final count = _sources!
+                              .where(
+                                (source) => _languageOf(source) == language,
+                              )
+                              .length;
+                          return ListTile(
+                            contentPadding: const EdgeInsets.only(right: 8),
+                            leading: Icon(
+                              Icons.language_rounded,
+                              color: AppColors.accent,
+                            ),
+                            title: Text(
+                              language,
+                              style: AppText.body.copyWith(
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            subtitle: Text(
+                              '$count resolution${count == 1 ? '' : 's'}',
+                              style: AppText.caption,
+                            ),
+                            trailing: const Icon(
+                              Icons.chevron_right_rounded,
+                              color: AppColors.textSecondary,
+                            ),
+                            onTap: () =>
+                                setState(() => _selectedLanguage = language),
+                          );
+                        },
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount:
+                            widget.groupByLanguage && _selectedLanguage != null
+                            ? _resolutionSources.length
+                            : _sources!.length,
+                        itemBuilder: (context, i) {
+                          final source =
+                              widget.groupByLanguage &&
+                                  _selectedLanguage != null
+                              ? _resolutionSources[i]
+                              : _sources![i];
+                          return _row(source, i);
+                        },
+                      ),
               ),
           ],
         ),
@@ -511,7 +629,9 @@ class _DownloadSheetState extends State<_DownloadSheet> {
                   style: AppText.overline,
                 ),
                 _textBtn(
-                  _allSeasonSelected ? context.l10n.clear : context.l10n.selectAll,
+                  _allSeasonSelected
+                      ? context.l10n.clear
+                      : context.l10n.selectAll,
                   _allSeasonSelected ? _clearSeason : _selectAllInSeason,
                 ),
               ],
@@ -711,7 +831,10 @@ class _DownloadSheetState extends State<_DownloadSheet> {
                     padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(context.l10n.startFrom, style: AppText.headline),
+                      child: Text(
+                        context.l10n.startFrom,
+                        style: AppText.headline,
+                      ),
                     ),
                   ),
                   if (pool.length > 8)
@@ -757,7 +880,8 @@ class _DownloadSheetState extends State<_DownloadSheet> {
                         final idx = pool.indexOf(ep);
                         final n = ep.number?.toInt() ?? (idx + 1);
                         final title = ep.title.trim();
-                        final hasTitle = title.isNotEmpty &&
+                        final hasTitle =
+                            title.isNotEmpty &&
                             title != context.l10n.episodeLabel(n);
                         return ListTile(
                           title: Text(
@@ -769,7 +893,10 @@ class _DownloadSheetState extends State<_DownloadSheet> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           trailing: idx == _startIdx
-                              ? Icon(Icons.check_rounded, color: AppColors.accent)
+                              ? Icon(
+                                  Icons.check_rounded,
+                                  color: AppColors.accent,
+                                )
                               : null,
                           onTap: () => Navigator.pop(ctx, idx),
                         );
@@ -820,7 +947,10 @@ class _DownloadSheetState extends State<_DownloadSheet> {
               padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(context.l10n.playerInfoSource, style: AppText.headline),
+                child: Text(
+                  context.l10n.playerInfoSource,
+                  style: AppText.headline,
+                ),
               ),
             ),
             const Divider(color: AppColors.hairline, height: 1),
@@ -911,11 +1041,15 @@ class _DownloadSheetState extends State<_DownloadSheet> {
       );
     }
     if (_multiSeason) {
-      add(_minimalMetaSeg(context.l10n.seasonNumber(_season), onTap: _pickSeason));
+      add(
+        _minimalMetaSeg(context.l10n.seasonNumber(_season), onTap: _pickSeason),
+      );
     }
     // "From E{n}" — the movable start point (searchable picker).
     if (_minimalPool.length > 1) {
-      add(_minimalMetaSeg(context.l10n.fromEpisode(_startNum), onTap: _pickStart));
+      add(
+        _minimalMetaSeg(context.l10n.fromEpisode(_startNum), onTap: _pickStart),
+      );
     }
     final srcs = _sources ?? const <VideoSource>[];
     add(
@@ -925,10 +1059,7 @@ class _DownloadSheetState extends State<_DownloadSheet> {
       ),
     );
 
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: segs,
-    );
+    return Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: segs);
   }
 
   Widget _wheelPicker() {
@@ -1010,7 +1141,10 @@ class _DownloadSheetState extends State<_DownloadSheet> {
     final count = eps.length;
     final preview = eps.isEmpty
         ? ''
-        : context.l10n.episodeCountWithRange(count, _rangeLabel(context.l10n, eps));
+        : context.l10n.episodeCountWithRange(
+            count,
+            _rangeLabel(context.l10n, eps),
+          );
     return SafeArea(
       top: false,
       child: Padding(
@@ -1245,7 +1379,8 @@ class _DownloadSheetState extends State<_DownloadSheet> {
       // checked radio; focus = TvFocusable's ring.
       return Padding(
         padding: const EdgeInsets.only(bottom: 8),
-        child: TvListFocusable( // full-width row — scaling overflows the sheet edges
+        child: TvListFocusable(
+          // full-width row — scaling overflows the sheet edges
           onTap: onTap,
           semanticLabel: hasQuality ? '$label, ${s.quality!.trim()}' : label,
           child: Material(
@@ -1304,7 +1439,12 @@ class _DownloadSheetState extends State<_DownloadSheet> {
       padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
       child: Row(
         children: [
-          Expanded(child: Text('${context.l10n.season} $_season', style: AppText.headline)),
+          Expanded(
+            child: Text(
+              '${context.l10n.season} $_season',
+              style: AppText.headline,
+            ),
+          ),
           const Icon(
             Icons.keyboard_arrow_down_rounded,
             color: AppColors.textPrimary,

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Leanback support for Android TV -->
+    <supports-screens
+        android:largeScreens="true"
+        android:xlargeScreens="true"
+        android:anyDensity="true"
+        android:smallestScreenWidthDp="720"
+        android:screenDensity="ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi"
+        android:screenSize="normal|large|xlarge" />
+
+    <!-- TV hardware features -->
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.faketouch"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
+
+    <!-- Allow network state changes for live streaming -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- Optional permissions for TV features -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" android:required="false" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:required="false" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:required="false" />
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" android:required="false" />
+
+    <!-- Declare this app as a TV app -->
+    <uses-feature
+        android:name="android.hardware.type.television"
+        android:required="true" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:banner="@drawable/app_banner"
+        android:theme="@style/Theme.SifatsPlayer.TV"
+        android:supportsRtl="true"
+        tools:targetApi="leanback">
+
+        <!-- Main TV Activity with Leanback support -->
+        <activity
+            android:name="com.sifat.player.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:banner="@drawable/app_banner"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:resizeableActivity="false">
+
+            <!-- Leanback launcher intent filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- TV search intent -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+
+            <!-- TV search metadata -->
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+            <!-- TV shortcuts -->
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity>
+
+        <!-- Video player activity for TV -->
+        <activity
+            android:name="com.sifat.player.VideoPlayerActivity"
+            android:exported="true"
+            android:label="@string/video_player_title"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.SifatsPlayer.VideoPlayer"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation" />
+
+        <!-- Settings activity for TV -->
+        <activity
+            android:name="com.sifat.player.SettingsActivity"
+            android:exported="true"
+            android:label="@string/settings_title"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.SifatsPlayer.Settings" />
+
+    </application>
+
+</manifest>

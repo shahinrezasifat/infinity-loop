@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A tracker's mark — its brand colour and short name in a rounded tile, the
 /// way AniList/MAL/Simkl are recognised at a glance.

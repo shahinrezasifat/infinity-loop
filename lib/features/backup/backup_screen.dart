@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/app_mode.dart';
@@ -36,8 +36,9 @@ class _BackupScreenState extends State<BackupScreen> {
   bool get _isTv => sl<AppMode>().isTv;
 
   Future<void> _backupToCloud() async {
-    if (!requireLogin(context, action: context.l10n.signInToBackUpToCloud))
+    if (!requireLogin(context, action: context.l10n.signInToBackUpToCloud)) {
       return;
+    }
     final uid = context.read<AuthCubit>().state.user?.id;
     if (uid == null) return;
     setState(() => _busy = true);
@@ -84,8 +85,9 @@ class _BackupScreenState extends State<BackupScreen> {
   }
 
   Future<void> _restoreFromCloud() async {
-    if (!requireLogin(context, action: context.l10n.signInToRestoreFromCloud))
+    if (!requireLogin(context, action: context.l10n.signInToRestoreFromCloud)) {
       return;
+    }
     final uid = context.read<AuthCubit>().state.user?.id;
     if (uid == null) return;
     setState(() => _busy = true);

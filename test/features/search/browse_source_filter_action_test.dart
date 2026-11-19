@@ -2,7 +2,7 @@
 // extension concept, so the button must appear for Aniyomi/Mihon sources and
 // stay away from the ecosystems that have no filter schema at all.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/di/injector.dart' show sl;

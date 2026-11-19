@@ -1,5 +1,5 @@
 name: watch_app
-description: "A new Flutter project."
+description: "Sifat's Player - A premium Flutter-based streaming and media player with multi-repository support."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -42,6 +42,9 @@ dependencies:
   # State / value equality
   equatable: ^2.0.7
 
+  # UUID generation for repository IDs
+  uuid: ^4.0.0
+
   # DI
   get_it: ^8.0.3
 
@@ -52,6 +55,9 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   path_provider: ^2.1.5
+  path: ^1.9.1
+  sqflite: ^2.4.2
+  sqflite_common_ffi: ^2.3.6
   # Apple TV (tvOS) federated plugin implementations. path_provider does not
   # degrade gracefully (Hive.initFlutter fails hard without it).
   path_provider_tvos: ^0.0.3
@@ -166,6 +172,9 @@ dependencies:
   firebase_messaging: ^16.4.3
   fluttertoast: ^10.0.0
   dynamic_color: ^2.1.0
+  material_ui: any
+  cupertino_ui: any
+  provider: any
 dev_dependencies:
   # Test-only: gives the EPUB tests a REAL XML parse, which catches what a
   # hand-rolled tag-balance check cannot (an unescaped '&', a bad attribute)
@@ -248,7 +257,7 @@ dependency_overrides:
   # forcing 0.7.1 unblocks resolution without affecting the Android build.
   js: ^0.7.1
 
-# App launcher icon (Zangetsu logo). Regenerate with:
+# App launcher icon (Loop/Infinity logo). Regenerate with:
 #   dart run flutter_launcher_icons
 flutter_launcher_icons:
   image_path: "assets/icon/app_icon.png"
@@ -266,6 +275,7 @@ flutter:
   generate: true
   uses-material-design: true
   assets:
+    - assets/preloaded_repos.json
     # No built-in providers — sources are installed from the Zangetsu repo.
     # Extractors stay bundled (shared video-host helpers, not providers).
     - extractors/example_embed.js

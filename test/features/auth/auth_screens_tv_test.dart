@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:watch_app/core/appwrite/appwrite_service.dart';
@@ -11,9 +11,9 @@ import 'package:watch_app/features/auth/migration_bridge.dart';
 // ── Minimal fakes ─────────────────────────────────────────────────────────────
 
 MigrationBridge _fakeBridge() => MigrationBridge(
-      invoke: (_, __) async => const {'ok': false},
-      signInPassword: (_, __) async => false,
-      verifyOtp: (_, __) async => false,
+      invoke: (_, _) async => const {'ok': false},
+      signInPassword: (_, _) async => false,
+      verifyOtp: (_, _) async => false,
     );
 
 /// Extends [AuthCubit] with stub dependencies and a preset initial state.

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,9 +27,9 @@ import 'package:watch_app/features/settings/settings_screen.dart';
 import 'package:watch_app/l10n/app_localizations.dart';
 
 MigrationBridge _fakeBridge() => MigrationBridge(
-      invoke: (_, __) async => const {'ok': false},
-      signInPassword: (_, __) async => false,
-      verifyOtp: (_, __) async => false,
+      invoke: (_, _) async => const {'ok': false},
+      signInPassword: (_, _) async => false,
+      verifyOtp: (_, _) async => false,
     );
 
 // ── Minimal stubs (mirrors settings_screen_tv_test.dart / AppMode wiring) ────
@@ -84,11 +84,11 @@ void _mockPathProvider(WidgetTester tester) {
 
 void main() {
   late ActiveSourceCubit activeCubit;
-  late Directory _hiveDir;
+  late Directory hiveDir;
 
   setUp(() async {
-    _hiveDir = await Directory.systemTemp.createTemp();
-    Hive.init(_hiveDir.path);
+    hiveDir = await Directory.systemTemp.createTemp();
+    Hive.init(hiveDir.path);
     await Hive.openBox(DownloadPrefs.boxName);
     await Hive.openBox(TorrentPrefs.boxName);
     await Hive.openBox(ThemeController.boxName);
@@ -115,10 +115,10 @@ void main() {
     await activeCubit.close();
     await GetIt.instance.reset();
     await Hive.deleteFromDisk();
-    if (_hiveDir.existsSync()) await _hiveDir.delete(recursive: true);
+    if (hiveDir.existsSync()) await hiveDir.delete(recursive: true);
   });
 
-  Future<void> _pumpSettings(WidgetTester tester) async {
+  Future<void> pumpSettings(WidgetTester tester) async {
     _mockPathProvider(tester);
     await tester.binding.setSurfaceSize(const Size(1000, 2200));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -146,7 +146,7 @@ void main() {
 
   testWidgets('top level shows one tappable row per section, not the tiles',
       (tester) async {
-    await _pumpSettings(tester);
+    await pumpSettings(tester);
 
     // Each section is now a single drill-down row.
     for (final section in const [
@@ -170,7 +170,7 @@ void main() {
   });
 
   testWidgets('tapping a category drills into its settings', (tester) async {
-    await _pumpSettings(tester);
+    await pumpSettings(tester);
 
     await tester.tap(find.text('Sources'));
     await tester.pumpAndSettle();
@@ -196,7 +196,7 @@ void main() {
 
   testWidgets('Reading section has a Reader entry that opens reader defaults',
       (tester) async {
-    await _pumpSettings(tester);
+    await pumpSettings(tester);
 
     await tester.tap(find.text('Reading'));
     await tester.pumpAndSettle();
@@ -211,7 +211,7 @@ void main() {
 
   testWidgets('search cuts across every section (flat filtered list)',
       (tester) async {
-    await _pumpSettings(tester);
+    await pumpSettings(tester);
 
     await tester.enterText(find.byType(TextField), 'backup');
     await tester.pumpAndSettle();

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../core/i18n/source_languages.dart';
 import '../../core/prefs/source_lang_prefs.dart';

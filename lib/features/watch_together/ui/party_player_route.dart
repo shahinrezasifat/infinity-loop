@@ -1,5 +1,5 @@
 // lib/features/watch_together/ui/party_player_route.dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../core/di/injector.dart';
 import '../../../core/playback/resume_store.dart';

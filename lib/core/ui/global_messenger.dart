@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// App-wide ScaffoldMessenger so non-widget code (e.g. the AniList scrobbler
 /// running from the player controller) can surface a brief toast. Wired into

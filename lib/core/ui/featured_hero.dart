@@ -2,7 +2,7 @@
 import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'image_fade.dart';
 import 'package:palette_generator/palette_generator.dart';

@@ -50,8 +50,8 @@ VideoSource _$VideoSourceFromJson(Map<String, dynamic> json) => VideoSource(
           .toList() ??
       [],
   subtitleSkewSeconds: (json['subtitleSkewSeconds'] as num?)?.toDouble(),
-  subtitleSkewAfterSeconds:
-      (json['subtitleSkewAfterSeconds'] as num?)?.toDouble(),
+  subtitleSkewAfterSeconds: (json['subtitleSkewAfterSeconds'] as num?)
+      ?.toDouble(),
 );
 
 Map<String, dynamic> _$VideoSourceToJson(VideoSource instance) =>

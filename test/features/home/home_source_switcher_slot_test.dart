@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
@@ -66,23 +66,28 @@ void main() {
     expect(ZModePrefs.enabled, isFalse);
     await pumpSlot(tester);
     expect(find.byType(SourceSwitcher), findsOneWidget);
+    expect(
+      tester.widget<SourceSwitcher>(find.byType(SourceSwitcher)).iconOnly,
+      isTrue,
+    );
+    expect(find.byIcon(Icons.source_outlined), findsOneWidget);
   });
 
-  testWidgets('Z Mode on: the source switcher is hidden', (tester) async {
+  testWidgets('Z Mode on: the source switcher remains available', (tester) async {
     // A real Hive write never drains under the pump-driven testWidgets
     // binding without runAsync — same gotcha as wrong_title_sheet_test.dart.
     await tester.runAsync(() => ZModePrefs.setEnabled(true));
     await pumpSlot(tester);
-    expect(find.byType(SourceSwitcher), findsNothing);
+    expect(find.byType(SourceSwitcher), findsOneWidget);
   });
 
-  testWidgets('flipping the toggle updates the slot without a restart', (tester) async {
+  testWidgets('flipping Z Mode does not hide the source switcher', (tester) async {
     await pumpSlot(tester);
     expect(find.byType(SourceSwitcher), findsOneWidget);
 
     await tester.runAsync(() => ZModePrefs.setEnabled(true));
     await tester.pump();
-    expect(find.byType(SourceSwitcher), findsNothing);
+    expect(find.byType(SourceSwitcher), findsOneWidget);
 
     await tester.runAsync(() => ZModePrefs.setEnabled(false));
     await tester.pump();
