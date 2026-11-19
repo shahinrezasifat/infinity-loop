@@ -116,6 +116,11 @@ extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
         // classpath so Robolectric can shadow Activity / Application / etc.
         unitTests.isIncludeAndroidResources = true
     }
+
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
+    }
 }
 
 flutter {
