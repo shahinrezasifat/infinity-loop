@@ -1,8 +1,8 @@
 <div align="center">
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:FF4D57,100:1a1a2e&height=220&section=header&text=Zangetsu%20Player&fontSize=70&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Advanced%20Movie%20%26%20Anime%20Streaming%2C%20Downloader%20%26%20Reader&descAlignY=58&descSize=20" />
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:FF4D57,100:1a1a2e&height=220&section=header&text=Infinity%20Loop&fontSize=70&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Advanced%20Movie%20%26%20Anime%20Streaming%2C%20Downloader%20%26%20Reader&descAlignY=58&descSize=20" />
 
-<img src="assets/icon/app_icon.png" width="120" alt="Zangetsu" />
+<img src="assets/icon/app_icon.png" width="120" alt="Infinity Loop" />
 
 ### A modern, open-source streaming app & offline downloader for movies, anime, manga & light novels — Android, TV and iOS
 
@@ -130,9 +130,9 @@ Licensed under the **[GNU GPL-3.0](LICENSE)**. See the included license file for
 
 <br/>
 
-<img src="assets/icon/app_icon.png" width="60" alt="Zangetsu"/>
+<img src="assets/icon/app_icon.png" width="60" alt="Infinity Loop"/>
 
-### Zangetsu
+### Infinity Loop
 *Crafted with ❤️ for entertainment lovers.*
 
 <br/>
