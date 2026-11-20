@@ -18,21 +18,21 @@ Infinity Loop is an independently maintained, modified open-source Android and A
 
 ## Screenshots
 
-Infinity Loop v2.2.1 running on the Android Studio emulator.
+Infinity Loop v2.2.2 running on the Android Studio emulator.
 
 <div align="center">
 <table>
   <tr>
-    <td align="center"><img src=".github/screenshots/home.png" alt="Home screen with featured movies and latest episodes" width="210" /><br /><strong>Home</strong></td>
-    <td align="center"><img src=".github/screenshots/search.png" alt="Search screen for finding titles and filtering results" width="210" /><br /><strong>Search</strong></td>
+    <td align="center"><img src=".github/screenshots/home-v2-2-2.png" alt="Home screen with featured movies and latest episodes" width="210" /><br /><strong>Home</strong></td>
+    <td align="center"><img src=".github/screenshots/search-v2-2-2.png" alt="Search screen for finding titles and filtering results" width="210" /><br /><strong>Search</strong></td>
   </tr>
   <tr>
-    <td align="center"><img src=".github/screenshots/detail.png" alt="Title details screen with viewing options" width="210" /><br /><strong>Details</strong></td>
-    <td align="center"><img src=".github/screenshots/my-list.png" alt="My List screen for saved titles and watch status" width="210" /><br /><strong>My List</strong></td>
+    <td align="center"><img src=".github/screenshots/details-v2-2-2.png" alt="Title details screen with viewing options" width="210" /><br /><strong>Details</strong></td>
+    <td align="center"><img src=".github/screenshots/my-list-v2-2-2.png" alt="My List screen for saved titles and watch status" width="210" /><br /><strong>My List</strong></td>
   </tr>
   <tr>
-    <td align="center"><img src=".github/screenshots/about.png" alt="Infinity Loop About with the GitHub profile and Check for updates" width="210" /><br /><strong>About &amp; Updates</strong></td>
-    <td align="center"><img src=".github/screenshots/developer.png" alt="Infinity Loop Developer profile for S. M. Shahin Reza Sifat" width="210" /><br /><strong>Developer</strong></td>
+    <td align="center"><img src=".github/screenshots/about-v2-2-2.png" alt="Infinity Loop About with the GitHub profile and Check for updates" width="210" /><br /><strong>About &amp; Updates</strong></td>
+    <td align="center"><img src=".github/screenshots/developer-v2-2-2.png" alt="Infinity Loop Developer profile for S. M. Shahin Reza Sifat" width="210" /><br /><strong>Developer</strong></td>
   </tr>
 </table>
 </div>
