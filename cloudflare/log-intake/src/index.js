@@ -1,5 +1,5 @@
 /**
- * Zangetsu log intake.
+ * Infinity Loop log intake.
  *
  * The app posts a gzipped diagnostic log here when someone taps "Send report".
  * The Worker attaches it to a Discord message — so the report can be read by
@@ -194,7 +194,7 @@ async function notify(
   payload.append(
     'payload_json',
     JSON.stringify({
-      username: 'Zangetsu logs',
+      username: 'Infinity Loop logs',
       // The note is user-supplied — never let a report ping the channel.
       allowed_mentions: { parse: [] },
       content: lines.join('\n'),

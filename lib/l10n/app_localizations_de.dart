@@ -329,7 +329,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get couldNotExportLogs => 'Logs konnten nicht exportiert werden';
 
   @override
-  String get logsShareSubject => 'Zangetsu-Logs';
+  String get logsShareSubject => 'InfinityLoop-Logs';
 
   @override
   String get signInSubtitle => 'Liste, Verlauf & Weiterschauen synchronisieren';
@@ -1413,7 +1413,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Material You aus, um selbst eine Farbe zu wählen';
 
   @override
-  String get downloadsZangetsu => 'Downloads › Infinity Loop';
+  String get downloadsInfinityLoop => 'Downloads › Infinity Loop';
 
   @override
   String get removableDrive => 'Wechseldatenträger';
@@ -2078,7 +2078,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get haveTheApp => 'Hast du die App?';
 
   @override
-  String get openZangetsuOnYourNphoneAndScan =>
+  String get openInfinityLoopOnYourNphoneAndScan =>
       'Öffne Infinity Loop auf deinem\\nHandy und scanne';
 
   @override
@@ -2137,8 +2137,8 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String
-  get onTheZangetsuAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR =>
-      'In der Zangetsu-App auf dem Handy öffne\\n„TV koppeln“ und gib diesen Code ein — oder scanne den QR.';
+  get onTheInfinityLoopAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR =>
+      'In der InfinityLoop-App auf dem Handy öffne\\n„TV koppeln“ und gib diesen Code ein — oder scanne den QR.';
 
   @override
   String get signingIn => 'Anmeldung…';
@@ -2163,7 +2163,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get enterTheCodeFromYourTV => 'Code von deiner TV eingeben';
 
   @override
-  String get openZangetsuOnYourTVAndSignInWithYourPhoneToSeeIt =>
+  String get openInfinityLoopOnYourTVAndSignInWithYourPhoneToSeeIt =>
       'Öffne Infinity Loop auf der TV und melde dich mit dem Handy an, um es zu sehen.';
 
   @override
@@ -2209,7 +2209,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get restoreComplete => 'Wiederherstellung fertig';
 
   @override
-  String get reopenZangetsuToSeeRestoredLibrarySources =>
+  String get reopenInfinityLoopToSeeRestoredLibrarySources =>
       'Infinity Loop erneut öffnen, um Bibliothek & Quellen zu sehen.';
 
   @override
@@ -2432,7 +2432,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noSourcesInThisRepo => 'Keine Quellen in diesem Repo.';
 
   @override
-  String get zangetsuProviders => 'Zangetsu-Anbieter';
+  String get infinityloopProviders => 'InfinityLoop-Anbieter';
 
   @override
   String get addRepo => 'Repo hinzufügen';
@@ -2539,7 +2539,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Eigene Einstellungen dieser Quelle öffnen (z. B. Server, Sprache)';
 
   @override
-  String get addZangetsuRepo => 'Zangetsu-Repo hinzufügen';
+  String get addInfinityLoopRepo => 'InfinityLoop-Repo hinzufügen';
 
   @override
   String get theProviderWillBeRemovedFromYourInstalledSources =>
@@ -3791,7 +3791,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Cloud-Sicherung ist fehlgeschlagen. Überprüfen Sie Ihre Internetverbindung. Sollte die Sicherung weiterhin fehlschlagen, ist der Cloud-Speicher möglicherweise noch nicht eingerichtet.';
 
   @override
-  String get savedToDownloadsZangetsu =>
+  String get savedToDownloadsInfinityLoop =>
       'Unter Downloads gespeichert › Infinity Loop';
 
   @override
@@ -3805,7 +3805,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get backupScreenBlurb =>
-      'Speichern Sie Ihre Quellen, Listen und Einstellungen – entweder in einer Datei auf Ihrem Gerät oder in Ihrem Zangetsu-Konto. Durch das Wiederherstellen werden lediglich die gespeicherten Daten wiederhergestellt; bereits vorhandene Daten werden niemals gelöscht.';
+      'Speichern Sie Ihre Quellen, Listen und Einstellungen – entweder in einer Datei auf Ihrem Gerät oder in Ihrem InfinityLoop-Konto. Durch das Wiederherstellen werden lediglich die gespeicherten Daten wiederhergestellt; bereits vorhandene Daten werden niemals gelöscht.';
 
   @override
   String get includeInTheBackup => 'In die Sicherung aufnehmen';
@@ -4033,7 +4033,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get lnreader => 'LNReader';
 
   @override
-  String get zangetsu => 'Infinity Loop';
+  String get infinityloop => 'Infinity Loop';
 
   @override
   String get cloudStream => 'Cloudstream';
@@ -5314,5 +5314,5 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get keepDownloadsPrivateSubtitle =>
-      'New video downloads stay inside Infinity Loop instead of the Downloads folder. They are deleted when you uninstall Zangetsu. Chapters and exports are unaffected.';
+      'New video downloads stay inside Infinity Loop instead of the Downloads folder. They are deleted when you uninstall Infinity Loop. Chapters and exports are unaffected.';
 }

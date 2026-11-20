@@ -3068,7 +3068,7 @@ class PlayerCubit extends Cubit<PlayerState> {
         _toast("Couldn't capture the frame");
         return false;
       }
-      final name = 'Zangetsu_${DateTime.now().millisecondsSinceEpoch}';
+      final name = 'InfinityLoop_${DateTime.now().millisecondsSinceEpoch}';
       // Saving needs no runtime permission on Android 10+; on older Android /
       // iOS the first attempt throws accessDenied — request, then retry once.
       try {

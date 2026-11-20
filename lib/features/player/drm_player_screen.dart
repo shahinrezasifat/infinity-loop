@@ -240,7 +240,7 @@ class _DrmPlayerScreenState extends State<DrmPlayerScreen> {
           children: [
             Positioned.fill(
               child: PlatformViewLink(
-                viewType: 'zangetsu/exoplayer_view',
+                viewType: 'infinityloop/exoplayer_view',
                 surfaceFactory: (context, controller) => AndroidViewSurface(
                   controller: controller as AndroidViewController,
                   gestureRecognizers:
@@ -250,7 +250,7 @@ class _DrmPlayerScreenState extends State<DrmPlayerScreen> {
                 onCreatePlatformView: (params) {
                   return PlatformViewsService.initExpensiveAndroidView(
                     id: params.id,
-                    viewType: 'zangetsu/exoplayer_view',
+                    viewType: 'infinityloop/exoplayer_view',
                     layoutDirection: TextDirection.ltr,
                     // Same buffer setting as everywhere else — this screen is
                     // ExoPlayer too (ClearKey DRM, which mpv can't decrypt).

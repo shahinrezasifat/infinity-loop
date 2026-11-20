@@ -38,7 +38,7 @@ Widget? manageSourceScreenFor(String sourceId) {
   if (sourceId.startsWith('ani:')) return const AniyomiSourcesScreen();
   if (sourceId.startsWith('mihon:')) return const MihonSourcesScreen();
   if (sourceId.startsWith('lnr:')) return const LnReaderSourcesScreen();
-  // Everything else is a JS provider from the Zangetsu repo — those ids carry
+  // Everything else is a JS provider from the Infinity Loop repo — those ids carry
   // no prefix, so this is the fallback rather than a match.
   return const InfinityLoopSourcesScreen();
 }

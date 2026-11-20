@@ -76,7 +76,7 @@ class _HubPhoneView extends StatelessWidget {
   Widget build(BuildContext context) {
     // Recompute the counts live when a source is installed / enabled / updated
     // while the hub is open (CS + Aniyomi managers are ChangeNotifiers). The
-    // Zangetsu registry isn't a Listenable, but it can only be mutated from its
+    // Infinity Loop registry isn't a Listenable, but it can only be mutated from its
     // own screen, so its count refreshes on navigation back here anyway.
     return ListenableBuilder(
       listenable: Listenable.merge([
@@ -89,13 +89,13 @@ class _HubPhoneView extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) {
-    final zangetsuCount = sl<ProviderRegistry>().getAll().length;
+    final infinityloopCount = sl<ProviderRegistry>().getAll().length;
     final showCs = Platform.isAndroid;
     final showAniyomi = Platform.isAndroid;
     // Mihon (manga extensions) boot-loads the same way Aniyomi does — the
     // load step is Android-only (M7) — so the row is gated identically.
     final showMihon = Platform.isAndroid;
-    // LNReader (novel sources) is a JS provider, same as Zangetsu — no
+    // LNReader (novel sources) is a JS provider, same as Infinity Loop — no
     // platform gate needed. Gated on registration instead, so a minimal-GetIt
     // test that never registers LnReaderManager doesn't crash reading it,
     // same purpose the Mihon platform check serves.
@@ -128,8 +128,8 @@ class _HubPhoneView extends StatelessWidget {
         ? sl<LnReaderManager>().installedSources.length
         : 0;
 
-    // Read-only pending-update counts. Zangetsu reuses SourcesState's own
-    // installed-vs-manifest comparison (same result the Zangetsu screen shows);
+    // Read-only pending-update counts. Infinity Loop reuses SourcesState's own
+    // installed-vs-manifest comparison (same result the Infinity Loop screen shows);
     // CS/Aniyomi/Mihon expose an aggregate updateCount. Nothing is fetched or
     // mutated.
     final zUpdates = SourcesState(
@@ -149,7 +149,7 @@ class _HubPhoneView extends StatelessWidget {
         : 0;
 
     final total =
-        zangetsuCount +
+        infinityloopCount +
         autoLinkCount +
         (showCs ? csTotalInstalled : 0) +
         (showAniyomi ? aniCount : 0) +
@@ -170,25 +170,25 @@ class _HubPhoneView extends StatelessWidget {
     final activeIsAni = activeId.startsWith('ani:');
     final activeIsMihon = activeId.startsWith('mihon:');
     final activeIsLnReader = activeId.startsWith('lnr:');
-    final activeIsZangetsu =
+    final activeIsInfinityLoop =
         activeId.isNotEmpty &&
         !activeIsCs &&
         !activeIsAni &&
         !activeIsMihon &&
         !activeIsAutoLink;
 
-    // Manga/novel sources are also Zangetsu JS providers under the hood, but
+    // Manga/novel sources are also Infinity Loop JS providers under the hood, but
     // get their own hub entry (Task E3) so reading sources read as visibly
     // separate from streaming. sourceTypeOf is the app's one ProviderType
     // resolver (core/ui/source_switcher.dart) — reused rather than
     // re-deriving a manga/novel check here.
     bool isReadingType(ProviderType t) =>
         t == ProviderType.manga || t == ProviderType.novel;
-    // Still needed after the Zangetsu reading row was dropped: a JS reading
-    // source can still be installed and active, and the Zangetsu STREAMING row
+    // Still needed after the Infinity Loop reading row was dropped: a JS reading
+    // source can still be installed and active, and the Infinity Loop STREAMING row
     // must not light up as ACTIVE when it is.
     final activeIsReading =
-        activeIsZangetsu && isReadingType(sourceTypeOf(activeId));
+        activeIsInfinityLoop && isReadingType(sourceTypeOf(activeId));
 
     return Scaffold(
       backgroundColor: AppColors.bg,
@@ -222,15 +222,15 @@ class _HubPhoneView extends StatelessWidget {
           const SizedBox(height: 12),
           _EcoRow(
             icon: Icons.dns_rounded,
-            title: context.l10n.zangetsu,
+            title: context.l10n.infinityloop,
             desc: 'Built-in JS providers',
-            info: '$zangetsuCount sources',
-            // Reading sources are Zangetsu providers too (activeIsZangetsu
+            info: '$infinityloopCount sources',
+            // Reading sources are Infinity Loop providers too (activeIsInfinityLoop
             // alone doesn't distinguish), so exclude them here — the Manga &
             // Novel row owns the badge when a reading source is active. When
             // the active source is anime/movie, activeIsReading is false and
-            // this is byte-identical to plain activeIsZangetsu, as before.
-            active: activeIsZangetsu && !activeIsReading,
+            // this is byte-identical to plain activeIsInfinityLoop, as before.
+            active: activeIsInfinityLoop && !activeIsReading,
             updateCount: zUpdates,
             onTap: () => open(const InfinityLoopSourcesScreen()),
           ),
@@ -273,7 +273,7 @@ class _HubPhoneView extends StatelessWidget {
           ],
           // Reading ecosystems live under their own header so a manga/novel
           // source never reads as a streaming one. Mihon (manga) and LNReader
-          // (novel) sit side by side here — the Zangetsu reading row was
+          // (novel) sit side by side here — the Infinity Loop reading row was
           // dropped because those JS sources are search-only (no
           // popular/latest), which left Home with nothing to render.
           //
@@ -600,7 +600,7 @@ class _HubTvViewState extends State<_HubTvView> {
   }
 
   Widget _body(BuildContext context) {
-    final zangetsuCount = sl<ProviderRegistry>().getAll().length;
+    final infinityloopCount = sl<ProviderRegistry>().getAll().length;
     final showCs = Platform.isAndroid;
     final showAniyomi = Platform.isAndroid;
     final adultGroups = sl<CloudStreamManager>().repoGroups
@@ -719,8 +719,8 @@ class _HubTvViewState extends State<_HubTvView> {
                     ),
                     row(
                       icon: Icons.dns_rounded,
-                      title: context.l10n.zangetsuProviders,
-                      subtitle: '$zangetsuCount installed',
+                      title: context.l10n.infinityloopProviders,
+                      subtitle: '$infinityloopCount installed',
                       tint: AppColors.accent,
                       onTap: () => _open(const InfinityLoopSourcesScreen()),
                     ),

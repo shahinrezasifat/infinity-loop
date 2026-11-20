@@ -14,7 +14,7 @@ class AboutSettingsScreen extends StatefulWidget {
 
 class _AboutSettingsScreenState extends State<AboutSettingsScreen> {
   static const String _websiteUrl = 'https://motionwork-tali.top';
-  static const String _githubUrl = 'https://github.com/shahinrezasifat1999';
+  static const String _githubUrl = 'https://github.com/shahinrezasifat/';
   static const String _facebookUrl =
       'https://www.facebook.com/Shahin.Reza.Sifat1997/';
   static const String _youtubeUrl =
@@ -65,7 +65,7 @@ class _AboutSettingsScreenState extends State<AboutSettingsScreen> {
               SettingsTile(
                 icon: Icons.code_rounded,
                 title: context.l10n.github,
-                subtitle: 'github.com/shahinrezasifat1999',
+                subtitle: 'github.com/shahinrezasifat',
                 onTap: () => _open(_githubUrl),
               ),
               SettingsTile(
@@ -91,12 +91,13 @@ class _AboutSettingsScreenState extends State<AboutSettingsScreen> {
                 subtitle: context.l10n.howItWorksSubtitle,
                 onTap: () => _push(const HowItWorksScreen()),
               ),
-              SettingsTile(
-                icon: Icons.favorite_border_rounded,
-                title: context.l10n.supportTheApp,
-                subtitle: context.l10n.buyMeACoffee,
-                onTap: () => _push(const DonateScreen()),
-              ),
+              if (AppUpdatePrompt.supported)
+                SettingsTile(
+                  icon: Icons.system_update_rounded,
+                  title: context.l10n.checkForUpdates,
+                  subtitle: context.l10n.checkForUpdatesSubtitle,
+                  onTap: () => AppUpdatePrompt.check(context, manual: true),
+                ),
               if (sl.isRegistered<AppMode>() &&
                   sl<AppMode>().isTv &&
                   kExoSpikeEnabled)

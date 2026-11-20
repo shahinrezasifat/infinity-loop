@@ -1,5 +1,12 @@
-Zangetsu
-Copyright (C) 2026 Krishna Vishwakarma (https://github.com/Spyou)
+Infinity Loop
+Copyright (C) 2026 S. M. Shahin Reza Sifat / Motion Work
+
+Infinity Loop is an independently maintained, modified distribution of Zangetsu by
+Krishna Vishwakarma. Original source: https://github.com/Spyou/Zangetsu
+Original work copyright (C) 2026 Krishna Vishwakarma.
+
+Modified 2026-11-21 to use its own branding, Android application identity,
+release signature, GitHub release channel, and service configuration.
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License version 3.0 (GPL-3.0) as published
@@ -26,7 +33,7 @@ Aniyomi / Tachiyomi
   https://github.com/tachiyomiorg/tachiyomi
   License: Apache-2.0
   Portions of the Android extension-loading code (files under
-  android/app/src/main/kotlin/com/spyou/watch_app/aniyomi/) are derived from
+  android/app/src/main/kotlin/com/motionwork/infinityloop/aniyomi/) are derived from
   Aniyomi/Tachiyomi and retain their original Apache-2.0 headers. The full
   Apache License 2.0 text is included as LICENSE-Apache-2.0.txt.
 

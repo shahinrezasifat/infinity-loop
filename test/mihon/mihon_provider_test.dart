@@ -19,7 +19,7 @@ import 'package:infinity_loop/core/models/provider_info.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channel = MethodChannel('zangetsu/mihon');
+  const channel = MethodChannel('infinityloop/mihon');
   final log = <MethodCall>[];
 
   void install(Future<dynamic> Function(MethodCall call) handler) {

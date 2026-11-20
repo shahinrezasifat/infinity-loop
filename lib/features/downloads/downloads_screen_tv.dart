@@ -437,7 +437,7 @@ class _TvLocationHeaderState extends State<_TvLocationHeader> {
     final label = downloadDestinationLabel(
       keepPrivate: prefs?.keepPrivate ?? false,
       locationLabel: prefs?.locationLabel,
-      publicFallback: l10n.downloadsZangetsu,
+      publicFallback: l10n.downloadsInfinityLoop,
     );
     return Padding(
       padding: const EdgeInsets.fromLTRB(48, 0, 48, 12),
@@ -662,7 +662,7 @@ class _TvLocationPickerState extends State<_TvLocationPicker> {
                 downloadDestinationLabel(
                   keepPrivate: prefs?.keepPrivate ?? false,
                   locationLabel: prefs?.locationLabel,
-                  publicFallback: l10n.downloadsZangetsu,
+                  publicFallback: l10n.downloadsInfinityLoop,
                 ),
                 style: AppText.body,
               ),

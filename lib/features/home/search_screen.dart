@@ -1400,7 +1400,7 @@ class _SearchViewState extends State<_SearchView>
     );
   }
 
-  // ── Ecosystem tabs (All · Zangetsu · CloudStream · Aniyomi) ────────────────
+  // ── Ecosystem tabs (All · Infinity Loop · CloudStream · Aniyomi) ────────────────
   /// Real [TabBar]/[TabController] pair — same treatment as the History
   /// screen's tabs (`history_screen.dart:321`): sliding rounded accent
   /// underline + label-colour crossfade instead of a static border, so

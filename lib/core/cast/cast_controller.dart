@@ -86,13 +86,13 @@ String castMimeFor(SourceContainer c, String url) {
 // CastController
 // ---------------------------------------------------------------------------
 
-/// Thin Flutter wrapper around the `zangetsu/cast` native MethodChannel.
+/// Thin Flutter wrapper around the `infinityloop/cast` native MethodChannel.
 ///
 /// Keeps the cast session state as listenable fields and serialises all
 /// channel calls so callers never need to catch [PlatformException].
 class CastController extends ChangeNotifier {
-  static const _method = MethodChannel('zangetsu/cast');
-  static const _events = EventChannel('zangetsu/cast/events');
+  static const _method = MethodChannel('infinityloop/cast');
+  static const _events = EventChannel('infinityloop/cast/events');
 
   // --- Exposed state -------------------------------------------------------
 
@@ -108,7 +108,7 @@ class CastController extends ChangeNotifier {
   bool isPlaying = false;
 
   /// CAF [MediaStatus.playerState] / [idleReason]. Logged on change so a
-  /// shared `zangetsu.log` can show play/pause/idle without native logcat.
+  /// shared `infinityloop.log` can show play/pause/idle without native logcat.
   int playerState = 0;
   int idleReason = 0;
 

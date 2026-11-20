@@ -60,7 +60,7 @@ void main() {
     // Real Hive (temp dir) + real registries — SourcesBloc subscribes to
     // both boxes' `.watch()` in its constructor, so a plain mock can't
     // stand in without reimplementing that surface.
-    tempDir = await Directory.systemTemp.createTemp('zangetsu_sources_test');
+    tempDir = await Directory.systemTemp.createTemp('infinityloop_sources_test');
     Hive.init(tempDir.path);
     await ProviderRegistry.init();
     await ProviderReposRegistry.init();

@@ -808,7 +808,7 @@ class DownloadManager extends ChangeNotifier {
 
   /// Native TS→MP4 remux channel (Android only). See MainActivity + TsRemuxer.
   static const MethodChannel _downloadChannel = MethodChannel(
-    'zangetsu/download',
+    'infinityloop/download',
   );
 
   /// Remux the concatenated-TS file at [input] into a real MP4 at [output] via
@@ -1271,7 +1271,7 @@ class DownloadManager extends ChangeNotifier {
   }
 
   static const MethodChannel _deviceChannel = MethodChannel(
-    'com.spyou.watch_app/device',
+    'com.motionwork.infinityloop/device',
   );
 
   /// Does a SAF `content://` download still exist? Checked natively via

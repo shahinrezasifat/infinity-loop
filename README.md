@@ -14,11 +14,11 @@
   </p>
 </div>
 
-Infinity Loop is an open-source Zangetsu fork that combines a video player, an offline download manager, and dedicated manga and light novel readers. Watch supported streams, save media for offline use, and add your own streams or M3U playlists through Link Repo. On Android TV, browse and control playback with a D-pad remote.
+Infinity Loop is an independently maintained, modified open-source Android and Android TV app that combines a video player, an offline download manager, and dedicated manga and light novel readers. Watch supported streams, save media for offline use, and add your own streams or M3U playlists through Link Repo. On Android TV, browse and control playback with a D-pad remote.
 
 ## Screenshots
 
-These captures show the phone interface before the Infinity Loop rebrand.
+Infinity Loop v2.2.1 running on the Android Studio emulator.
 
 <div align="center">
 <table>
@@ -29,6 +29,10 @@ These captures show the phone interface before the Infinity Loop rebrand.
   <tr>
     <td align="center"><img src=".github/screenshots/detail.png" alt="Title details screen with viewing options" width="210" /><br /><strong>Details</strong></td>
     <td align="center"><img src=".github/screenshots/my-list.png" alt="My List screen for saved titles and watch status" width="210" /><br /><strong>My List</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src=".github/screenshots/about.png" alt="Infinity Loop About with the GitHub profile and Check for updates" width="210" /><br /><strong>About &amp; Updates</strong></td>
+    <td align="center"><img src=".github/screenshots/developer.png" alt="Infinity Loop Developer profile for S. M. Shahin Reza Sifat" width="210" /><br /><strong>Developer</strong></td>
   </tr>
 </table>
 </div>
@@ -60,8 +64,18 @@ S. M. Shahin Reza Sifat maintains this fork under **Motion Work**. Infinity Loop
 2. Open the APK on your Android phone or transfer it to your Android TV and open it with a file manager. If prompted, allow that installer to install from its source.
 3. Launch Infinity Loop, choose **Streaming**, **Manga**, or **Novel**, and configure a supported source or add a media link.
 
-## Credits and license
+## App updates
 
-Infinity Loop is based on [Zangetsu](https://github.com/Spyou/Zangetsu) by Krishna Vishwakarma (Spyou) and its contributors. The app is built with Flutter and uses Android Media3 (ExoPlayer) and MediaKit for playback. See [NOTICE.md](NOTICE.md) for upstream and third-party attributions.
+On Android and Android TV, Infinity Loop checks this repository for new stable releases when it starts or returns to the foreground. You can also check from **Settings → About → Check for updates**. Choose **Update** to download the verified APK and open Android's installer. Android requires installation confirmation and may ask you to allow installs from Infinity Loop the first time.
+
+To publish an update, increase the app version and Android build number, sign with the same Infinity Loop release key, and publish a stable GitHub release tagged vX.Y.Z with an APK named Infinity-Loop-vX.Y.Z-universal.apk.
+
+Version 2.2.1 uses the new Android application ID com.motionwork.infinityloop. Older builds use a different Android identity. Install the new APK separately. Its app data starts fresh.
+
+Cloud sync, account-based Watch Party, tracker sign-in and Discord presence require the maintainer's own service configuration. This APK supports local use without those accounts.
+
+## License
+
+Infinity Loop is maintained by [S. M. Shahin Reza Sifat](https://github.com/shahinrezasifat/) at Motion Work. See [NOTICE.md](NOTICE.md) for source and dependency notices.
 
 Infinity Loop is distributed under the [GNU General Public License v3.0](LICENSE).

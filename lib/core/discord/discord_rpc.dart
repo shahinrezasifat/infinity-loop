@@ -180,7 +180,7 @@ class DiscordRpc {
     final logo = await _appLogoKey();
     _current = DiscordActivity(
       name: DiscordConfig.appName,
-      type: 0, // Playing → "Playing Zangetsu"
+      type: 0, // Playing → "Playing Infinity Loop"
       details: title != null ? 'Looking at $title' : 'Browsing',
       largeImage: large ?? logo,
       largeText: title ?? DiscordConfig.appName,

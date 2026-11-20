@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 2.2.0+13502
+version: 2.2.1+13503
 
 environment:
   sdk: ^3.11.5
@@ -152,7 +152,7 @@ dependencies:
   web_socket_channel: ^3.0.1
   flutter_secure_storage: ^10.3.1
   webview_flutter: ^4.10.0
-  # Capture the OAuth redirect (zangetsu://anilist-auth) back into the app for
+  # Capture the OAuth redirect (infinityloop://anilist-auth) back into the app for
   # AniList account linking.
   app_links: ^6.3.2
   # Render the QR on the TV device-pairing screen (pure Dart).
@@ -276,7 +276,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/preloaded_repos.json
-    # No built-in providers — sources are installed from the Zangetsu repo.
+    # No built-in providers — sources are installed from the Infinity Loop repo.
     # Extractors stay bundled (shared video-host helpers, not providers).
     - extractors/example_embed.js
     - extractors/okru.js

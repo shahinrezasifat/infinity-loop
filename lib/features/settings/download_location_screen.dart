@@ -85,7 +85,7 @@ class _DownloadLocationScreenState extends State<DownloadLocationScreen> {
                         downloadDestinationLabel(
                           keepPrivate: prefs.keepPrivate,
                           locationLabel: prefs.locationLabel,
-                          publicFallback: context.l10n.downloadsZangetsu,
+                          publicFallback: context.l10n.downloadsInfinityLoop,
                         ),
                         style: AppText.body,
                       ),

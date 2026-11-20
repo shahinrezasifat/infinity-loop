@@ -34,7 +34,7 @@ kotlin {
 }
 
 extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
-    namespace = "com.spyou.watch_app"
+    namespace = "com.motionwork.infinityloop"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -46,7 +46,7 @@ extensions.configure<com.android.build.api.dsl.ApplicationExtension> {
     }
 
     defaultConfig {
-        applicationId = "com.spyou.watch_app"
+        applicationId = "com.motionwork.infinityloop"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

@@ -25,7 +25,7 @@ class NotificationService {
   final Dio _dio = Dio();
   // Native (CS worker) notification taps come over this channel.
   static const MethodChannel _notifChannel =
-      MethodChannel('zangetsu/notifications');
+      MethodChannel('infinityloop/notifications');
   bool _inited = false;
 
   Future<void> init() async {
@@ -55,7 +55,7 @@ class NotificationService {
   /// Wire notification taps and open the show if the app was launched by one.
   /// Call once the navigator is ready. Handles both notification kinds:
   ///   • Flutter-plugin (JS): init callback for live taps, launch-details here.
-  ///   • Native worker (CS): the zangetsu/notifications channel — openShow for
+  ///   • Native worker (CS): the infinityloop/notifications channel — openShow for
   ///     live taps (onNewIntent), getInitialNotification for cold/back launch.
   Future<void> handleLaunch() async {
     // The native half below is the Android CloudStream worker's channel; there

@@ -25,7 +25,7 @@ BRANDS = {
     "Infinity Loop", "AniList", "MyAnimeList", "Simkl", "MAL", "Discord", "GitHub",
     "Telegram", "CloudStream", "Aniyomi", "Mihon", "LNReader", "PayPal", "DRM",
     "AL", "SK", "SOURCE", "HOST", "CODE", "LIVE", "ACTIVE", "ANIYOMI", "MIHON",
-    "UPI · India", "Krishna Vishwakarma", "zangetsu.online",
+    "UPI · India", "Krishna Vishwakarma", "infinityloop.online",
 }
 
 # Explicit keys (name -> english). Placeholders use {name} / ICU plural.

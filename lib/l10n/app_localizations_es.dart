@@ -1414,7 +1414,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Desactiva Material You para elegir un color tú';
 
   @override
-  String get downloadsZangetsu => 'Descargas › Infinity Loop';
+  String get downloadsInfinityLoop => 'Descargas › Infinity Loop';
 
   @override
   String get removableDrive => 'Unidad extraíble';
@@ -2079,7 +2079,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get haveTheApp => '¿Tienes la app?';
 
   @override
-  String get openZangetsuOnYourNphoneAndScan =>
+  String get openInfinityLoopOnYourNphoneAndScan =>
       'Abre Infinity Loop en tu\\nteléfono y escanea';
 
   @override
@@ -2138,7 +2138,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String
-  get onTheZangetsuAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR =>
+  get onTheInfinityLoopAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR =>
       'En la app Infinity Loop del teléfono, abre\\n«Emparejar una TV» e introduce este código — o escanea el QR.';
 
   @override
@@ -2164,7 +2164,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get enterTheCodeFromYourTV => 'Introduce el código de tu TV';
 
   @override
-  String get openZangetsuOnYourTVAndSignInWithYourPhoneToSeeIt =>
+  String get openInfinityLoopOnYourTVAndSignInWithYourPhoneToSeeIt =>
       'Abre Infinity Loop en tu TV e inicia sesión con el teléfono para verlo.';
 
   @override
@@ -2209,7 +2209,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get restoreComplete => 'Restauración lista';
 
   @override
-  String get reopenZangetsuToSeeRestoredLibrarySources =>
+  String get reopenInfinityLoopToSeeRestoredLibrarySources =>
       'Vuelve a abrir Infinity Loop para ver la biblioteca y fuentes restauradas.';
 
   @override
@@ -2432,7 +2432,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noSourcesInThisRepo => 'No hay fuentes en este repo.';
 
   @override
-  String get zangetsuProviders => 'Proveedores Infinity Loop';
+  String get infinityloopProviders => 'Proveedores Infinity Loop';
 
   @override
   String get addRepo => 'Añadir repo';
@@ -2540,7 +2540,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Abre los ajustes propios de esta fuente (p. ej. servidor, idioma)';
 
   @override
-  String get addZangetsuRepo => 'Añadir repo Infinity Loop';
+  String get addInfinityLoopRepo => 'Añadir repo Infinity Loop';
 
   @override
   String get theProviderWillBeRemovedFromYourInstalledSources =>
@@ -3786,7 +3786,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'La copia de seguridad en la nube falló. Comprueba que estás conectado a internet; si sigue fallando, es posible que el servicio de copia de seguridad en la nube aún no esté configurado.';
 
   @override
-  String get savedToDownloadsZangetsu =>
+  String get savedToDownloadsInfinityLoop =>
       'Guardado en Descargas › Infinity Loop';
 
   @override
@@ -3800,7 +3800,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get backupScreenBlurb =>
-      'Guarda tus fuentes, listas y ajustes en un archivo de tu dispositivo o en tu cuenta de Zangetsu. Al restaurar, solo se añaden los elementos; nunca se borra lo que ya tienes.';
+      'Guarda tus fuentes, listas y ajustes en un archivo de tu dispositivo o en tu cuenta de InfinityLoop. Al restaurar, solo se añaden los elementos; nunca se borra lo que ya tienes.';
 
   @override
   String get includeInTheBackup => 'Incluir en la copia de seguridad';
@@ -4028,7 +4028,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get lnreader => 'Lector de LN';
 
   @override
-  String get zangetsu => 'Infinity Loop';
+  String get infinityloop => 'Infinity Loop';
 
   @override
   String get cloudStream => 'Flujo de nube';
@@ -5307,5 +5307,5 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get keepDownloadsPrivateSubtitle =>
-      'New video downloads stay inside Infinity Loop instead of the Downloads folder. They are deleted when you uninstall Zangetsu. Chapters and exports are unaffected.';
+      'New video downloads stay inside Infinity Loop instead of the Downloads folder. They are deleted when you uninstall Infinity Loop. Chapters and exports are unaffected.';
 }

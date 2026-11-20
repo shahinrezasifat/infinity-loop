@@ -7,18 +7,21 @@ import '../environment.dart';
 /// (Case 2). Removed once account migration dries up.
 class AppwriteService {
   AppwriteService() {
+    if (Environment.appwriteProjectId.isEmpty ||
+        Environment.appwritePublicEndpoint.isEmpty)
+      return;
     final client = Client()
         .setEndpoint(Environment.appwritePublicEndpoint)
         .setProject(Environment.appwriteProjectId);
     _account = Account(client);
   }
-  late final Account _account;
+  Account? _account;
 
   /// Null when there is no restorable Appwrite session.
   Future<String?> mintJwt() async {
     try {
-      final jwt = await _account.createJWT();
-      return jwt.jwt;
+      final jwt = await _account?.createJWT();
+      return jwt?.jwt;
     } catch (_) {
       return null;
     }

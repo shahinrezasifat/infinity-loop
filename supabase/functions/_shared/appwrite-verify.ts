@@ -1,8 +1,8 @@
 // Verifies a user against the legacy Appwrite backend during account migration.
 // Read-only from Supabase's perspective: never writes to Appwrite except the
 // throwaway session created to check a password.
-const AW_ENDPOINT = "https://sgp.cloud.appwrite.io/v1";
-const AW_PROJECT = "6a1ed44f0029b50bccde";
+const AW_ENDPOINT = Deno.env.get("APPWRITE_ENDPOINT") ?? "";
+const AW_PROJECT = Deno.env.get("APPWRITE_PROJECT_ID") ?? "";
 
 type AwResult = { ok: boolean; legacyUid?: string; name?: string; email?: string };
 
@@ -10,6 +10,7 @@ type AwResult = { ok: boolean; legacyUid?: string; name?: string; email?: string
 // /account with that session. Any non-2xx or thrown error is treated as a
 // failed verification (never leaks Appwrite error details to the caller).
 export async function verifyPassword(email: string, password: string): Promise<AwResult> {
+  if (!AW_ENDPOINT || !AW_PROJECT) return null;
   try {
     const res = await fetch(`${AW_ENDPOINT}/account/sessions/email`, {
       method: "POST",
@@ -39,6 +40,7 @@ async function meFromSession(headers: Headers, session: { secret?: string }): Pr
     return { ok: false };
   }
 
+  if (!AW_ENDPOINT || !AW_PROJECT) return null;
   try {
     const res = await fetch(`${AW_ENDPOINT}/account`, { headers: authHeaders });
     if (!res.ok) return { ok: false };
@@ -51,6 +53,7 @@ async function meFromSession(headers: Headers, session: { secret?: string }): Pr
 
 // Verify a client-minted Appwrite JWT (Case 2: user still has a live Appwrite session).
 export async function verifyJwt(jwt: string): Promise<AwResult> {
+  if (!AW_ENDPOINT || !AW_PROJECT) return null;
   try {
     const res = await fetch(`${AW_ENDPOINT}/account`, {
       headers: { "X-Appwrite-Project": AW_PROJECT, "X-Appwrite-JWT": jwt },

@@ -16,6 +16,7 @@ import 'sync_math.dart';
 /// transfer / end (see [updateRoom]). No UI or player knowledge lives here.
 class WatchRoomService {
   WatchRoomService(this._sb) {
+    if (!_sb.available) return;
     // Subscribing a channel before the websocket is connected leaves its join
     // stuck (this SDK doesn't re-send it on open). So we queue subscribes made
     // while disconnected and flush them here, once the socket is actually up.

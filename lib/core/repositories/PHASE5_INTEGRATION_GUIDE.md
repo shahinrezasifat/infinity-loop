@@ -2,7 +2,7 @@
 
 ## Overview
 
-Phase 5 integrates the Repository System (Phases 3-4) with the existing Zangetsu UI screens (Home, Search, Details, Episodes). The goal is to make all content screens repository-aware without rewriting them.
+Phase 5 integrates the Repository System (Phases 3-4) with the existing Infinity Loop UI screens (Home, Search, Details, Episodes). The goal is to make all content screens repository-aware without rewriting them.
 
 ## Key Principles
 

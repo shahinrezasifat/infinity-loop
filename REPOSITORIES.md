@@ -1,6 +1,6 @@
 # 📦 Infinity Loop - Preloaded Repositories & Providers Catalog
 
-This document lists all **35 pre-installed repositories, provider sources, and extension manifests** integrated into **Infinity Loop**.
+This document lists the preloaded source and extension repository catalog integrated into **Infinity Loop**.
 
 ---
 
@@ -51,12 +51,7 @@ This document lists all **35 pre-installed repositories, provider sources, and e
 
 ## 2. Native JS Streaming Providers
 
-Direct JavaScript QuickJS-powered streaming engines.
-
-| # | Repository Name | Category | Manifest URL |
-|---|---|---|---|
-| 1 | **Zangetsu Providers (Official)** | Official / Anime & Movies | [`index.json`](https://raw.githubusercontent.com/Spyou/zangetsu-providers/main/index.json) |
-| 2 | **Mewtwo Community** | Community / Streaming | [`index.json`](https://raw.githubusercontent.com/MewtwoOP1/Zangetsu-repo/main/index.json) |
+Add a supported JavaScript provider manifest from **Settings → Providers**.
 
 ---
 

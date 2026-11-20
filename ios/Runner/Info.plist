@@ -81,8 +81,8 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<!-- Custom-scheme hand-off from https://zangetsu.online/pair/ (and
-	     share / tracker OAuth). Without this, Safari's zangetsu:// redirect
+	<!-- Custom-scheme hand-off from a configured web pairing page (and
+	     share / tracker OAuth). Without this, Safari's infinityloop:// redirect
 	     after scanning the TV QR never reaches the app. Flutter's own
 	     deep-link handler is off so app_links receives the URI. -->
 	<key>FlutterDeepLinkingEnabled</key>
@@ -93,10 +93,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.spyou.watchApp</string>
+			<string>com.motionwork.infinityloop</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>zangetsu</string>
+				<string>infinityloop</string>
 			</array>
 		</dict>
 	</array>

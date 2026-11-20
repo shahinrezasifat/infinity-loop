@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:infinity_loop/core/reading/tiles/tile_decoder.dart';
 import 'package:infinity_loop/core/reading/tiles/tile_pyramid.dart';
 
-const _tileChannel = MethodChannel('zangetsu/tiles');
+const _tileChannel = MethodChannel('infinityloop/tiles');
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -108,7 +108,7 @@ void main() {
 
     test('decode returns null rather than throwing when the channel is '
         'missing', () async {
-      // No mock handler installed for zangetsu/tiles: invoking it behaves
+      // No mock handler installed for infinityloop/tiles: invoking it behaves
       // exactly as it would on a platform that never registered the
       // channel (iOS), which is the failure decode() has to swallow.
       final decoder = TileDecoder();

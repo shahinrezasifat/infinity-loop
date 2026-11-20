@@ -31,13 +31,13 @@ void main() {
       expect(ecosystemOf('cs:MovieBox@cncverse'), SearchEcosystem.cloudstream);
     });
 
-    test('maps anything else to Zangetsu', () {
-      expect(ecosystemOf('allanime'), SearchEcosystem.zangetsu);
-      expect(ecosystemOf('netmirror'), SearchEcosystem.zangetsu);
-      // No colon → not an Aniyomi/CloudStream id, so it stays Zangetsu.
-      expect(ecosystemOf('anilist'), SearchEcosystem.zangetsu);
-      expect(ecosystemOf('csfd'), SearchEcosystem.zangetsu);
-      expect(ecosystemOf(''), SearchEcosystem.zangetsu);
+    test('maps anything else to Infinity Loop', () {
+      expect(ecosystemOf('allanime'), SearchEcosystem.infinityloop);
+      expect(ecosystemOf('netmirror'), SearchEcosystem.infinityloop);
+      // No colon → not an Aniyomi/CloudStream id, so it stays InfinityLoop.
+      expect(ecosystemOf('anilist'), SearchEcosystem.infinityloop);
+      expect(ecosystemOf('csfd'), SearchEcosystem.infinityloop);
+      expect(ecosystemOf(''), SearchEcosystem.infinityloop);
     });
 
     test('never returns the All sentinel', () {
@@ -52,10 +52,10 @@ void main() {
       expect(ecosystemTabsFor(const []), [SearchEcosystem.all]);
     });
 
-    test('only Zangetsu sources → All + Zangetsu (no CS/Ani tabs)', () {
+    test('only Infinity Loop sources → All + Infinity Loop (no CS/Ani tabs)', () {
       expect(ecosystemTabsFor(const ['allanime', 'netmirror']), [
         SearchEcosystem.all,
-        SearchEcosystem.zangetsu,
+        SearchEcosystem.infinityloop,
       ]);
     });
 
@@ -63,7 +63,7 @@ void main() {
       final tabs = ecosystemTabsFor(const ['allanime', 'cs:AnimePahe']);
       expect(tabs, [
         SearchEcosystem.all,
-        SearchEcosystem.zangetsu,
+        SearchEcosystem.infinityloop,
         SearchEcosystem.cloudstream,
       ]);
       expect(tabs, isNot(contains(SearchEcosystem.aniyomi)));
@@ -77,7 +77,7 @@ void main() {
     test('all three ecosystems present → All + all three, in fixed order', () {
       expect(ecosystemTabsFor(const ['allanime', 'cs:AnimePahe', 'ani:1']), [
         SearchEcosystem.all,
-        SearchEcosystem.zangetsu,
+        SearchEcosystem.infinityloop,
         SearchEcosystem.cloudstream,
         SearchEcosystem.aniyomi,
       ]);
@@ -88,14 +88,14 @@ void main() {
         ecosystemTabsFor(const ['ani:2', 'ani:1', 'cs:b', 'cs:a', 'zjs']),
         [
           SearchEcosystem.all,
-          SearchEcosystem.zangetsu,
+          SearchEcosystem.infinityloop,
           SearchEcosystem.cloudstream,
           SearchEcosystem.aniyomi,
         ],
       );
     });
 
-    test('only an Aniyomi source → All + Aniyomi (no Zangetsu/CS tabs)', () {
+    test('only an Aniyomi source → All + Aniyomi (no InfinityLoop/CS tabs)', () {
       expect(ecosystemTabsFor(const ['ani:1']), [
         SearchEcosystem.all,
         SearchEcosystem.aniyomi,
@@ -105,7 +105,7 @@ void main() {
 
   group('SearchState group filtering by ecosystem', () {
     final groups = [
-      _group('allanime', arrival: 0), // Zangetsu
+      _group('allanime', arrival: 0), // InfinityLoop
       _group('cs:AnimePahe', arrival: 1), // CloudStream
       _group('ani:1', arrival: 2), // Aniyomi
     ];
@@ -129,8 +129,8 @@ void main() {
       expect(base.visibleResults, hasLength(3));
     });
 
-    test('Zangetsu tab shows only Zangetsu groups', () {
-      final s = base.copyWith(ecosystem: SearchEcosystem.zangetsu);
+    test('Infinity Loop tab shows only Infinity Loop groups', () {
+      final s = base.copyWith(ecosystem: SearchEcosystem.infinityloop);
       expect(s.sortedVisibleGroups.map((g) => g.sourceId), ['allanime']);
       expect(s.visibleGroups.map((g) => g.sourceId), ['allanime']);
       expect(s.visibleResults.map((i) => i.sourceId), ['allanime']);

@@ -299,7 +299,7 @@ class RoomStrip extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Clipboard.setData(
-                  ClipboardData(text: 'zangetsu://room/${room.code}'));
+                  ClipboardData(text: 'infinityloop://room/${room.code}'));
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text(context.l10n.inviteCopied)));
             },

@@ -7,7 +7,7 @@ void main() {
         'infinity-loop-backup-20260702-0905.json');
   });
   test('parseBackupJson returns the map / throws on non-object', () {
-    expect(parseBackupJson('{"app":"zangetsu"}'), {'app': 'zangetsu'});
+    expect(parseBackupJson('{"app":"infinityloop"}'), {'app': 'infinityloop'});
     expect(() => parseBackupJson('[1,2]'), throwsA(isA<FormatException>()));
     expect(() => parseBackupJson('not json'), throwsA(isA<FormatException>()));
   });

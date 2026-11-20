@@ -7,8 +7,8 @@
 class DiscordConfig {
   DiscordConfig._();
 
-  /// Zangetsu's Discord Application ID (Developer Portal → General Information).
-  static const String applicationId = '1518610045422665748';
+  /// Infinity Loop's Discord Application ID (Developer Portal → General Information).
+  static const String applicationId = String.fromEnvironment('DISCORD_APPLICATION_ID');
 
   /// Rich-Presence art-asset key for a named portal upload (optional). We
   /// prefer [appLogoUrl] via the external-assets API so browsing doesn't
@@ -18,9 +18,9 @@ class DiscordConfig {
 
   /// Public square app icon Discord can proxy (same file as the launcher).
   static const String appLogoUrl =
-      'https://cdn.jsdelivr.net/gh/Spyou/Zangetsu@main/assets/icon/app_icon.png';
+      'https://raw.githubusercontent.com/shahinrezasifat/infinity-loop/main/assets/icon/app_icon.png';
 
-  static const String appName = 'infinity';
+  static const String appName = 'Infinity Loop';
 
   /// Discord API base (v10).
   static const String api = 'https://discord.com/api/v10';

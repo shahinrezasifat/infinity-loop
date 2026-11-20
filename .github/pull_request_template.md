@@ -20,7 +20,6 @@ sources". "Builds fine" isn't testing. -->
 - [ ] `flutter analyze` is clean
 - [ ] `flutter test` passes
 - [ ] Native build still compiles, if I touched `android/` or `ios/`
-- [ ] I've read and agree to the [CLA](../CLA.md)
 - [ ] New dependency or third-party code? [`NOTICE.md`](../NOTICE.md) updated in this PR
 - [ ] Used AI tooling? Disclosed per [`AI_POLICY.md`](../AI_POLICY.md)
 

@@ -4,7 +4,7 @@ import 'package:infinity_loop/core/torrent/torrent_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const channel = MethodChannel('com.spyou.watch_app/torrent');
+  const channel = MethodChannel('com.motionwork.infinityloop/torrent');
   final calls = <MethodCall>[];
 
   setUp(() {

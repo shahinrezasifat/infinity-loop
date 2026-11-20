@@ -1,6 +1,14 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseService {
+  bool get available {
+    try {
+      return Supabase.instance.isInitialized;
+    } catch (_) {
+      return false;
+    }
+  }
+
   SupabaseClient get client => Supabase.instance.client;
 
   /// The signed-in user's id, or null when signed out OR when Supabase isn't

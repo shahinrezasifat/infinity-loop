@@ -1359,7 +1359,7 @@ class AppLocalizationsZh extends AppLocalizations {
       '关闭 Material You 后可自选颜色';
 
   @override
-  String get downloadsZangetsu => '下载 › Infinity Loop';
+  String get downloadsInfinityLoop => '下载 › Infinity Loop';
 
   @override
   String get removableDrive => '可移动存储';
@@ -2005,7 +2005,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get haveTheApp => '已有应用？';
 
   @override
-  String get openZangetsuOnYourNphoneAndScan => '在手机上打开 Infinity Loop\\n并扫描';
+  String get openInfinityLoopOnYourNphoneAndScan =>
+      '在手机上打开 Infinity Loop\\n并扫描';
 
   @override
   String get noApp => '没有应用？';
@@ -2063,7 +2064,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String
-  get onTheZangetsuAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR =>
+  get onTheInfinityLoopAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR =>
       '在手机上的 Infinity Loop 中打开「配对电视」，\\n输入此代码或扫描二维码。';
 
   @override
@@ -2088,7 +2089,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get enterTheCodeFromYourTV => '输入电视上的代码';
 
   @override
-  String get openZangetsuOnYourTVAndSignInWithYourPhoneToSeeIt =>
+  String get openInfinityLoopOnYourTVAndSignInWithYourPhoneToSeeIt =>
       '在电视上打开 Infinity Loop，并用手机登录即可看到。';
 
   @override
@@ -2131,7 +2132,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get restoreComplete => '还原完成';
 
   @override
-  String get reopenZangetsuToSeeRestoredLibrarySources =>
+  String get reopenInfinityLoopToSeeRestoredLibrarySources =>
       '重新打开 Infinity Loop 即可看到还原的资料库和来源。';
 
   @override
@@ -2345,7 +2346,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noSourcesInThisRepo => '此仓库中没有来源。';
 
   @override
-  String get zangetsuProviders => 'Infinity Loop 扩展';
+  String get infinityloopProviders => 'Infinity Loop 扩展';
 
   @override
   String get addRepo => '添加仓库';
@@ -2444,7 +2445,7 @@ class AppLocalizationsZh extends AppLocalizations {
       '打开此来源自己的设置（如服务器、语言）';
 
   @override
-  String get addZangetsuRepo => '添加 Infinity Loop 仓库';
+  String get addInfinityLoopRepo => '添加 Infinity Loop 仓库';
 
   @override
   String get theProviderWillBeRemovedFromYourInstalledSources =>
@@ -3653,7 +3654,7 @@ class AppLocalizationsZh extends AppLocalizations {
       '云备份失败。请检查您的网络连接是否正常——如果备份持续失败，则可能是云备份存储尚未设置完成。';
 
   @override
-  String get savedToDownloadsZangetsu => '已保存至下载 › Infinity Loop';
+  String get savedToDownloadsInfinityLoop => '已保存至下载 › Infinity Loop';
 
   @override
   String restoreFailed(String error) {
@@ -3665,7 +3666,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get backupScreenBlurb =>
-      '将您的资源、列表和设置保存到设备上的文件或您的Zangetsu帐户。恢复操作只会添加新内容，绝不会删除您已有的内容。';
+      '将您的资源、列表和设置保存到设备上的文件或您的InfinityLoop帐户。恢复操作只会添加新内容，绝不会删除您已有的内容。';
 
   @override
   String get includeInTheBackup => '包含在备份中';
@@ -3879,7 +3880,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get lnreader => 'LNReader';
 
   @override
-  String get zangetsu => 'Infinity Loop';
+  String get infinityloop => 'Infinity Loop';
 
   @override
   String get cloudStream => '云流';
@@ -5129,7 +5130,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get keepDownloadsPrivateSubtitle =>
-      'New video downloads stay inside Infinity Loop instead of the Downloads folder. They are deleted when you uninstall Zangetsu. Chapters and exports are unaffected.';
+      'New video downloads stay inside Infinity Loop instead of the Downloads folder. They are deleted when you uninstall Infinity Loop. Chapters and exports are unaffected.';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -6439,7 +6440,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
       '關閉 Material You 後可自選顏色';
 
   @override
-  String get downloadsZangetsu => '下載 › Infinity Loop';
+  String get downloadsInfinityLoop => '下載 › Infinity Loop';
 
   @override
   String get removableDrive => '可移除磁碟';
@@ -7070,7 +7071,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get haveTheApp => '已有 App？';
 
   @override
-  String get openZangetsuOnYourNphoneAndScan => '在手機開啟 Infinity Loop\\n並掃描';
+  String get openInfinityLoopOnYourNphoneAndScan => '在手機開啟 Infinity Loop\\n並掃描';
 
   @override
   String get noApp => '沒有 App？';
@@ -7128,7 +7129,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String
-  get onTheZangetsuAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR =>
+  get onTheInfinityLoopAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR =>
       '在手機上的 Infinity Loop 開啟「配對電視」，\\n輸入此代碼或掃描 QR。';
 
   @override
@@ -7153,7 +7154,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get enterTheCodeFromYourTV => '輸入電視上的代碼';
 
   @override
-  String get openZangetsuOnYourTVAndSignInWithYourPhoneToSeeIt =>
+  String get openInfinityLoopOnYourTVAndSignInWithYourPhoneToSeeIt =>
       '在電視開啟 Infinity Loop，並用手機登入即可看到。';
 
   @override
@@ -7196,7 +7197,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get restoreComplete => '還原完成';
 
   @override
-  String get reopenZangetsuToSeeRestoredLibrarySources =>
+  String get reopenInfinityLoopToSeeRestoredLibrarySources =>
       '重新開啟 Infinity Loop 即可看到還原的收藏庫與來源。';
 
   @override
@@ -7410,7 +7411,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get noSourcesInThisRepo => '此儲庫中沒有來源。';
 
   @override
-  String get zangetsuProviders => 'Infinity Loop 擴充套件';
+  String get infinityloopProviders => 'Infinity Loop 擴充套件';
 
   @override
   String get addRepo => '新增儲庫';
@@ -7509,7 +7510,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
       '開啟此來源自己的設定（如伺服器、語言）';
 
   @override
-  String get addZangetsuRepo => '新增 Infinity Loop 儲庫';
+  String get addInfinityLoopRepo => '新增 Infinity Loop 儲庫';
 
   @override
   String get theProviderWillBeRemovedFromYourInstalledSources =>
@@ -8635,7 +8636,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
       '雲端備份失敗。請檢查您的網路連線是否正常—如果備份持續失敗，則可能是雲端備份儲存尚未設定完成。';
 
   @override
-  String get savedToDownloadsZangetsu => '已儲存至下載 › Infinity Loop';
+  String get savedToDownloadsInfinityLoop => '已儲存至下載 › Infinity Loop';
 
   @override
   String restoreFailed(String error) {
@@ -8647,7 +8648,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get backupScreenBlurb =>
-      '將您的資源、清單和設定儲存到裝置上的檔案或您的Zangetsu帳戶。恢復操作只會新增內容，絕不會刪除您已有的內容。';
+      '將您的資源、清單和設定儲存到裝置上的檔案或您的InfinityLoop帳戶。恢復操作只會新增內容，絕不會刪除您已有的內容。';
 
   @override
   String get includeInTheBackup => '包含在備份中';
@@ -8861,7 +8862,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get lnreader => 'LNReader';
 
   @override
-  String get zangetsu => 'Infinity Loop';
+  String get infinityloop => 'Infinity Loop';
 
   @override
   String get cloudStream => '雲端';

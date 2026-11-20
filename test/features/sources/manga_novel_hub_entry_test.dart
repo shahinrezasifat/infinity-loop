@@ -1,16 +1,16 @@
-// Task E3 originally gave manga/novel sources their own "Zangetsu Manga" hub
+// Task E3 originally gave manga/novel sources their own "Infinity Loop Manga" hub
 // row and a "Manga & Novel" Settings entry. BOTH were later removed —
 // (and the Sozo Read recommended-repo suggestion, tested elsewhere) was
-// dropped: that Zangetsu JS reading-source row duplicated the still-live
+// dropped: that Infinity Loop JS reading-source row duplicated the still-live
 // Settings entry, and those JS sources are search-only (no popular/latest),
 // so selecting one left Home with nothing to render. The Settings entry
-// itself is unaffected and still opens the same scoped Zangetsu screen.
+// itself is unaffected and still opens the same scoped Infinity Loop screen.
 //
 // What's under test now:
-//  - ProvidersHubScreen (phone view) has no "Zangetsu Manga" row / section —
+//  - ProvidersHubScreen (phone view) has no "Infinity Loop Manga" row / section —
 //    the existing three streaming rows stay exactly as they are today, and
 //    the ACTIVE-badge exclusivity rule (a reading source must not badge the
-//    Zangetsu streaming row) still holds even with the dedicated row gone.
+//    Infinity Loop streaming row) still holds even with the dedicated row gone.
 //  - Settings → Sources no longer has a "Manga & Novel" entry.
 import 'dart:io';
 
@@ -138,13 +138,13 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    // The dedicated "Zangetsu Manga" hub row and its MANGA & NOVEL section
+    // The dedicated "Infinity Loop Manga" hub row and its MANGA & NOVEL section
     // are gone — those JS reading sources are search-only, so selecting one
     // left Home with nothing to render. Reading sources are still reachable
     // through Settings → Manga & Novel (unaffected, tested elsewhere), just
     // not from this hub. Inverse assertion so the row can't silently
     // reappear.
-    testWidgets('has no Zangetsu Manga row or MANGA & NOVEL section',
+    testWidgets('has no Infinity Loop Manga row or MANGA & NOVEL section',
         (tester) async {
       await pump(tester);
 
@@ -153,7 +153,7 @@ void main() {
     });
 
     testWidgets(
-      'the existing Zangetsu row is unchanged — same title, desc and '
+      'the existing Infinity Loop row is unchanged — same title, desc and '
       'unfiltered total (reading sources still count toward it, as today)',
       (tester) async {
         await pump(tester);
@@ -177,7 +177,7 @@ void main() {
 
     // ── Fix round 1, finding 1: ACTIVE badge must be exclusive ────────────
     testWidgets(
-      'an anime active source badges the Zangetsu row (unchanged today)',
+      'an anime active source badges the Infinity Loop row (unchanged today)',
       (tester) async {
         sl.unregister<ActiveSourceCubit>();
         sl.registerSingleton<ActiveSourceCubit>(
@@ -185,23 +185,23 @@ void main() {
         );
         await pump(tester);
 
-        // Only row on screen in this (non-Android) test host is Zangetsu —
+        // Only row on screen in this (non-Android) test host is Infinity Loop —
         // CS/Aniyomi/Mihon are all Android-gated — so a single ACTIVE badge
-        // sitting right on Zangetsu's line is what "badges the Zangetsu row"
+        // sitting right on Infinity Loop's line is what "badges the Infinity Loop row"
         // reduces to here.
         expect(find.text('ACTIVE'), findsOneWidget);
         final activeY = tester.getTopLeft(find.text('ACTIVE')).dy;
-        final zangetsuY = tester.getTopLeft(find.text('Infinity Loop')).dy;
-        expect((activeY - zangetsuY).abs(), lessThan(30));
+        final infinityloopY = tester.getTopLeft(find.text('Infinity Loop')).dy;
+        expect((activeY - infinityloopY).abs(), lessThan(30));
       },
     );
 
-    // The Zangetsu Manga row this used to compare against is gone, but the
+    // The Infinity Loop Manga row this used to compare against is gone, but the
     // rule it guarded is still live: a reading source active under the
-    // Zangetsu ecosystem must not badge the Zangetsu *streaming* row.
+    // Infinity Loop ecosystem must not badge the Infinity Loop *streaming* row.
     // (activeIsReading in providers_hub_screen.dart.)
     testWidgets(
-      'a manga active source does not badge the Zangetsu streaming row',
+      'a manga active source does not badge the Infinity Loop streaming row',
       (tester) async {
         sl.unregister<ActiveSourceCubit>();
         sl.registerSingleton<ActiveSourceCubit>(
@@ -250,7 +250,7 @@ void main() {
     );
 
     testWidgets(
-      'tapping Zangetsu (unscoped) still shows every provider, no scoping UI',
+      'tapping Infinity Loop (unscoped) still shows every provider, no scoping UI',
       (tester) async {
         await pump(tester);
 

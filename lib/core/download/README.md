@@ -160,7 +160,7 @@ downloadManager.updateSettings(
 
 ## Background Download Integration
 
-The `background_downloader` package (already in Zangetsu) is used for persistent downloads:
+The `background_downloader` package (already in InfinityLoop) is used for persistent downloads:
 
 ```dart
 // In _startDownload() method
@@ -286,7 +286,7 @@ lib/
 - `equatable`: Already present
 - `json_annotation`: Already present
 - `hive_flutter`: Already present
-- `background_downloader`: Already present in Zangetsu
+- `background_downloader`: Already present in InfinityLoop
 - `get_it`: For dependency injection
 
 ## Next Steps

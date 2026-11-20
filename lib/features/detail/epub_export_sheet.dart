@@ -260,7 +260,7 @@ class _EpubExportBodyState extends State<_EpubExportBody> {
     if (!mounted) return;
     setState(() => _exporting = false);
     final folderLabel =
-        sl<DownloadPrefs>().locationLabel ?? context.l10n.downloadsZangetsu;
+        sl<DownloadPrefs>().locationLabel ?? context.l10n.downloadsInfinityLoop;
     Navigator.of(context).pop();
     showAppToast(
       context,
@@ -277,7 +277,7 @@ class _EpubExportBodyState extends State<_EpubExportBody> {
     final downloadedCount = _downloaded.length;
     final canExport = downloadedCount > 0 && !_exporting;
     final folderLabel =
-        sl<DownloadPrefs>().locationLabel ?? l10n.downloadsZangetsu;
+        sl<DownloadPrefs>().locationLabel ?? l10n.downloadsInfinityLoop;
 
     return SafeArea(
       child: Padding(

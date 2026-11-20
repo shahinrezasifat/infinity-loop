@@ -688,7 +688,7 @@ class _MyListViewState extends State<_MyListView> with WidgetsBindingObserver {
     final url = pinned?.viewerAvatar;
     final letter = pinned?.displayName.isNotEmpty == true
         ? pinned!.displayName[0]
-        : 'Z';
+        : '∞';
     return Container(
       width: 30,
       height: 30,

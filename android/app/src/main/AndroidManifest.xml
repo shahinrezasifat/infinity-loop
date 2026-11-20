@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.spyou.watch_app">
+    package="com.motionwork.infinityloop">
     <!-- Network: Flutter only auto-adds INTERNET to debug builds, so it MUST be
          declared here or release builds have no network at all (streaming,
          providers, downloads). -->
@@ -94,20 +94,20 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
             <!-- Tracker OAuth redirects (AniList / MyAnimeList / Simkl) sent back
-                 to zangetsu://<host> and captured by app_links. -->
+                 to infinityloop://<host> and captured by app_links. -->
             <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="zangetsu" android:host="anilist-auth"/>
-                <data android:scheme="zangetsu" android:host="mal-auth"/>
-                <data android:scheme="zangetsu" android:host="simkl-auth"/>
-                <data android:scheme="zangetsu" android:host="mangabaka-auth"/>
-                <!-- Shared-title deep link: zangetsu://open?d=…&t=… (see OpenLinkService). -->
-                <data android:scheme="zangetsu" android:host="open"/>
-                <data android:scheme="zangetsu" android:host="room"/>
-                <!-- TV pairing QR: zangetsu://pair?code=… (see OpenLinkService). -->
-                <data android:scheme="zangetsu" android:host="pair"/>
+                <data android:scheme="infinityloop" android:host="anilist-auth"/>
+                <data android:scheme="infinityloop" android:host="mal-auth"/>
+                <data android:scheme="infinityloop" android:host="simkl-auth"/>
+                <data android:scheme="infinityloop" android:host="mangabaka-auth"/>
+                <!-- Shared-title deep link: infinityloop://open?d=…&t=… (see OpenLinkService). -->
+                <data android:scheme="infinityloop" android:host="open"/>
+                <data android:scheme="infinityloop" android:host="room"/>
+                <!-- TV pairing QR: infinityloop://pair?code=… (see OpenLinkService). -->
+                <data android:scheme="infinityloop" android:host="pair"/>
             </intent-filter>
             <!-- "Open with" for local video files, so a file manager / Downloads
                  offers Infinity Loop the way it offers any other player.
@@ -117,9 +117,9 @@
                  fast way to make the app feel like spyware. file:// and
                  content:// only — something the user already has on the device.
 
-                 Separate <intent-filter> from the zangetsu:// block above on
+                 Separate <intent-filter> from the infinityloop:// block above on
                  purpose: within one filter Android ORs the schemes with the
-                 mime types, so merging them would also claim zangetsu://*
+                 mime types, so merging them would also claim infinityloop://*
                  video/* and, worse, every file:// host for the tracker hosts. -->
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW"/>
@@ -249,7 +249,7 @@
         <!-- Google Cast Framework configuration. -->
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-            android:value="com.spyou.watch_app.cast.CastOptionsProvider" />
+            android:value="com.motionwork.infinityloop.cast.CastOptionsProvider" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

@@ -335,7 +335,7 @@ SourceBuckets categorizedSources() {
 /// bucketing default, so an id with no cached manifest type still counts as
 /// anime (matching today's behavior when a mode filter isn't applied).
 ProviderType sourceTypeOf(String id) {
-  // Zangetsu Mode's pseudo source has no manifest to type — its "type" is
+  // Infinity Loop Mode's pseudo source has no manifest to type — its "type" is
   // whatever catalogue kind is currently browsed. `movie`/`anime`/`tv` all
   // fall under `anime` here since ContentMode.anime.matchesProvider accepts
   // either; the caller only needs to know which ContentMode bucket it's in.
@@ -397,7 +397,7 @@ ProviderType _typeOfFromMap(String id, Map<String, String> typeMap) {
   return ProviderType.values.asNameMap()[t] ?? ProviderType.anime;
 }
 
-/// Splits video rows by the ecosystem they came from — Zangetsu's own JS
+/// Splits video rows by the ecosystem they came from — Infinity Loop's own JS
 /// providers, CloudStream plugins, Aniyomi extensions — in that order, with
 /// empty ones dropped.
 ///
@@ -416,7 +416,7 @@ ecosystemTabs(
   bool isCs(String id) => id.startsWith('cs:');
   bool isAni(String id) => id.startsWith('ani:');
   bool isAutoLink(String id) => id == AutoLinkProvider.id;
-  final zangetsu = [
+  final infinityloop = [
     for (final r in rows)
       if (!isCs(r.id) && !isAni(r.id)) r,
   ];
@@ -434,7 +434,7 @@ ecosystemTabs(
   ];
   return [
     if (linkRepo.isNotEmpty) (title: 'Link Repo', rows: linkRepo),
-    if (zangetsu.isNotEmpty) (title: 'Infinity Loop', rows: zangetsu),
+    if (infinityloop.isNotEmpty) (title: 'Infinity Loop', rows: infinityloop),
     if (cs.isNotEmpty) (title: 'CloudStream', rows: cs),
     if (ani.isNotEmpty) (title: 'Aniyomi', rows: ani),
   ];
@@ -537,7 +537,7 @@ class SourceSwitcher extends StatelessWidget {
   final String currentId;
   final void Function(String id) onChanged;
 
-  /// Opens the install flow (Zangetsu sources → Repositories) — shown as a
+  /// Opens the install flow (Infinity Loop sources → Repositories) — shown as a
   /// button on the picker's empty state when a reading mode has no sources
   /// installed yet. Null → the empty state just has no button (today's
   /// anime-mode behavior, and a safe no-op for any caller that hasn't wired
@@ -551,7 +551,7 @@ class SourceSwitcher extends StatelessWidget {
   SourceBuckets _buckets() => categorizedSources();
 
   // Ecosystem signature colors for the chip tag (CS blue / Aniyomi purple /
-  // Zangetsu coral).
+  // Infinity Loop coral).
   static const Color _csColor = Color(0xFF7EA2FF);
   static const Color _aniColor = Color(0xFFBB8CFF);
   static const Color _mihonColor = Color(0xFF6FD8A8);

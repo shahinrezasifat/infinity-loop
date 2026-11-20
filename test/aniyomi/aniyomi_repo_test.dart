@@ -72,7 +72,7 @@ void main() {
   // AniyomiExtensionService.listSources via mocked MethodChannel
   // ---------------------------------------------------------------------------
   group('AniyomiExtensionService.listSources', () {
-    const channel = MethodChannel('zangetsu/aniyomi');
+    const channel = MethodChannel('infinityloop/aniyomi');
 
     setUp(() {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

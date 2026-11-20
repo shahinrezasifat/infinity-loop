@@ -526,7 +526,7 @@
 	"cardsFadeInAsYouScroll": "Cards fade in as you scroll",
 	"animationStyle": "Animation style",
 	"turnOffMaterialYouToPickAColourYourself": "Turn off Material You to pick a colour yourself",
-	"downloadsZangetsu": "Downloads › Infinity Loop",
+	"downloadsInfinityLoop": "Downloads › Infinity Loop",
 	"removableDrive": "Removable drive",
 	"chooseFolder": "Choose folder…",
 	"resetToDefault": "Reset to default",
@@ -739,7 +739,7 @@
 	"saveYourListAndContinueWatchingAnywhere": "Save your list and continue watching anywhere.",
 	"notSignedIn": "Not signed in",
 	"haveTheApp": "Have the app?",
-	"openZangetsuOnYourNphoneAndScan": "Open Infinity Loop on your\\nphone and scan",
+	"openInfinityLoopOnYourNphoneAndScan": "Open Infinity Loop on your\\nphone and scan",
 	"noApp": "No app?",
 	"resetPassword": "Reset password",
 	"youExampleCom": "you@example.com",
@@ -758,7 +758,7 @@
 	"logOutAnyway": "Log out anyway",
 	"reconnect": "Reconnect",
 	"signInWithYourPhone": "Sign in with your phone",
-	"onTheZangetsuAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR": "On the Infinity Loop app on your phone, open\\n\"Pair a TV\" and enter this code — or scan the QR.",
+	"onTheInfinityLoopAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR": "On the Infinity Loop app on your phone, open\\n\"Pair a TV\" and enter this code — or scan the QR.",
 	"signingIn": "Signing in…",
 	"getANewCode": "Get a new code",
 	"sendTrackers": "Send trackers",
@@ -766,7 +766,7 @@
 	"sendToTV": "Send to TV",
 	"signInToYourAccountFirstNthenPairYourTV": "Sign in to your account first,\\nthen pair your TV.",
 	"enterTheCodeFromYourTV": "Enter the code from your TV",
-	"openZangetsuOnYourTVAndSignInWithYourPhoneToSeeIt": "Open Infinity Loop on your TV and sign in with your phone to see it.",
+	"openInfinityLoopOnYourTVAndSignInWithYourPhoneToSeeIt": "Open Infinity Loop on your TV and sign in with your phone to see it.",
 	"abcd2345": "ABCD 2345",
 	"thisTVWillSignIntoYourAccountYouCanSignItOutLater": "This TV will sign into your account. You can sign it out later.",
 	"alsoSendYourTrackersAniListMyAnimeListSimkl": "Also send your trackers (AniList, MyAnimeList, Simkl)",
@@ -779,7 +779,7 @@
 	"pickABackup": "Pick a backup",
 	"couldnTReadThatBackupFile": "Couldn't read that backup file.",
 	"restoreComplete": "Restore complete",
-	"reopenZangetsuToSeeRestoredLibrarySources": "Reopen Infinity Loop to see restored library & sources.",
+	"reopenInfinityLoopToSeeRestoredLibrarySources": "Reopen Infinity Loop to see restored library & sources.",
 	"saveToAFile": "Save to a file",
 	"saveABackupFileToYourDownloadsFolder": "Save a backup file to your Downloads folder",
 	"backUpToCloud": "Back up to cloud",
@@ -849,7 +849,7 @@
 	"addNovelRepo": "Add novel repo",
 	"removeRepository": "Remove repository",
 	"noSourcesInThisRepo": "No sources in this repo.",
-	"zangetsuProviders": "Infinity Loop providers",
+	"infinityloopProviders": "Infinity Loop providers",
 	"addRepo": "Add repo",
 	"noProvidersInstalled": "No providers installed.",
 	"noSourcesInThisRepoYet": "No sources in this repo yet.",
@@ -888,7 +888,7 @@
 	"resetToDefaults": "Reset to defaults",
 	"providerSettings": "Provider settings",
 	"openThisSourceSOwnSettingsEGServerLanguage": "Open this source's own settings (e.g. server, language)",
-	"addZangetsuRepo": "Add Infinity Loop repo",
+	"addInfinityLoopRepo": "Add Infinity Loop repo",
 	"theProviderWillBeRemovedFromYourInstalledSources": "The provider will be removed from your installed sources.",
 	"addMihonRepo": "Add Mihon repo",
 	"noMihonReposAddedYetNTapAddMihonRepoToAddOne": "No Mihon repos added yet.\\nTap \"Add Mihon repo\" to add one.",
@@ -1791,7 +1791,7 @@
 		}
 	},
 	"cloudBackupFailed": "Cloud backup failed. Check you're online — if it keeps failing, the cloud backup store may not be set up yet.",
-	"savedToDownloadsZangetsu": "Saved to Downloads › Infinity Loop",
+	"savedToDownloadsInfinityLoop": "Saved to Downloads › Infinity Loop",
 	"restoreFailed": "Restore failed: {error}",
 	"@restoreFailed": {
 		"placeholders": {
@@ -1975,7 +1975,7 @@
 	"aniyomi": "Aniyomi",
 	"mihon": "Mihon",
 	"lnreader": "LNReader",
-	"zangetsu": "Infinity Loop",
+	"infinityloop": "Infinity Loop",
 	"cloudStream": "CloudStream",
 	"installedCount": "{count} installed",
 	"@installedCount": {
@@ -3010,5 +3010,5 @@
 	"epubExportFailed": "Couldn't save the EPUB",
 	"export": "Export",
 	"keepDownloadsPrivate": "Keep downloads private",
-	"keepDownloadsPrivateSubtitle": "New video downloads stay inside Infinity Loop instead of the Downloads folder. They are deleted when you uninstall Zangetsu. Chapters and exports are unaffected."
+	"keepDownloadsPrivateSubtitle": "New video downloads stay inside Infinity Loop instead of the Downloads folder. They are deleted when you uninstall Infinity Loop. Chapters and exports are unaffected."
 }

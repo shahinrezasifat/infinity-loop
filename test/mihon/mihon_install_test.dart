@@ -14,7 +14,7 @@ void main() {
   late Directory tempDir;
   late MihonManager manager;
 
-  const channel = MethodChannel('zangetsu/mihon');
+  const channel = MethodChannel('infinityloop/mihon');
   final log = <MethodCall>[];
 
   setUp(() async {

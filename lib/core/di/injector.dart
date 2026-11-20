@@ -195,7 +195,7 @@ Future<void> _seedExistingProviderEcosystems(
       final url = entry['manifestUrl'] as String?;
       if (url == null || url.isEmpty) continue;
 
-      if (ecosystem == 'zangetsuJs' && !repos.has(url)) {
+      if (ecosystem == 'infinityloopJs' && !repos.has(url)) {
         await repos.fetchAndCache(url, customName: entry['name'] as String?);
         continue;
       }
@@ -273,12 +273,12 @@ const Map<String, String> _lnreaderBrowserHeaders = {
 /// Android the LNReader fetch tries this channel (see NovelHttp.kt) before
 /// falling back to Dio. iOS/other platforms never touch this and keep using
 /// Dio as before.
-const MethodChannel _novelHttp = MethodChannel('zangetsu/novel_http');
+const MethodChannel _novelHttp = MethodChannel('infinityloop/novel_http');
 
 /// One-time app bootstrap: Hive boxes, Dio, the shared provider runtime,
 /// the provider registry (built-in providers seeded from assets + any
 /// repo-installed providers), and the bundled extractors.
-const _deviceChannel = MethodChannel('com.spyou.watch_app/device');
+const _deviceChannel = MethodChannel('com.motionwork.infinityloop/device');
 
 /// Simkl requires these on every request — the API and the static data files
 /// alike. Without them our traffic doesn't appear in their debug log at all,
@@ -597,7 +597,7 @@ Future<void> initDependencies() async {
     }),
   );
 
-  // Share deep links (zangetsu://open?…): opens a shared title's Detail, or
+  // Share deep links (infinityloop://open?…): opens a shared title's Detail, or
   // reports an uninstalled source. Eager so its AppLinks listener is live from
   // boot; navigation is deferred until the root Navigator exists.
   sl.registerSingleton<OpenLinkService>(OpenLinkService());
@@ -800,7 +800,7 @@ Future<void> initDependencies() async {
   }
 
   // The app ships with NO built-in providers — every source comes from a repo
-  // (the Zangetsu repo is installed on first launch via onboarding). Drop any
+  // (the Infinity Loop repo is installed on first launch via onboarding). Drop any
   // legacy `bundled://` entries left by older installs, then load the
   // repo-installed providers persisted from previous launches.
   await registry.purgeBundled();
@@ -1061,7 +1061,7 @@ Future<void> initDependencies() async {
 
   // Z Mode: the catalogue router and its metadata side. Off by default;
   // registering it costs nothing but makes the toggle instant.
-  await registerZangetsuMode(sl);
+  await registerInfinityLoopMode(sl);
 
   // TV never started loadAll above. Reapply the saved active source once the
   // shell is up (CloudStream/Aniyomi may still land later via their microtasks).
@@ -1115,7 +1115,7 @@ Future<void> initDependencies() async {
   );
   unawaited(sl<ChapterDownloader>().resumeInterrupted());
 
-  // Chromecast session controller. Wraps the native zangetsu/cast channel.
+  // Chromecast session controller. Wraps the native infinityloop/cast channel.
   // init() is guarded: if the native side is absent (non-Android, test) the
   // controller stays in CastState.unavailable and never throws.
   sl.registerSingleton<CastController>(CastController());

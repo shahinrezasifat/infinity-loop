@@ -11,10 +11,10 @@
 //  - a Mihon source's count/updates do NOT leak into the header total when
 //    the row itself is gated off — the exact place a broken
 //    `showMihon ? x : 0` guard would silently show up;
-//  - a `mihon:` active source id is excluded from `activeIsZangetsu`, so it
-//    no longer misbadges the Zangetsu row as ACTIVE (the bug the task
+//  - a `mihon:` active source id is excluded from `activeIsInfinityLoop`, so it
+//    no longer misbadges the Infinity Loop row as ACTIVE (the bug the task
 //    specifically flagged as a risk);
-//  - the existing Zangetsu/CloudStream/Aniyomi rows and their counts are
+//  - the existing InfinityLoop/CloudStream/Aniyomi rows and their counts are
 //    completely unaffected by the new row.
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -152,14 +152,14 @@ void main() {
   );
 
   testWidgets(
-    'the existing Zangetsu row count is unaffected by a registered Mihon '
+    'the existing Infinity Loop row count is unaffected by a registered Mihon '
     'source',
     (tester) async {
       sl<MihonManager>().register(_mihonSrc(1, 'Manga One'));
       await pump(tester);
 
-      // Only the 2 Zangetsu entries — the Mihon source must not leak into
-      // the Zangetsu row's count.
+      // Only the 2 Infinity Loop entries — the Mihon source must not leak into
+      // the Infinity Loop row's count.
       expect(find.text('2 sources'), findsOneWidget);
     },
   );
@@ -194,7 +194,7 @@ void main() {
 
       await pump(tester);
 
-      // Header total stays at 2 (the Zangetsu entries only) and no updates
+      // Header total stays at 2 (the Infinity Loop entries only) and no updates
       // pill is shown — both would fail if the count/updates guard were
       // ever made unconditional.
       expect(find.text('2 sources ready'), findsOneWidget);
@@ -203,7 +203,7 @@ void main() {
   );
 
   testWidgets(
-    'a mihon: active id does not badge the Zangetsu row as ACTIVE',
+    'a mihon: active id does not badge the Infinity Loop row as ACTIVE',
     (tester) async {
       sl.unregister<ActiveSourceCubit>();
       sl.registerSingleton<ActiveSourceCubit>(
@@ -211,8 +211,8 @@ void main() {
       );
       await pump(tester);
 
-      // Before this task, activeIsZangetsu didn't exclude mihon: ids, so the
-      // Zangetsu row would have shown ACTIVE here. Off-Android the Mihon row
+      // Before this task, activeIsInfinity Loop didn't exclude mihon: ids, so the
+      // Infinity Loop row would have shown ACTIVE here. Off-Android the Mihon row
       // itself is hidden, so correctly nothing should show ACTIVE at all.
       expect(find.text('ACTIVE'), findsNothing);
     },

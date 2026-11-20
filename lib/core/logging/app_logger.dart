@@ -34,7 +34,7 @@ class AppLogger {
   Future<void> init() async {
     try {
       final dir = await getWritableAppDirectory();
-      await _openAt(File('${dir.path}/zangetsu.log'));
+      await _openAt(File('${dir.path}/infinityloop.log'));
     } catch (_) {
       _file = null;
     }
@@ -88,7 +88,7 @@ class AppLogger {
   Future<File?> exportFile() async {
     try {
       final dir = await getTemporaryDirectory();
-      final f = File('${dir.path}/zangetsu-logs.txt');
+      final f = File('${dir.path}/infinityloop-logs.txt');
       await f.writeAsString('Infinity Loop logs\n\n$contents\n');
       return f;
     } catch (_) {

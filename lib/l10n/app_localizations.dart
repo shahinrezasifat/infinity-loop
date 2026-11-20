@@ -2683,11 +2683,11 @@ abstract class AppLocalizations {
   /// **'Turn off Material You to pick a colour yourself'**
   String get turnOffMaterialYouToPickAColourYourself;
 
-  /// No description provided for @downloadsZangetsu.
+  /// No description provided for @downloadsInfinityLoop.
   ///
   /// In en, this message translates to:
   /// **'Downloads › Infinity Loop'**
-  String get downloadsZangetsu;
+  String get downloadsInfinityLoop;
 
   /// No description provided for @removableDrive.
   ///
@@ -3962,11 +3962,11 @@ abstract class AppLocalizations {
   /// **'Have the app?'**
   String get haveTheApp;
 
-  /// No description provided for @openZangetsuOnYourNphoneAndScan.
+  /// No description provided for @openInfinityLoopOnYourNphoneAndScan.
   ///
   /// In en, this message translates to:
   /// **'Open Infinity Loop on your\\nphone and scan'**
-  String get openZangetsuOnYourNphoneAndScan;
+  String get openInfinityLoopOnYourNphoneAndScan;
 
   /// No description provided for @noApp.
   ///
@@ -4076,11 +4076,12 @@ abstract class AppLocalizations {
   /// **'Sign in with your phone'**
   String get signInWithYourPhone;
 
-  /// No description provided for @onTheZangetsuAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR.
+  /// No description provided for @onTheInfinityLoopAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR.
   ///
   /// In en, this message translates to:
   /// **'On the Infinity Loop app on your phone, open\\n\"Pair a TV\" and enter this code — or scan the QR.'**
-  String get onTheZangetsuAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR;
+  String
+  get onTheInfinityLoopAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR;
 
   /// No description provided for @signingIn.
   ///
@@ -4124,11 +4125,11 @@ abstract class AppLocalizations {
   /// **'Enter the code from your TV'**
   String get enterTheCodeFromYourTV;
 
-  /// No description provided for @openZangetsuOnYourTVAndSignInWithYourPhoneToSeeIt.
+  /// No description provided for @openInfinityLoopOnYourTVAndSignInWithYourPhoneToSeeIt.
   ///
   /// In en, this message translates to:
   /// **'Open Infinity Loop on your TV and sign in with your phone to see it.'**
-  String get openZangetsuOnYourTVAndSignInWithYourPhoneToSeeIt;
+  String get openInfinityLoopOnYourTVAndSignInWithYourPhoneToSeeIt;
 
   /// No description provided for @abcd2345.
   ///
@@ -4202,11 +4203,11 @@ abstract class AppLocalizations {
   /// **'Restore complete'**
   String get restoreComplete;
 
-  /// No description provided for @reopenZangetsuToSeeRestoredLibrarySources.
+  /// No description provided for @reopenInfinityLoopToSeeRestoredLibrarySources.
   ///
   /// In en, this message translates to:
   /// **'Reopen Infinity Loop to see restored library & sources.'**
-  String get reopenZangetsuToSeeRestoredLibrarySources;
+  String get reopenInfinityLoopToSeeRestoredLibrarySources;
 
   /// No description provided for @saveToAFile.
   ///
@@ -4622,11 +4623,11 @@ abstract class AppLocalizations {
   /// **'No sources in this repo.'**
   String get noSourcesInThisRepo;
 
-  /// No description provided for @zangetsuProviders.
+  /// No description provided for @infinityloopProviders.
   ///
   /// In en, this message translates to:
   /// **'Infinity Loop providers'**
-  String get zangetsuProviders;
+  String get infinityloopProviders;
 
   /// No description provided for @addRepo.
   ///
@@ -4814,11 +4815,11 @@ abstract class AppLocalizations {
   /// **'Open this source\'s own settings (e.g. server, language)'**
   String get openThisSourceSOwnSettingsEGServerLanguage;
 
-  /// No description provided for @addZangetsuRepo.
+  /// No description provided for @addInfinityLoopRepo.
   ///
   /// In en, this message translates to:
   /// **'Add Infinity Loop repo'**
-  String get addZangetsuRepo;
+  String get addInfinityLoopRepo;
 
   /// No description provided for @theProviderWillBeRemovedFromYourInstalledSources.
   ///
@@ -6782,11 +6783,11 @@ abstract class AppLocalizations {
   /// **'Cloud backup failed. Check you\'re online — if it keeps failing, the cloud backup store may not be set up yet.'**
   String get cloudBackupFailed;
 
-  /// No description provided for @savedToDownloadsZangetsu.
+  /// No description provided for @savedToDownloadsInfinityLoop.
   ///
   /// In en, this message translates to:
   /// **'Saved to Downloads › Infinity Loop'**
-  String get savedToDownloadsZangetsu;
+  String get savedToDownloadsInfinityLoop;
 
   /// No description provided for @restoreFailed.
   ///
@@ -7160,11 +7161,11 @@ abstract class AppLocalizations {
   /// **'LNReader'**
   String get lnreader;
 
-  /// No description provided for @zangetsu.
+  /// No description provided for @infinityloop.
   ///
   /// In en, this message translates to:
   /// **'Infinity Loop'**
-  String get zangetsu;
+  String get infinityloop;
 
   /// No description provided for @cloudStream.
   ///
@@ -9095,7 +9096,7 @@ abstract class AppLocalizations {
   /// No description provided for @keepDownloadsPrivateSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'New video downloads stay inside Infinity Loop instead of the Downloads folder. They are deleted when you uninstall Zangetsu. Chapters and exports are unaffected.'**
+  /// **'New video downloads stay inside Infinity Loop instead of the Downloads folder. They are deleted when you uninstall Infinity Loop. Chapters and exports are unaffected.'**
   String get keepDownloadsPrivateSubtitle;
 }
 

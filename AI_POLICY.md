@@ -1,8 +1,8 @@
-# AI Usage Policy for Zangetsu
+# AI Usage Policy for InfinityLoop
 
 **Last Updated: August 3, 2026**
 
-AI tools (Copilot, ChatGPT, Claude, Cursor, etc.) are welcome for contributing to Zangetsu — used well, they're a normal part of how software gets written in 2026. This policy exists to make sure AI-assisted contributions meet the same bar as any other contribution: correct, legally clean, and something a human actually understands and stands behind.
+AI tools (Copilot, ChatGPT, Claude, Cursor, etc.) are welcome for contributing to Infinity Loop — used well, they're a normal part of how software gets written in 2026. This policy exists to make sure AI-assisted contributions meet the same bar as any other contribution: correct, legally clean, and something a human actually understands and stands behind.
 
 ---
 
@@ -13,7 +13,6 @@ AI tools (Copilot, ChatGPT, Claude, Cursor, etc.) are welcome for contributing t
 - You are **fully responsible** for AI-generated code you submit — "the AI wrote it" is not a defense against bugs, license violations, or security issues.
 - You must **understand and have tested** anything you submit, AI-written or not.
 - Extra care applies to **providers/extractors** — see Section 5.
-- The CLA still applies in full; AI assistance doesn't change your obligations under it. In fact, the CLA's Section 5 promises now explicitly include "if AI tools were used to help create the Contribution, its use complies with this policy" — so signing the CLA means agreeing to this document too.
 
 ---
 
@@ -34,7 +33,6 @@ Non-disclosure of substantial AI-generated content, discovered later, will be tr
 
 ## 2. You Own What You Submit
 
-Submitting an AI-assisted Contribution means you are certifying, same as with any other Contribution under the [CLA](CLA.md):
 
 - You've **read and understood** the code, not just pasted it in.
 - You've **tested it** — AI-generated code frequently looks plausible while being subtly wrong, especially around edge cases, async logic, and platform-specific behavior.
@@ -50,8 +48,7 @@ AI models can reproduce memorized snippets from their training data, sometimes v
 
 - Check for anything that looks like it was lifted from a specific existing project (unusual comments, distinctive variable names matching a known library, license headers, etc.).
 - If AI output includes or closely resembles code from a project under a license incompatible with GPLv3 (or requiring attribution you haven't given), **do not submit it** — rewrite the logic yourself or find a compatible reference implementation.
-- This is the same disclosure obligation already in **Section 5 of the CLA** ("if the Contribution includes third-party code, assets, data, or references, you have clearly identified them...") — AI-generated code is not exempt just because a model produced it instead of a human copy-pasting.
-- If your Contribution is derived from, or closely modeled on, a specific third-party project (the way Zangetsu's existing CloudStream and Aniyomi/Tachiyomi integrations are), that needs its own entry in [`NOTICE.md`](NOTICE.md), same as any other third-party-derived code — regardless of whether a human or an AI wrote the derivation.
+- If your Contribution is derived from, or closely modeled on, a specific third-party project (the way Infinity Loop's existing CloudStream and Aniyomi/Tachiyomi integrations are), that needs its own entry in [`NOTICE.md`](NOTICE.md), same as any other third-party-derived code — regardless of whether a human or an AI wrote the derivation.
 
 ---
 
@@ -69,11 +66,10 @@ review AI-generated code in those paths especially carefully, and call it out in
 
 ## 5. Providers, Extractors, and Scraping Logic
 
-This is the area where AI-assisted contributions need the most caution, because the legal risk isn't just about Zangetsu's own code:
+This is the area where AI-assisted contributions need the most caution, because the legal risk isn't just about Infinity Loop's own code:
 
 - **Don't let AI invent plausible-looking scraping logic for a source you haven't personally verified.** AI models will confidently generate code that *looks* like it scrapes a real site correctly while being outdated, wrong, or targeting something that never worked to begin with.
 - **Don't use AI to help bypass anti-scraping protections, rate limits, DRM, or authentication on a third-party source** you don't have the right to access that way. This applies regardless of whether a human or an AI wrote the bypass.
-- If an AI-assisted provider/extractor PR is later found to violate a source's terms of service in a way you didn't personally verify, responsibility for that still falls on you as the Contributor, per the CLA's indemnification terms (Section 8).
 
 ---
 
@@ -100,9 +96,8 @@ Maintainers reserve the right to decline AI-assisted Contributions that don't me
 
 ---
 
-## 8. Relationship to the CLA and LICENSE
+## 8. License
 
-This policy doesn't modify the [CLA](CLA.md) or [LICENSE](LICENSE) — it clarifies how existing obligations (originality, no undisclosed third-party code, indemnification, no warranty) apply specifically to AI-assisted work. Where anything here seems to conflict with the CLA or LICENSE, those documents control.
 
 ---
 

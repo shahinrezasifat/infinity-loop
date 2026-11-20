@@ -45,7 +45,7 @@ updateLastSync(id)         // Update sync time
 ```
 
 #### 3. **RepositoryBloc** (`repository_bloc.dart`)
-- State management using BLoC pattern (matches Zangetsu architecture)
+- State management using BLoC pattern (matches Infinity Loop architecture)
 - Events: Load, Add, Update, Delete, Enable, Disable, Switch, Test, etc.
 - States: Initial, Loading, Loaded, Switching, Error
 - Emits `RepositorySwitching` state during transitions for UI feedback
@@ -244,7 +244,7 @@ lib/core/repositories/
 
 ## Integration Points
 
-### With Existing Zangetsu Systems
+### With Existing Infinity Loop Systems
 
 1. **CatalogueRepository Interface**
    - Will be extended to accept repository selection
@@ -326,4 +326,4 @@ blocTest<RepositoryBloc, RepositoryState>(
 
 ## License
 
-This system is part of Infinity Loop, licensed under GNU GPL-3.0 (inherited from Zangetsu base).
+This system is part of Infinity Loop, licensed under GNU GPL-3.0 (inherited from Infinity Loop base).

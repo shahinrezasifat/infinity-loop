@@ -1,6 +1,4 @@
 [
-  {"name":"Zangetsu Providers (Official)","ecosystem":"zangetsuJs","category":"Official / Anime & Movies","manifestUrl":"https://raw.githubusercontent.com/Spyou/zangetsu-providers/main/index.json","isNsfw":false},
-  {"name":"Mewtwo Community","ecosystem":"zangetsuJs","category":"Community / Streaming","manifestUrl":"https://raw.githubusercontent.com/MewtwoOP1/Zangetsu-repo/main/index.json","isNsfw":false},
   {"name":"yuzono anime-repo","ecosystem":"aniyomi","category":"Anime","manifestUrl":"https://raw.githubusercontent.com/yuzono/anime-repo/repo/index.min.json","isNsfw":false},
   {"name":"Keiyoushi Extensions","ecosystem":"mihon","category":"Manga","manifestUrl":"https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json","isNsfw":false},
   {"name":"LNReader Plugins","ecosystem":"lnreader","category":"Light Novels","manifestUrl":"https://raw.githubusercontent.com/LNReader/lnreader-plugins/plugins/v3.0.0/.dist/plugins.min.json","isNsfw":false},

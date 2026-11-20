@@ -1,4 +1,4 @@
-// Zangetsu sources — TV (D-pad) UI.
+// Infinity Loop sources — TV (D-pad) UI.
 part of 'infinity_loop_sources_screen.dart';
 
 // ---------------------------------------------------------------------------
@@ -56,7 +56,7 @@ class _ZTvViewState extends State<_ZTvView> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: Text(
-                        context.l10n.zangetsuProviders,
+                        context.l10n.infinityloopProviders,
                         style: AppText.largeTitle,
                       ),
                     ),

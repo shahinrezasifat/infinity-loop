@@ -30,7 +30,7 @@ class AppIconOption {
 /// Android-only. Everywhere else [supported] is false and the setting is hidden;
 /// iOS has its own unrelated API and TV has no icon picker at all.
 class AppIconService {
-  static const _ch = MethodChannel('zangetsu/app_icon');
+  static const _ch = MethodChannel('infinityloop/app_icon');
   static const String boxName = 'app_prefs';
   static const String _key = 'appIconId';
   static const String customAppIconPathKey = 'customAppIconPath';

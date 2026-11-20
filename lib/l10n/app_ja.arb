@@ -506,7 +506,7 @@
 	"cardsFadeInAsYouScroll": "スクロールに合わせてカードがフェードイン",
 	"animationStyle": "アニメーションのスタイル",
 	"turnOffMaterialYouToPickAColourYourself": "自分で色を選ぶには Material You をオフ",
-	"downloadsZangetsu": "ダウンロード › Infinity Loop",
+	"downloadsInfinityLoop": "ダウンロード › Infinity Loop",
 	"removableDrive": "リムーバブルドライブ",
 	"chooseFolder": "フォルダーを選択…",
 	"resetToDefault": "デフォルトに戻す",
@@ -714,7 +714,7 @@
 	"saveYourListAndContinueWatchingAnywhere": "リストを保存して、どこでも続きから視聴。",
 	"notSignedIn": "未サインイン",
 	"haveTheApp": "アプリをお持ちですか？",
-	"openZangetsuOnYourNphoneAndScan": "スマホで Infinity Loop を開き、\\nスキャンしてください",
+	"openInfinityLoopOnYourNphoneAndScan": "スマホで Infinity Loop を開き、\\nスキャンしてください",
 	"noApp": "アプリがありませんか？",
 	"resetPassword": "パスワードをリセット",
 	"youExampleCom": "あなた@example.com",
@@ -733,7 +733,7 @@
 	"logOutAnyway": "このままログアウト",
 	"reconnect": "再接続",
 	"signInWithYourPhone": "スマホでサインイン",
-	"onTheZangetsuAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR": "スマホの Infinity Loop で「テレビをペアリング」を開き、\\nこのコードを入力するか、QR をスキャンしてください。",
+	"onTheInfinityLoopAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR": "スマホの Infinity Loop で「テレビをペアリング」を開き、\\nこのコードを入力するか、QR をスキャンしてください。",
 	"signingIn": "サインイン中…",
 	"getANewCode": "新しいコードを取得",
 	"sendTrackers": "トラッカーを送信",
@@ -741,7 +741,7 @@
 	"sendToTV": "テレビに送信",
 	"signInToYourAccountFirstNthenPairYourTV": "先にアカウントにサインインし、\\nテレビをペアリングしてください。",
 	"enterTheCodeFromYourTV": "テレビに表示されたコードを入力",
-	"openZangetsuOnYourTVAndSignInWithYourPhoneToSeeIt": "テレビで Infinity Loop を開き、スマホでサインインすると表示されます。",
+	"openInfinityLoopOnYourTVAndSignInWithYourPhoneToSeeIt": "テレビで Infinity Loop を開き、スマホでサインインすると表示されます。",
 	"abcd2345": "ABCD 2345",
 	"thisTVWillSignIntoYourAccountYouCanSignItOutLater": "このテレビがアカウントにサインインします。後から切断できます。",
 	"alsoSendYourTrackersAniListMyAnimeListSimkl": "トラッカーも送信（AniList、MyAnimeList、Simkl）",
@@ -754,7 +754,7 @@
 	"pickABackup": "バックアップを選択",
 	"couldnTReadThatBackupFile": "そのバックアップファイルを読めませんでした。",
 	"restoreComplete": "復元が完了しました",
-	"reopenZangetsuToSeeRestoredLibrarySources": "Infinity Loop を開き直すと、復元したライブラリとソースが表示されます。",
+	"reopenInfinityLoopToSeeRestoredLibrarySources": "Infinity Loop を開き直すと、復元したライブラリとソースが表示されます。",
 	"saveToAFile": "ファイルに保存",
 	"saveABackupFileToYourDownloadsFolder": "ダウンロードフォルダーにバックアップを保存",
 	"backUpToCloud": "クラウドにバックアップ",
@@ -824,7 +824,7 @@
 	"addNovelRepo": "小説リポジトリを追加",
 	"removeRepository": "リポジトリを削除",
 	"noSourcesInThisRepo": "このリポジトリにソースはありません。",
-	"zangetsuProviders": "Infinity Loop プロバイダー",
+	"infinityloopProviders": "Infinity Loop プロバイダー",
 	"addRepo": "リポジトリを追加",
 	"noProvidersInstalled": "プロバイダーはインストールされていません。",
 	"noSourcesInThisRepoYet": "このリポジトリにソースはまだありません。",
@@ -863,7 +863,7 @@
 	"resetToDefaults": "初期値に戻す",
 	"providerSettings": "プロバイダー設定",
 	"openThisSourceSOwnSettingsEGServerLanguage": "このソース独自の設定を開く（サーバー、言語など）",
-	"addZangetsuRepo": "Infinity Loop リポジトリを追加",
+	"addInfinityLoopRepo": "Infinity Loop リポジトリを追加",
 	"theProviderWillBeRemovedFromYourInstalledSources": "インストール済みソースからこのプロバイダーを外します。",
 	"addMihonRepo": "Mihon リポジトリを追加",
 	"noMihonReposAddedYetNTapAddMihonRepoToAddOne": "Mihon リポジトリはまだありません。\\n「Mihon リポジトリを追加」をタップしてください。",
@@ -1666,7 +1666,7 @@
 	"github": "GitHub",
 	"telegram": "電報",
 	"accentColourBlurb": "ボタン、チップ、進行状況、選択されたアイテム全体で使用されるハイライトカラー。",
-	"appIconBlurb": "ホーム画面上のアイコンです。アイコンを変更するとZangetsuが閉じます。Androidがランチャーのエントリを切り替える必要があるためです。",
+	"appIconBlurb": "ホーム画面上のアイコンです。アイコンを変更するとInfinityLoopが閉じます。Androidがランチャーのエントリを切り替える必要があるためです。",
 	"useTheIcon": " {label} アイコンを使用しますか？",
 	"@useTheIcon": {
 		"placeholders": {
@@ -1675,7 +1675,7 @@
 			}
 		}
 	},
-	"useTheIconBody": "Androidが新しいアイコンを適用するため、Zangetsuは一時的に閉じます。その後、ホーム画面から再度起動してください。\n\nZangetsuがフォルダやドックにある場合は、再度追加する必要があるかもしれません。",
+	"useTheIconBody": "Androidが新しいアイコンを適用するため、InfinityLoopは一時的に閉じます。その後、ホーム画面から再度起動してください。\n\nInfinityLoopがフォルダやドックにある場合は、再度追加する必要があるかもしれません。",
 	"animRise": "上昇",
 	"animRiseDesc": "リフトとフェードイン",
 	"animFade": "フェード",
@@ -1718,7 +1718,7 @@
 		}
 	},
 	"cloudBackupFailed": "クラウドバックアップに失敗しました。インターネット接続を確認してください。繰り返し失敗する場合は、クラウドバックアップストアがまだ設定されていない可能性があります。",
-	"savedToDownloadsZangetsu": "ダウンロードに保存済み › Infinity Loop",
+	"savedToDownloadsInfinityLoop": "ダウンロードに保存済み › Infinity Loop",
 	"restoreFailed": "復元に失敗しました: {error}",
 	"@restoreFailed": {
 		"placeholders": {
@@ -1728,7 +1728,7 @@
 		}
 	},
 	"noBackupFilesOnDevice": "このデバイスにはバックアップファイルが見つかりませんでした。まずバックアップファイルを保存するか、「クラウドから復元」を使用してください。",
-	"backupScreenBlurb": "ソース、リスト、設定を、デバイス上のファイルまたはZangetsuアカウントに保存してください。復元しても、既存のデータは追加されるだけで、削除されることはありません。",
+	"backupScreenBlurb": "ソース、リスト、設定を、デバイス上のファイルまたはInfinityLoopアカウントに保存してください。復元しても、既存のデータは追加されるだけで、削除されることはありません。",
 	"includeInTheBackup": "バックアップに含める",
 	"sourcesAndRepos": "ソースとリポジトリ",
 	"installedSourcesAndRepoLinks": "インストール済みのソースとそのリポジトリへのリンク",
@@ -1902,7 +1902,7 @@
 	"aniyomi": "アニヨミ",
 	"mihon": "ミホン",
 	"lnreader": "LNリーダー",
-	"zangetsu": "Infinity Loop",
+	"infinityloop": "Infinity Loop",
 	"cloudStream": "クラウドストリーム",
 	"installedCount": "{count} インストール済み",
 	"@installedCount": {

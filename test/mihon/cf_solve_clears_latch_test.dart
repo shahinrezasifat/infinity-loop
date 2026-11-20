@@ -11,7 +11,7 @@ import 'package:infinity_loop/core/provider/cf_solve_needed.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channel = MethodChannel('zangetsu/mihon');
+  const channel = MethodChannel('infinityloop/mihon');
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 

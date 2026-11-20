@@ -5,7 +5,7 @@ import 'package:infinity_loop/core/aniyomi/aniyomi_extension_service.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channel = MethodChannel('zangetsu/aniyomi');
+  const channel = MethodChannel('infinityloop/aniyomi');
   final log = <MethodCall>[];
 
   // ---------------------------------------------------------------------------

@@ -203,7 +203,7 @@ void main() {
 
   testWidgets(
     'an lnr: active id badges the LNReader row ACTIVE and does not badge the '
-    'Zangetsu row',
+    'Infinity Loop row',
     (tester) async {
       lnrService.seed(_pluginA);
       await sl.unregister<ActiveSourceCubit>();
@@ -222,7 +222,7 @@ void main() {
       lnrService.seed(_pluginA);
       await pump(tester);
 
-      // 2 Zangetsu entries + 1 LNReader source.
+      // 2 Infinity Loop entries + 1 LNReader source.
       expect(find.text('3 sources ready'), findsOneWidget);
     },
   );

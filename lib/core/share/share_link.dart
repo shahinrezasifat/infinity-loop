@@ -3,13 +3,12 @@ import '../models/media_item.dart';
 import '../models/provider_info.dart';
 
 /// Encodes a [MediaItem] into a short shareable web link and decodes an incoming
-/// `zangetsu://open?…` deep link back into a [MediaItem].
+/// `infinityloop://open?…` deep link back into a [MediaItem].
 ///
-/// The shared link is an HTTPS URL to the site's `/open/` page:
-///   `https://…/Zangetsu-Site/open/?s=<source>&u=<url>&t=<title>&y=<a|m>&c=<cover>`
+/// The shared link uses the app scheme unless a web handoff site is configured.
 /// Only the fields needed to re-open the title are carried — the Detail
 /// re-fetches everything else — which keeps the link short. When installed, the
-/// app catches it via `zangetsu://open?…`; otherwise the page offers the app.
+/// app catches it via `infinityloop://open?…`; otherwise the page offers the app.
 class ShareLink {
   const ShareLink._();
 
@@ -44,7 +43,7 @@ class ShareLink {
   static String shareText(MediaItem item) =>
       '${item.title}\n\nWatch on Infinity Loop:\n${forItem(item)}';
 
-  /// Parse a `zangetsu://open?s=…&u=…` deep link into a [MediaItem], or null
+  /// Parse a `infinityloop://open?s=…&u=…` deep link into a [MediaItem], or null
   /// when [uri] is not an open-link or is missing the source/url.
   static MediaItem? parse(Uri uri) {
     if (uri.scheme != Environment.openLinkScheme ||

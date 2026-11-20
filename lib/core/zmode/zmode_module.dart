@@ -33,7 +33,7 @@ import 'zmode_prefs.dart';
 /// Registered even when the toggle is off: the router reads the pref per call,
 /// so flipping the toggle never re-registers anything. Call once from
 /// `initDependencies`, after `SourceRepository` and `ContentModeCubit`.
-Future<void> registerZangetsuMode(GetIt sl) async {
+Future<void> registerInfinityLoopMode(GetIt sl) async {
   final matchStore = await MatchStore.open();
   sl.registerSingleton<MatchStore>(matchStore);
 
@@ -221,7 +221,7 @@ List<({String id, String name})> byKindAffinity(
 /// own health/pin tie-breaks — agree on the user's priority order.
 ///
 /// A top-level function reading `sl` directly, not a closure inside
-/// [registerZangetsuMode]: a test can register fakes into `sl` and call this
+/// [registerInfinityLoopMode]: a test can register fakes into `sl` and call this
 /// (and [sweepList]) exactly as production does, instead of reconstructing
 /// their composition by hand and testing that instead.
 List<({String id, String name})> orderedCandidates(ZKind kind) {

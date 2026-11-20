@@ -3431,7 +3431,7 @@ class _MangaReaderScreenState extends State<MangaReaderScreen>
         headers: page.headers ?? const {},
       );
       final bytes = await file.readAsBytes();
-      final name = 'Zangetsu_${DateTime.now().millisecondsSinceEpoch}';
+      final name = 'InfinityLoop_${DateTime.now().millisecondsSinceEpoch}';
       try {
         await Gal.putImageBytes(bytes, name: name);
       } on GalException {

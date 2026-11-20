@@ -7,7 +7,7 @@ class BackupFormatException implements Exception {
   String toString() => 'BackupFormatException: $message';
 }
 
-const _kApp = 'zangetsu'; // Stable file format identifier for older backups.
+const _kApp = 'infinityloop'; // Stable file format identifier for older backups.
 const _kVersion = 1;
 
 Map<String, dynamic> wrapPayload(

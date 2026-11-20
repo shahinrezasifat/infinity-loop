@@ -23,7 +23,7 @@ class AppImageCache {
     final index = File('${dir.path}/cache_index.json');
     _tvManager = CacheManager(
       Config(
-        'zangetsuTvImageCache',
+        'infinityloopTvImageCache',
         stalePeriod: const Duration(days: 14),
         maxNrOfCacheObjects: 400,
         repo: JsonCacheInfoRepository.withFile(index),

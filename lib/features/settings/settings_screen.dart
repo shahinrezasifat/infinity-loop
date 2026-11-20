@@ -61,7 +61,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/ui/dock_visibility.dart';
 import 'developer_screen.dart';
 import 'developer_service.dart';
-import 'donate_screen.dart';
+import '../../core/update/app_update_prompt.dart';
 import '../onboarding/how_it_works.dart';
 import '../notify/subscriptions_screen.dart';
 import 'tracker_settings_screen.dart';
@@ -205,7 +205,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// The metadata provider store is registered by `registerZangetsuMode`,
+  /// The metadata provider store is registered by `registerInfinityLoopMode`,
   /// which runs late in boot — and this screen is built eagerly as the dock's
   /// Profile tab. Guarded so it reads as the default rather than throwing if
   /// it is built first. Same guard `SourceRepository._domainOverride` uses.
@@ -1041,7 +1041,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       keywords: 'logs share diagnostic debug bug report crash',
       onTap: _sendLogReport,
     ),
-    // About — a single destination holding the app info, contributors,
+    // About — a single destination holding the app info,
     // social links, updates, beta toggle and support (so the section opens
     // straight to it — no nested "About" sub-page).
     _SettingsEntry(
@@ -1051,7 +1051,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       subtitle: 'v$kAppVersion',
       keywords:
           'about version app info license developers credits team '
-          'contributors social discord telegram how it works guide '
+          'developer social how it works guide '
           'check updates upgrade latest beta prerelease support donate coffee',
       onTap: () => _push(const AboutSettingsScreen()),
     ),

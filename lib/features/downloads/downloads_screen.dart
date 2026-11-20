@@ -123,7 +123,7 @@ class _DownloadsScreenState extends State<DownloadsScreen>
     final label = downloadDestinationLabel(
       keepPrivate: prefs.keepPrivate,
       locationLabel: prefs.locationLabel,
-      publicFallback: l10n.downloadsZangetsu,
+      publicFallback: l10n.downloadsInfinityLoop,
     );
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 6, 16, 8),

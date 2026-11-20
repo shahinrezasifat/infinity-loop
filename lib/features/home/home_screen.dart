@@ -125,7 +125,7 @@ class _HomeViewState extends State<_HomeView>
   bool _resumePrewarmed = false;
 
   // ── Logo-strike mode transition ──────────────────────────────────────────
-  // Tapping a mode card runs a full-screen overlay: the Zangetsu mark springs
+  // Tapping a mode card runs a full-screen overlay: the Infinity Loop mark springs
   // in at centre behind a scrim, a red glow pulses and a steel glint sweeps the
   // blade, the mode swaps hidden at that peak, then it reveals. Self-contained —
   // see [_enterMode] / [_slashOverlay].

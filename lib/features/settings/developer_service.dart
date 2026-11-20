@@ -15,7 +15,7 @@ class GitHubDevProfile {
     required this.bio,
     required this.avatarUrl,
     required this.updatedAt,
-    this.htmlUrl = 'https://github.com/shahinrezasifat1999',
+    this.htmlUrl = 'https://github.com/shahinrezasifat/',
     this.blog = 'https://motionwork-tali.top',
     this.company = 'Motion Work',
     this.location,
@@ -38,12 +38,12 @@ class GitHubDevProfile {
   final int following;
 
   static const defaultProfile = GitHubDevProfile(
-    username: 'shahinrezasifat1999',
+    username: 'shahinrezasifat',
     name: 'S. M. Shahin Reza Sifat',
     bio: 'Software Developer & Founder of Motion Work',
     avatarUrl: 'https://avatars.githubusercontent.com/u/203796840?v=4',
     updatedAt: '',
-    htmlUrl: 'https://github.com/shahinrezasifat1999',
+    htmlUrl: 'https://github.com/shahinrezasifat/',
     blog: 'https://motionwork-tali.top',
     company: 'Motion Work',
   );
@@ -76,7 +76,7 @@ class GitHubDevProfile {
 
   factory GitHubDevProfile.fromJson(Map<String, dynamic> json) {
     return GitHubDevProfile(
-      username: json['username'] as String? ?? 'shahinrezasifat1999',
+      username: json['username'] as String? ?? 'shahinrezasifat',
       name: json['name'] as String? ?? defaultProfile.name,
       bio: json['bio'] as String? ?? defaultProfile.bio,
       avatarUrl: json['avatarUrl'] as String? ?? defaultProfile.avatarUrl,
@@ -99,7 +99,7 @@ class GitHubDevProfile {
     final rawUpdated = json['updated_at'] as String?;
 
     return GitHubDevProfile(
-      username: json['login'] as String? ?? 'shahinrezasifat1999',
+      username: json['login'] as String? ?? 'shahinrezasifat',
       name: (rawName != null && rawName.trim().isNotEmpty)
           ? rawName.trim()
           : defaultProfile.name,
@@ -129,8 +129,8 @@ class GitHubDevProfile {
 class DeveloperProfileService {
   DeveloperProfileService._();
 
-  static const String _cacheKey = 'github_dev_profile_cache';
-  static const String username = 'shahinrezasifat1999';
+  static const String _cacheKey = 'github_dev_profile_$username';
+  static const String username = 'shahinrezasifat';
   static const String apiUrl = 'https://api.github.com/users/$username';
 
   /// Live listenable for instant UI reactivity across the entire app.
@@ -157,7 +157,7 @@ class DeveloperProfileService {
         apiUrl,
         options: Options(
           headers: {
-            'User-Agent': 'ZangetsuApp',
+            'User-Agent': 'InfinityLoopApp',
             'Accept': 'application/vnd.github.v3+json',
           },
           receiveTimeout: const Duration(seconds: 6),

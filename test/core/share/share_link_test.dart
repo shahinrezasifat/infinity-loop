@@ -13,16 +13,18 @@ void main() {
     cover: 'https://img.example/x.jpg',
   );
 
-  test('forItem builds a short /open/ link that parse() round-trips', () {
+  test('forItem builds an Infinity Loop link that parse() round-trips', () {
     final webUrl = ShareLink.forItem(item);
-    expect(webUrl, contains('/open/'));
+    expect(Uri.parse(webUrl).scheme, 'infinityloop');
+    expect(Uri.parse(webUrl).host, 'open');
     // Short link: plain query params, no base64 blob.
     expect(webUrl, isNot(contains('d=')));
 
-    // The site forwards the same query params into a zangetsu://open link.
+    // The site forwards the same query params into a infinityloop://open link.
     final web = Uri.parse(webUrl);
-    final deepLink =
-        Uri.parse('zangetsu://open').replace(queryParameters: web.queryParameters);
+    final deepLink = Uri.parse(
+      'infinityloop://open',
+    ).replace(queryParameters: web.queryParameters);
     final parsed = ShareLink.parse(deepLink);
     expect(parsed, isNotNull);
     expect(parsed!.url, item.url);
@@ -46,7 +48,9 @@ void main() {
     expect(web.queryParameters.containsKey('c'), isFalse);
 
     final parsed = ShareLink.parse(
-      Uri.parse('zangetsu://open').replace(queryParameters: web.queryParameters),
+      Uri.parse(
+        'infinityloop://open',
+      ).replace(queryParameters: web.queryParameters),
     );
     // Older builds shared links without `c`; Detail falls back to the source.
     expect(parsed, isNotNull);
@@ -54,12 +58,12 @@ void main() {
     expect(parsed.url, noCover.url);
   });
 
-  test('parse ignores links that are not zangetsu://open', () {
-    expect(ShareLink.parse(Uri.parse('zangetsu://anilist-auth')), isNull);
+  test('parse ignores links that are not infinityloop://open', () {
+    expect(ShareLink.parse(Uri.parse('infinityloop://anilist-auth')), isNull);
+    expect(ShareLink.parse(Uri.parse('https://example.com/open/')), isNull);
     expect(
-      ShareLink.parse(Uri.parse('https://spyou.github.io/Zangetsu-Site/')),
+      ShareLink.parse(Uri.parse('infinityloop://open')),
       isNull,
-    );
-    expect(ShareLink.parse(Uri.parse('zangetsu://open')), isNull); // no source/url
+    ); // no source/url
   });
 }

@@ -355,7 +355,7 @@ void main() {
     // Home's launch sequence shows a one-time community sheet backed by the
     // 'app_flags' Hive box. Init Hive + mark it seen so that path no-ops
     // (mirrors production, where Hive is initialized before runApp).
-    Hive.init('/tmp/zangetsu_nav_test_hive');
+    Hive.init('/tmp/infinityloop_nav_test_hive');
     final flags = await Hive.openBox('app_flags');
     await flags.put('communitySheetSeen', true);
     await Hive.openBox(ThemeController.boxName);

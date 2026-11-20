@@ -46,6 +46,7 @@ import 'core/tv/tv_route_pop_guard.dart';
 import 'core/tv/tv_viewport.dart';
 import 'l10n/app_localizations.dart';
 import 'core/ui/global_messenger.dart';
+import 'core/update/app_update_prompt.dart';
 import 'features/home/cubit/home_cubit.dart';
 import 'features/onboarding/boot_error_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
@@ -120,15 +121,16 @@ Future<void> main() async {
       final appleTv = await resolveAppleTv();
       // Supabase's anonymous client is still used by optional cloud features
       // such as Watch Together. Login UI/auth flows remain removed.
-      try {
-        await Supabase.initialize(
-          url: Environment.supabaseUrl,
-          publishableKey: Environment.supabaseAnonKey,
-          authOptions: FlutterAuthClientOptions(detectSessionInUri: false),
-        ).timeout(const Duration(seconds: 8));
-      } catch (e, st) {
-        AppLogger.instance.logError(e, st);
-      }
+      if (Environment.cloudConfigured)
+        try {
+          await Supabase.initialize(
+            url: Environment.supabaseUrl,
+            publishableKey: Environment.supabaseAnonKey,
+            authOptions: FlutterAuthClientOptions(detectSessionInUri: false),
+          ).timeout(const Duration(seconds: 8));
+        } catch (e, st) {
+          AppLogger.instance.logError(e, st);
+        }
       // media_kit (libmpv) has no tvOS libs — Apple TV plays via AVPlayer instead.
       // Calling ensureInitialized here prints + throws and used to derail boot.
       // On old Android 8 / Fire TV the native libs can also fail to load; guard
@@ -177,7 +179,8 @@ class InfinityLoopApp extends StatefulWidget {
   State<InfinityLoopApp> createState() => _InfinityLoopAppState();
 }
 
-class _InfinityLoopAppState extends State<InfinityLoopApp> with WidgetsBindingObserver {
+class _InfinityLoopAppState extends State<InfinityLoopApp>
+    with WidgetsBindingObserver {
   /// Startup, with a watchdog. NOT `late final` — Try again reassigns it.
   late Future<void> _boot = _startBoot();
   bool _bootReady = false;
@@ -405,6 +408,7 @@ class _InfinityLoopAppState extends State<InfinityLoopApp> with WidgetsBindingOb
       discord?.onForeground();
       _syncOnResume();
       _startForegroundSync();
+      _checkForAppUpdate();
       // The wallpaper may have changed while we were away. No-op unless
       // Material You is on, and only rebuilds if the colours actually moved.
       ThemeController.refresh();
@@ -555,7 +559,14 @@ class _InfinityLoopAppState extends State<InfinityLoopApp> with WidgetsBindingOb
     // The shell is up, so a link held since boot can finally navigate without
     // the pushReplacement above throwing its route away.
     markAppShellReady();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkForAppUpdate());
     if (mounted) setState(() {});
+  }
+
+  void _checkForAppUpdate() {
+    if (!mounted || !_shellRoutePushed) return;
+    final context = rootNavigatorKey.currentState?.overlay?.context;
+    if (context != null) unawaited(AppUpdatePrompt.check(context));
   }
 
   Widget _buildHome() {

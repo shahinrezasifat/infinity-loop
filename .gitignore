@@ -76,6 +76,8 @@ supabase/.temp/
 # Signing files, local configuration, and build artifacts
 *.jks
 *.keystore
+*.p12
+*.pfx
 key.properties
 local.properties
 google-services.json

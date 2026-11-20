@@ -22,10 +22,10 @@ class DownloadService {
   static final FlutterBackgroundService _service = FlutterBackgroundService();
   static FlutterBackgroundService get instance => _service;
 
-  static const String channelId = 'zangetsu_downloads';
+  static const String channelId = 'infinityloop_downloads';
   static const String sharedDir = kSharedExportFolder;
   // Keep the internal completion-marker path readable across app updates.
-  static const String _resultsPath = 'Zangetsu/.results';
+  static const String _resultsPath = 'InfinityLoop/.results';
 
   /// Configure the service once at app start (does not start it).
   ///
@@ -75,7 +75,7 @@ void downloadServiceOnStart(ServiceInstance service) async {
 
   final dio = Dio(
     BaseOptions(
-      headers: {'User-Agent': 'Mozilla/5.0 (Zangetsu) Chrome/120.0'},
+      headers: {'User-Agent': 'Mozilla/5.0 (InfinityLoop) Chrome/120.0'},
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 60),
     ),

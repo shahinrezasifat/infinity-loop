@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-/// The Zangetsu mark as drawable geometry, split into the three parts the
+/// The Infinity Loop mark as drawable geometry, split into the three parts the
 /// splash animates independently.
 ///
 /// Generated from `assets/brand/crescent-mark.svg` (the traced master) with the

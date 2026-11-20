@@ -5,7 +5,7 @@ class RepoParserService {
 
   final Dio _dio;
 
-  Future<List<Map<String, dynamic>>> fetchZangetsuManifest(String url) =>
+  Future<List<Map<String, dynamic>>> fetchInfinityLoopManifest(String url) =>
       _fetchList(url);
 
   Future<List<Map<String, dynamic>>> fetchAniyomiMihonRepo(String url) =>

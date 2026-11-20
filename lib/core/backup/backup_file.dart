@@ -112,7 +112,7 @@ class BackupFile {
 
     await scan(await _localBackupDir());
     await scan(Directory('/storage/emulated/0/Download/$kSharedExportFolder'));
-    await scan(Directory('/storage/emulated/0/Download/Zangetsu'));
+    await scan(Directory('/storage/emulated/0/Download/InfinityLoop'));
 
     String dateKey(File file) {
       final name = file.uri.pathSegments.last;

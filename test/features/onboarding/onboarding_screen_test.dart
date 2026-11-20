@@ -22,7 +22,7 @@ import 'package:infinity_loop/features/onboarding/onboarding_screen.dart';
 // "I'll do it later" only touches Hive, so it's exercised directly to cover
 // the mark-onboarded behavior.
 //
-// Also a regression guard from Task E4: Part B's *recommended* Zangetsu repo
+// Also a regression guard from Task E4: Part B's *recommended* Infinity Loop repo
 // suggestion lives inside the add-repo dialog only and must never leak into
 // this welcome copy.
 
