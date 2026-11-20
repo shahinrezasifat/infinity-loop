@@ -5,14 +5,14 @@ import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/environment.dart';
-import 'package:watch_app/core/models/watch_status.dart';
-import 'package:watch_app/core/tracker/mangabaka_service.dart';
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/core/tracker/tracker.dart';
-import 'package:watch_app/core/tracker/tracker_hub.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
-import 'package:watch_app/features/home/cubit/tracker_home_rows.dart';
+import 'package:infinity_loop/core/environment.dart';
+import 'package:infinity_loop/core/models/watch_status.dart';
+import 'package:infinity_loop/core/tracker/mangabaka_service.dart';
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/tracker/tracker.dart';
+import 'package:infinity_loop/core/tracker/tracker_hub.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/features/home/cubit/tracker_home_rows.dart';
 
 /// MangaBaka is the only PUBLIC OAuth client of the four trackers — PKCE, no
 /// secret — so the verifier/challenge maths is ours to get right, not a

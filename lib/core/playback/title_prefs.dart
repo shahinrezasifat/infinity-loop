@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
-import 'package:watch_app/core/hive/hive_key.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/hive_key.dart';
 
 /// Remembers per-title user choices (currently the sub/dub category), keyed by
 /// `"<sourceId>::<showUrl>"`. Netflix-style "remember my choice for this title".

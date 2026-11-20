@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/home_row.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/models/watch_status.dart';
-import 'package:watch_app/core/tracker/tracker.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
-import 'package:watch_app/features/home/cubit/home_rows_composer.dart';
+import 'package:infinity_loop/core/models/home_row.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/models/watch_status.dart';
+import 'package:infinity_loop/core/tracker/tracker.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/features/home/cubit/home_rows_composer.dart';
 
 MediaItem _item(String t) => MediaItem(
   id: t,

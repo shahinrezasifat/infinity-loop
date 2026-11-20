@@ -4,7 +4,7 @@
 // to match on. These pin the mapping.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/zmode/metadata_filters.dart';
+import 'package:infinity_loop/core/zmode/metadata_filters.dart';
 
 void main() {
   group('tmdbGenreNames', () {

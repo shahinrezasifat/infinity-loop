@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:watch_app/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

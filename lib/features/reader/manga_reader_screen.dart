@@ -49,7 +49,7 @@ import '../../l10n/l10n.dart';
 import 'reader_pull_chapter.dart';
 
 /// Image reader for manga chapters — the paged/webtoon counterpart of
-/// [package:watch_app/features/reader/novel_reader_screen.dart]'s text
+/// [package:infinity_loop/features/reader/novel_reader_screen.dart]'s text
 /// reader. Phone-only (no TV twin, no TV focus handling needed).
 class MangaReaderScreen extends StatefulWidget {
   const MangaReaderScreen({

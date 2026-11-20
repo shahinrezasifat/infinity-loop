@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_provider.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_source_info.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/playback/playback_prefs.dart';
-import 'package:watch_app/core/provider/cloudstream_provider.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_provider.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_source_info.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/playback/playback_prefs.dart';
+import 'package:infinity_loop/core/provider/cloudstream_provider.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
 
 /// A fake Aniyomi provider that records which paging method was called (and the
 /// page it was asked for), so we can assert [SourceRepository.browseMore]'s

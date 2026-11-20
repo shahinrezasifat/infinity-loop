@@ -20,18 +20,18 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_repo.dart';
-import 'package:watch_app/core/mihon/mihon_manager.dart';
-import 'package:watch_app/core/mihon/mihon_provider.dart';
-import 'package:watch_app/core/mihon/mihon_source_info.dart';
-import 'package:watch_app/core/mihon/mihon_update.dart';
-import 'package:watch_app/core/provider/cloudstream_provider.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/provider/provider_registry.dart';
-import 'package:watch_app/core/provider/provider_repo_registry.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
-import 'package:watch_app/features/sources/providers_hub_screen.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_repo.dart';
+import 'package:infinity_loop/core/mihon/mihon_manager.dart';
+import 'package:infinity_loop/core/mihon/mihon_provider.dart';
+import 'package:infinity_loop/core/mihon/mihon_source_info.dart';
+import 'package:infinity_loop/core/mihon/mihon_update.dart';
+import 'package:infinity_loop/core/provider/cloudstream_provider.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/provider/provider_registry.dart';
+import 'package:infinity_loop/core/provider/provider_repo_registry.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/features/sources/providers_hub_screen.dart';
 
 // ---------------------------------------------------------------------------
 // Fakes — same shape as manga_novel_hub_entry_test.dart's (private to that

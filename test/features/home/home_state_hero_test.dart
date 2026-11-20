@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/features/home/cubit/home_cubit.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/features/home/cubit/home_cubit.dart';
 
 
 /// The hero banner is a Trending spotlight — it must keep showing Trending

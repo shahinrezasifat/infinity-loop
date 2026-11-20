@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../repositories/models/repository_model.dart';
 import 'watch_history_model.dart';
 
-/// Manages watch history for Sifat's Player.
+/// Manages watch history for Infinity Loop.
 ///
 /// Features:
 /// - Track watched episodes with timestamps

@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
-import 'package:watch_app/core/hive/hive_key.dart';
-import 'package:watch_app/core/reading/reader_prefs.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/hive_key.dart';
+import 'package:infinity_loop/core/reading/reader_prefs.dart';
 
 /// Per-series reading overrides for the manga reader — the "this title
 /// always reads this way, regardless of my global default" escape hatch.

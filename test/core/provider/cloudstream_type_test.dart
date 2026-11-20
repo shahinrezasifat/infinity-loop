@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/provider/cloudstream_provider.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/provider/cloudstream_provider.dart';
 
 // Proves the fix: an anime-ONLY CloudStream source must not let a coarse
 // per-item TvType (many plugins tag anime episodes as "TvSeries"/"Movie")

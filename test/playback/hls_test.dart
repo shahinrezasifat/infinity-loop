@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/playback/hls.dart';
+import 'package:infinity_loop/core/playback/hls.dart';
 
 /// Answers every request with a canned body and records what was asked for,
 /// so the Range header the sniff adds (and the plain path's lack of one) is

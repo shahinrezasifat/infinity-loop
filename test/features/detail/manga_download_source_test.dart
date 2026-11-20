@@ -4,8 +4,8 @@
 // that does not exist, so every manga download failed.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/download/chapter_download.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/download/chapter_download.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 /// Mirrors the choice made when enqueuing: the matched source wins, and the
 /// item's own id is only the fallback.

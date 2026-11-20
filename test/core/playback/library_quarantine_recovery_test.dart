@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
-import 'package:watch_app/core/playback/my_list.dart';
-import 'package:watch_app/core/playback/watch_history.dart';
-import 'package:watch_app/core/reading/read_history.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/playback/my_list.dart';
+import 'package:infinity_loop/core/playback/watch_history.dart';
+import 'package:infinity_loop/core/reading/read_history.dart';
 
 /// A value only an OLD build could read, used to make a box unreadable —
 /// exactly the `HiveError: Cannot read, unknown typeId` seen on real devices.

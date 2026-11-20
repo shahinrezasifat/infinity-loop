@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/torrent/torrent_service.dart';
+import 'package:infinity_loop/core/torrent/torrent_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

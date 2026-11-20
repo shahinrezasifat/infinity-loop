@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/playback/skip_service.dart';
-import 'package:watch_app/core/playback/tv_playback_helpers.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/playback/skip_service.dart';
+import 'package:infinity_loop/core/playback/tv_playback_helpers.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 void main() {
   group('kTvSpeeds', () {

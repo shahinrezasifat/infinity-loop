@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/reading/crop_borders.dart';
+import 'package:infinity_loop/core/reading/crop_borders.dart';
 
 /// Builds an RGBA buffer [w]x[h] filled with [bg], then paints [content] in.
 Uint8List page(

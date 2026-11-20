@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
 
 /// Provider calls run strictly one at a time. A detail fetch nobody is waiting
 /// for still held that queue, so opening three titles five seconds apart made

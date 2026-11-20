@@ -13,8 +13,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/provider/cf_solve_needed.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/provider/cf_solve_needed.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
 
 const String _cfBlockedJs = r'''
 async function search(query, page, opts) {

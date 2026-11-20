@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/tv/tv_viewport.dart';
+import 'package:infinity_loop/core/tv/tv_viewport.dart';
 
 void main() {
   testWidgets(

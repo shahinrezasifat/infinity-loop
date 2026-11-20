@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/zmode/match_store.dart';
-import 'package:watch_app/core/zmode/zmode_source_prefs.dart';
-import 'package:watch_app/core/zmode/source_matcher.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/zmode/match_store.dart';
+import 'package:infinity_loop/core/zmode/zmode_source_prefs.dart';
+import 'package:infinity_loop/core/zmode/source_matcher.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 MediaItem _hit(String src, String title, {int? malId, String? englishTitle}) => MediaItem(
   id: title.toLowerCase(), title: title, url: 'https://$src/$title', type: ProviderType.anime,

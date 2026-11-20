@@ -1,19 +1,19 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/repository/catalogue_repository.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/core/zmode/zmode_prefs.dart';
-import 'package:watch_app/features/auth/auth_cubit.dart';
-import 'package:watch_app/features/home/cubit/home_cubit.dart';
-import 'package:watch_app/features/home/home_screen_tv.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/repository/catalogue_repository.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/core/zmode/zmode_prefs.dart';
+import 'package:infinity_loop/features/auth/auth_cubit.dart';
+import 'package:infinity_loop/features/home/cubit/home_cubit.dart';
+import 'package:infinity_loop/features/home/home_screen_tv.dart';
 
 // ── Minimal fake ──────────────────────────────────────────────────────────────
 

@@ -7,7 +7,7 @@ class BackupFormatException implements Exception {
   String toString() => 'BackupFormatException: $message';
 }
 
-const _kApp = 'zangetsu';
+const _kApp = 'zangetsu'; // Stable file format identifier for older backups.
 const _kVersion = 1;
 
 Map<String, dynamic> wrapPayload(
@@ -22,10 +22,10 @@ Map<String, dynamic> wrapPayload(
 
 Map<BackupBundle, Map<String, dynamic>> unwrapPayload(Map<String, dynamic> raw) {
   if (raw['app'] != _kApp) {
-    throw const BackupFormatException("This isn't a Zangetsu backup.");
+    throw const BackupFormatException("This isn't an Infinity Loop backup.");
   }
   if ((raw['version'] as num? ?? 0) > _kVersion) {
-    throw const BackupFormatException('Made by a newer version of Zangetsu.');
+    throw const BackupFormatException('Made by a newer version of Infinity Loop.');
   }
   final bundles = (raw['bundles'] as Map?) ?? const {};
   final out = <BackupBundle, Map<String, dynamic>>{};

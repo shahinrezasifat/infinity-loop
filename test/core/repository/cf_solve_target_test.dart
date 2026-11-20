@@ -11,12 +11,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/playback/playback_prefs.dart';
-import 'package:watch_app/core/provider/cf_solve_needed.dart';
-import 'package:watch_app/core/provider/cloudstream_provider.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/core/playback/playback_prefs.dart';
+import 'package:infinity_loop/core/provider/cf_solve_needed.dart';
+import 'package:infinity_loop/core/provider/cloudstream_provider.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
 
 const _channel = MethodChannel('zangetsu/cloudstream');
 

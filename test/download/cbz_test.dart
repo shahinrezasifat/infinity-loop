@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/download/cbz_image.dart';
-import 'package:watch_app/core/download/chapter_download_store.dart';
+import 'package:infinity_loop/core/download/cbz_image.dart';
+import 'package:infinity_loop/core/download/chapter_download_store.dart';
 
 /// A tiny but real PNG, so the archive holds actual image bytes rather than
 /// text pretending to be one.

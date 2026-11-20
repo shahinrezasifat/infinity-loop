@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/reading/reader_page_queue.dart';
+import 'package:infinity_loop/core/reading/reader_page_queue.dart';
 
 void main() {
   /// A queue whose fetches finish only when the test says so, so ordering can

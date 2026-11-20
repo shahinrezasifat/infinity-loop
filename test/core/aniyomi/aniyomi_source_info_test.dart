@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_source_info.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_source_info.dart';
 
 void main() {
   group('AniyomiSourceInfo.fromJson version fields', () {

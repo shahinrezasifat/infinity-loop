@@ -4,11 +4,11 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
-import 'package:watch_app/core/zmode/zmode_prefs.dart';
-import 'package:watch_app/features/home/home_screen.dart';
-import 'package:watch_app/features/home/search_screen.dart';
-import 'package:watch_app/features/shell/dock_icons.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/core/zmode/zmode_prefs.dart';
+import 'package:infinity_loop/features/home/home_screen.dart';
+import 'package:infinity_loop/features/home/search_screen.dart';
+import 'package:infinity_loop/features/shell/dock_icons.dart';
 
 /// Search left the dock (task 17) — this header icon, beside
 /// [HomeBrowseSourcesAction], is the primary way in now. Unlike the sources

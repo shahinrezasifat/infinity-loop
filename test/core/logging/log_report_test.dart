@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/logging/log_report_service.dart';
+import 'package:infinity_loop/core/logging/log_report_service.dart';
 
 void main() {
   group('refOf', () {

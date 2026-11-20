@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/features/home/streaming_logo_tint.dart';
+import 'package:infinity_loop/features/home/streaming_logo_tint.dart';
 
 /// Build a width x height RGBA buffer, painting each row with `colourAt`.
 Uint8List _img(int w, int h, Color Function(int x, int y) colourAt) {

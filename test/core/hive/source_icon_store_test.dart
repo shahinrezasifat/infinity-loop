@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_repo.dart';
-import 'package:watch_app/core/hive/source_icon_store.dart';
-import 'package:watch_app/core/mihon/mihon_repo.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_repo.dart';
+import 'package:infinity_loop/core/hive/source_icon_store.dart';
+import 'package:infinity_loop/core/mihon/mihon_repo.dart';
 
 /// Icons for Aniyomi/Mihon rows in the source picker. The source objects
 /// those ecosystems hand back carry no icon — only the repo index names one —

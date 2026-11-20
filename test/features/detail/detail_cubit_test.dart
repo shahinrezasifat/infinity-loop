@@ -13,16 +13,16 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/metadata/episode_metadata_service.dart';
-import 'package:watch_app/core/metadata/metadata_enrichment.dart';
-import 'package:watch_app/core/models/episode.dart';
-import 'package:watch_app/core/models/media_detail.dart';
-import 'package:watch_app/core/models/media_extras.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/playback/title_prefs.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/features/detail/cubit/detail_cubit.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/metadata/episode_metadata_service.dart';
+import 'package:infinity_loop/core/metadata/metadata_enrichment.dart';
+import 'package:infinity_loop/core/models/episode.dart';
+import 'package:infinity_loop/core/models/media_detail.dart';
+import 'package:infinity_loop/core/models/media_extras.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/playback/title_prefs.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/features/detail/cubit/detail_cubit.dart';
 
 /// Hands back a pre-built [MediaDetail] synchronously; nothing else is
 /// touched by these tests. Mirrors reading_detail_routing_test.dart's

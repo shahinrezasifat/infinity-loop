@@ -5,8 +5,8 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/mihon/mihon_filters.dart';
-import 'package:watch_app/features/mihon/mihon_filter_sheet.dart';
+import 'package:infinity_loop/core/mihon/mihon_filters.dart';
+import 'package:infinity_loop/features/mihon/mihon_filter_sheet.dart';
 
 // ---------------------------------------------------------------------------
 // Helpers

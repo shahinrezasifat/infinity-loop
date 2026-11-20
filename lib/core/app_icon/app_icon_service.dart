@@ -51,7 +51,7 @@ class AppIconService {
   static const List<AppIconOption> options = [
     AppIconOption(
       id: 'crescent',
-      label: 'infinity',
+      label: 'Infinity Loop',
       asset: 'assets/icon/app_icon.png',
     ),
   ];

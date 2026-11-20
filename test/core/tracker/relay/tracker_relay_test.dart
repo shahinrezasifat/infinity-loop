@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/tracker/relay/tracker_blob.dart';
-import 'package:watch_app/core/tracker/relay/tracker_relay.dart';
-import 'package:watch_app/core/tracker/tracker.dart';
+import 'package:infinity_loop/core/tracker/relay/tracker_blob.dart';
+import 'package:infinity_loop/core/tracker/relay/tracker_relay.dart';
+import 'package:infinity_loop/core/tracker/tracker.dart';
 
 class _FakeTracker extends ChangeNotifier implements Tracker {
   @override

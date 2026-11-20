@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:watch_app/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -4,6 +4,7 @@ import 'package:background_downloader/background_downloader.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../core/app_config.dart';
 import '../../core/di/injector.dart';
 import '../../core/download/chapter_download.dart';
 import '../../core/download/chapter_download_store.dart';
@@ -254,7 +255,7 @@ class _EpubExportBodyState extends State<_EpubExportBody> {
       return;
     }
 
-    final show = 'Zangetsu/${ChapterDownloadStore.safeName(widget.showTitle)}';
+    final show = '$kSharedExportFolder/${ChapterDownloadStore.safeName(widget.showTitle)}';
     final saved = await _publish(written, show);
     if (!mounted) return;
     setState(() => _exporting = false);

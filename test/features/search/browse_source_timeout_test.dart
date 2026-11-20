@@ -6,10 +6,10 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/repository/catalogue_repository.dart';
-import 'package:watch_app/features/search/cubit/browse_source_cubit.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/repository/catalogue_repository.dart';
+import 'package:infinity_loop/features/search/cubit/browse_source_cubit.dart';
 
 /// Never completes, like a provider stuck on a challenge.
 class _HangingRepo implements CatalogueRepository {

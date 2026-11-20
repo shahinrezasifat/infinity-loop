@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/playback/source_health_store.dart';
-import 'package:watch_app/core/zmode/source_order_prefs.dart';
+import 'package:infinity_loop/core/playback/source_health_store.dart';
+import 'package:infinity_loop/core/zmode/source_order_prefs.dart';
 
 List<({String id, String name})> pool(List<String> ids) =>
     [for (final i in ids) (id: i, name: i)];

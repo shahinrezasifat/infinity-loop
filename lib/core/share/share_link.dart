@@ -42,7 +42,7 @@ class ShareLink {
 
   /// Human-facing share text: the title + the link.
   static String shareText(MediaItem item) =>
-      '${item.title}\n\nWatch on Zangetsu:\n${forItem(item)}';
+      '${item.title}\n\nWatch on Infinity Loop:\n${forItem(item)}';
 
   /// Parse a `zangetsu://open?s=…&u=…` deep link into a [MediaItem], or null
   /// when [uri] is not an open-link or is missing the source/url.

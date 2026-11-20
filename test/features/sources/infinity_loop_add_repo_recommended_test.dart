@@ -7,12 +7,12 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/provider/provider_downloader.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/provider/provider_registry.dart';
-import 'package:watch_app/core/provider/provider_repo_registry.dart';
-import 'package:watch_app/features/sources/zangetsu_sources_screen.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/provider/provider_downloader.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/provider/provider_registry.dart';
+import 'package:infinity_loop/core/provider/provider_repo_registry.dart';
+import 'package:infinity_loop/features/sources/infinity_loop_sources_screen.dart';
 
 // The Zangetsu (JS-provider) "Add repo" dialog used to offer a recommended
 // repo pack with a one-tap add. The whole recommended-repo surface — data,
@@ -131,9 +131,9 @@ void main() {
   // timeout. A couple of pumps is plenty for the AlertDialog's enter
   // transition.
   Future<void> openAddRepoDialog(WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home: ZangetsuSourcesScreen()));
+    await tester.pumpWidget(const MaterialApp(home: InfinityLoopSourcesScreen()));
     await tester.pump();
-    await tester.tap(find.text('Add Zangetsu repo'));
+    await tester.tap(find.widgetWithText(FloatingActionButton, 'Add repo'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
   }
@@ -143,7 +143,13 @@ void main() {
     (tester) async {
       await openAddRepoDialog(tester);
 
-      expect(find.text('Add repo'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(AlertDialog),
+          matching: find.text('Add repo'),
+        ),
+        findsOneWidget,
+      );
       expect(find.text('RECOMMENDED'), findsNothing);
       // The dialog's own two fields (name + manifest URL) still render
       // normally — an empty suggestion list doesn't take the rest of the

@@ -1,4 +1,4 @@
-// WATCH_APP provider template. Copy to <id>.js, fill in the functions.
+// Infinity Loop provider template. Copy to <id>.js, fill in the functions.
 // The host gives you: fetch(url,opts)->{status,body,headers,json,text},
 // extractVideo(embedUrl,opts)->[VideoSource], htmlText(), absUrl(), console.
 

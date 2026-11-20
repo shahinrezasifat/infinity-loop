@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/anilist/anilist_api.dart';
-import 'package:watch_app/core/metadata/episode_metadata_service.dart';
-import 'package:watch_app/core/zmode/season_chain.dart';
+import 'package:infinity_loop/core/anilist/anilist_api.dart';
+import 'package:infinity_loop/core/metadata/episode_metadata_service.dart';
+import 'package:infinity_loop/core/zmode/season_chain.dart';
 
 /// Answers AniList's relations query from a table of id → neighbours, and
 /// counts requests so a test can prove the walk is bounded and cached rather

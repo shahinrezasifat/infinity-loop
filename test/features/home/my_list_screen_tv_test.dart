@@ -1,20 +1,20 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/core/mode/content_mode_cubit.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/models/watch_status.dart';
-import 'package:watch_app/core/playback/list_status_store.dart';
-import 'package:watch_app/core/playback/my_list.dart';
-import 'package:watch_app/core/tracker/tracker.dart';
-import 'package:watch_app/core/tracker/tracker_hub.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/features/home/cubit/my_list_cubit.dart';
-import 'package:watch_app/features/home/cubit/tracker_list_cubit.dart';
-import 'package:watch_app/features/home/my_list_screen_tv.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/mode/content_mode_cubit.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/models/watch_status.dart';
+import 'package:infinity_loop/core/playback/list_status_store.dart';
+import 'package:infinity_loop/core/playback/my_list.dart';
+import 'package:infinity_loop/core/tracker/tracker.dart';
+import 'package:infinity_loop/core/tracker/tracker_hub.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/features/home/cubit/my_list_cubit.dart';
+import 'package:infinity_loop/features/home/cubit/tracker_list_cubit.dart';
+import 'package:infinity_loop/features/home/my_list_screen_tv.dart';
 
 // ── Minimal fakes ─────────────────────────────────────────────────────────────
 

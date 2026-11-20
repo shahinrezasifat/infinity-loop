@@ -157,7 +157,7 @@ Future<void> main() async {
       }
       // Dependency init happens inside the boot gate so the splash shows
       // immediately instead of a blank screen.
-      runApp(const WatchApp());
+      runApp(const InfinityLoopApp());
     },
     (error, stack) {
       AppLogger.instance.logError(error, stack);
@@ -170,14 +170,14 @@ Future<void> main() async {
 /// real app with the global cubits provided ABOVE the [MaterialApp]'s Navigator
 /// so pushed routes (login, profile, …) can read them. Providing them below the
 /// Navigator would scope them out of any `Navigator.push`ed route.
-class WatchApp extends StatefulWidget {
-  const WatchApp({super.key});
+class InfinityLoopApp extends StatefulWidget {
+  const InfinityLoopApp({super.key});
 
   @override
-  State<WatchApp> createState() => _WatchAppState();
+  State<InfinityLoopApp> createState() => _InfinityLoopAppState();
 }
 
-class _WatchAppState extends State<WatchApp> with WidgetsBindingObserver {
+class _InfinityLoopAppState extends State<InfinityLoopApp> with WidgetsBindingObserver {
   /// Startup, with a watchdog. NOT `late final` — Try again reassigns it.
   late Future<void> _boot = _startBoot();
   bool _bootReady = false;

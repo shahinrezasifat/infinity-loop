@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
 
 /// Subtitle font families bundled in the app (registered in pubspec's
 /// `flutter: fonts:`). Used by the player's Subtitle-style font picker; the

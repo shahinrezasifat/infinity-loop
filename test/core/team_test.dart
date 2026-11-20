@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/ui/team_section.dart';
+import 'package:infinity_loop/core/ui/team_section.dart';
 
 void main() {
   test('parseCommunity drops core team, ghost + bots, tags Contributor', () {

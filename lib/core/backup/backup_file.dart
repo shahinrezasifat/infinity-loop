@@ -5,19 +5,20 @@ import 'package:background_downloader/background_downloader.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../app_config.dart';
 import '../platform/apple_tv.dart';
 import '../platform/app_paths.dart';
 
 // ── Pure helpers (tested) ─────────────────────────────────────────────────────
 
-/// Returns a file name like `zangetsu-backup-20260702-0905.json`.
+/// Returns a file name like `infinity-loop-backup-20260702-0905.json`.
 String backupFileName(DateTime now) {
   final y  = now.year.toString().padLeft(4, '0');
   final mo = now.month.toString().padLeft(2, '0');
   final d  = now.day.toString().padLeft(2, '0');
   final h  = now.hour.toString().padLeft(2, '0');
   final mi = now.minute.toString().padLeft(2, '0');
-  return 'zangetsu-backup-$y$mo$d-$h$mi.json';
+  return 'infinity-loop-backup-$y$mo$d-$h$mi.json';
 }
 
 /// Decodes [raw] as JSON and asserts it is a JSON object.
@@ -39,7 +40,7 @@ Map<String, dynamic> parseBackupJson(String raw) {
 
 class BackupFile {
   /// Encodes [payload] as JSON and saves it into the public
-  /// **Downloads/Zangetsu** folder so the user can find it in their file
+  /// **Downloads/Infinity Loop** folder so the user can find it in their file
   /// manager. Returns the saved public path, or `null` if the move to shared
   /// storage failed.
   Future<String?> export(
@@ -63,7 +64,7 @@ class BackupFile {
       } catch (_) {/* best-effort — never block the primary export */}
     }
 
-    // Move into public Downloads/Zangetsu for the user's file manager. On TV
+    // Move into public Downloads/Infinity Loop for the user's file manager. On TV
     // boxes this often has no shared-storage target and returns null/throws —
     // in which case the app-private copy above is the saved backup, so report
     // its path (restore-from-file lists it) instead of failing. On a phone
@@ -73,7 +74,7 @@ class BackupFile {
       final shared = await FileDownloader().moveFileToSharedStorage(
         file.path,
         SharedStorage.downloads,
-        directory: 'Zangetsu',
+        directory: kSharedExportFolder,
       );
       if (shared != null && shared.isNotEmpty) return shared;
     } catch (_) {/* shared storage unavailable (common on TV) */}
@@ -94,7 +95,7 @@ class BackupFile {
 
   /// Backup files this app can read back without a document picker, newest
   /// first. Scans the app-private backups dir plus a best-effort look at the
-  /// public Downloads/Zangetsu folder (readable on many TV boxes). Used by the
+  /// public Downloads/Infinity Loop folder (readable on many TV boxes). Used by the
   /// TV restore flow in place of the (usually absent) system file picker.
   Future<List<File>> listLocalBackups() async {
     final found = <String, File>{}; // de-dupe by file name
@@ -110,10 +111,16 @@ class BackupFile {
     }
 
     await scan(await _localBackupDir());
+    await scan(Directory('/storage/emulated/0/Download/$kSharedExportFolder'));
     await scan(Directory('/storage/emulated/0/Download/Zangetsu'));
 
+    String dateKey(File file) {
+      final name = file.uri.pathSegments.last;
+      return RegExp(r'\d{8}-\d{4}').stringMatch(name) ?? name;
+    }
+
     final files = found.values.toList()
-      ..sort((a, b) => b.path.compareTo(a.path)); // name embeds the timestamp
+      ..sort((a, b) => dateKey(b).compareTo(dateKey(a)));
     return files;
   }
 
@@ -129,7 +136,7 @@ class BackupFile {
     // which makes the backup impossible to select — the #1 "restore doesn't
     // work" cause. The content is validated by parseBackupJson/unwrapPayload
     // right after reading, so allowing any file is safe (bad picks get a clear
-    // "isn't a Zangetsu backup" error).
+    // "isn't an Infinity Loop backup" error).
     final picked = await FilePicker.pickFile();
     if (picked == null) return null;
 

@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/mihon/mihon_extension_service.dart';
+import 'package:infinity_loop/core/mihon/mihon_extension_service.dart';
 
 /// Channel-surface tests for [MihonExtensionService].
 ///

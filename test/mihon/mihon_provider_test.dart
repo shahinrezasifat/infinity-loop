@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/error/exceptions.dart';
-import 'package:watch_app/core/mihon/mihon_provider.dart';
-import 'package:watch_app/core/mihon/mihon_source_info.dart';
-import 'package:watch_app/core/models/provider_info.dart';
+import 'package:infinity_loop/core/error/exceptions.dart';
+import 'package:infinity_loop/core/mihon/mihon_provider.dart';
+import 'package:infinity_loop/core/mihon/mihon_source_info.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
 
 /// Channel-surface tests for [MihonProvider].
 ///

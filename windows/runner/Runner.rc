@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.sifatsplay" "\0"
-            VALUE "FileDescription", "Zangetsu" "\0"
+            VALUE "FileDescription", "Infinity Loop" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "Zangetsu" "\0"
+            VALUE "InternalName", "infinity_loop" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.sifatsplay. All rights reserved." "\0"
-            VALUE "OriginalFilename", "Zangetsu.exe" "\0"
-            VALUE "ProductName", "Zangetsu" "\0"
+            VALUE "OriginalFilename", "infinity_loop.exe" "\0"
+            VALUE "ProductName", "Infinity Loop" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/search_quality.dart';
+import 'package:infinity_loop/core/models/search_quality.dart';
 
 // CloudStream reports an anime listing's DubStatus as a set. `None` is its
 // "not applicable" member rather than a real state, so a source that only

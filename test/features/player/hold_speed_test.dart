@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/features/player/player_screen.dart';
+import 'package:infinity_loop/features/player/player_screen.dart';
 
 void main() {
   group('rateToRestoreAfterHold', () {

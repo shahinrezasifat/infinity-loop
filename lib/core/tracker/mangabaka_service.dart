@@ -8,7 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
 
 import '../environment.dart';
 import '../models/media_item.dart';

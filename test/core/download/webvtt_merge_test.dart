@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/download/webvtt_merge.dart';
-import 'package:watch_app/core/playback/hls.dart';
+import 'package:infinity_loop/core/download/webvtt_merge.dart';
+import 'package:infinity_loop/core/playback/hls.dart';
 
 /// A downloaded episode came back with no subtitles even when the stream had
 /// them: nothing read `#EXT-X-MEDIA:TYPE=SUBTITLES`, and MediaMuxer cannot

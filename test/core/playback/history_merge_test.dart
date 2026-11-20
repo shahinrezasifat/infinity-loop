@@ -12,12 +12,12 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/playback/history_merge.dart';
-import 'package:watch_app/core/playback/resume_store.dart';
-import 'package:watch_app/core/playback/watch_history.dart';
-import 'package:watch_app/core/supabase/supabase_service.dart';
-import 'package:watch_app/core/zmode/match_store.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/playback/history_merge.dart';
+import 'package:infinity_loop/core/playback/resume_store.dart';
+import 'package:infinity_loop/core/playback/watch_history.dart';
+import 'package:infinity_loop/core/supabase/supabase_service.dart';
+import 'package:infinity_loop/core/zmode/match_store.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 import 'watch_history_supabase_test.dart' show FakeHistoryRemote;
 

@@ -63,7 +63,7 @@ Drag-drop reordering, custom bottom navigation, TV focus support, and deep linki
 ### Setup (main.dart)
 
 ```dart
-import 'package:sifats_player/core/navigation/navigation_di_setup.dart';
+import 'package:infinity_loop/core/navigation/navigation_di_setup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -98,7 +98,7 @@ ChangeNotifierProvider(
 ### Use Custom Navigation Bar
 
 ```dart
-import 'package:sifats_player/features/navigation/custom_nav_bar.dart';
+import 'package:infinity_loop/features/navigation/custom_nav_bar.dart';
 
 return Scaffold(
   body: child,
@@ -140,7 +140,7 @@ navigationManager.goBack();
 ### TV Focus Support
 
 ```dart
-import 'package:sifats_player/core/navigation/tv_focus_support.dart';
+import 'package:infinity_loop/core/navigation/tv_focus_support.dart';
 
 return TVFocusTraversalGroup(
   child: TVFocusListView(

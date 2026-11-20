@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/anilist/anilist_api.dart';
-import 'package:watch_app/core/anilist/anilist_service.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/models/watch_status.dart';
-import 'package:watch_app/core/tracker/tracker.dart';
+import 'package:infinity_loop/core/anilist/anilist_api.dart';
+import 'package:infinity_loop/core/anilist/anilist_service.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/models/watch_status.dart';
+import 'package:infinity_loop/core/tracker/tracker.dart';
 
 // Golden strings: the EXACT query text anilist_api.dart sends for anime, so a
 // change to any of them fails loudly — MediaKind.manga must not perturb the

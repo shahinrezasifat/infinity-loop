@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/ui/streaming_prefs.dart';
+import 'package:infinity_loop/core/ui/streaming_prefs.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

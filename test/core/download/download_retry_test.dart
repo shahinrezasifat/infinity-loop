@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/download/hls_downloader.dart';
+import 'package:infinity_loop/core/download/hls_downloader.dart';
 
 /// Fails the first [failures] requests for any URL containing [failFor], then
 /// answers normally. Counts every attempt so a test can prove a retry happened

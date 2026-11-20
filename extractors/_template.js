@@ -1,4 +1,4 @@
-// WATCH_APP extractor template. Copy to <host>.js, fill in extract().
+// Infinity Loop extractor template. Copy to <host>.js, fill in extract().
 // getInfo().hosts lists every domain this extractor claims; the runtime
 // registers it under each one and routes extractVideo(url) by URL host.
 

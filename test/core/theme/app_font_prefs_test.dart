@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/playback/tv_track_helpers.dart';
-import 'package:watch_app/core/theme/app_font_prefs.dart';
-import 'package:watch_app/core/theme/app_text.dart';
+import 'package:infinity_loop/core/playback/tv_track_helpers.dart';
+import 'package:infinity_loop/core/theme/app_font_prefs.dart';
+import 'package:infinity_loop/core/theme/app_text.dart';
 
 void main() {
   late Directory dir;

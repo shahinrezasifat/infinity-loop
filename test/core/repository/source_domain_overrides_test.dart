@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/repository/source_domain_overrides.dart';
+import 'package:infinity_loop/core/repository/source_domain_overrides.dart';
 
 void main() {
   late Directory dir;

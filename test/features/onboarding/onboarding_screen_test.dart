@@ -4,9 +4,9 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
-import 'package:watch_app/features/onboarding/onboarding_screen.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/features/onboarding/onboarding_screen.dart';
 
 // Onboarding no longer downloads or installs anything — the app ships with
 // zero sources, and this screen's job is just to explain that and point the

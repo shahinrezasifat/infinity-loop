@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/anilist/anilist_network_policy.dart';
-import 'package:watch_app/core/zmode/anilist_catalogue.dart';
+import 'package:infinity_loop/core/anilist/anilist_network_policy.dart';
+import 'package:infinity_loop/core/zmode/anilist_catalogue.dart';
 
 // The client used to swallow every failure and return null, which the caller
 // could not tell apart from a catalogue that simply had nothing. Home then

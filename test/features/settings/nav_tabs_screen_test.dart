@@ -14,10 +14,10 @@ import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/ui/nav_prefs.dart';
-import 'package:watch_app/core/zmode/zmode_prefs.dart';
-import 'package:watch_app/features/settings/nav_tabs_screen.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/ui/nav_prefs.dart';
+import 'package:infinity_loop/core/zmode/zmode_prefs.dart';
+import 'package:infinity_loop/features/settings/nav_tabs_screen.dart';
 
 void main() {
   late Directory dir;

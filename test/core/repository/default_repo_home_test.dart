@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/provider/cloudstream_provider.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/provider/cloudstream_provider.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
 
 void main() {
   test('combines all repository Home rows and keeps paging source IDs', () {

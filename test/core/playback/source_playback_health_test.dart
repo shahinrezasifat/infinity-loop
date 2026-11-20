@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/playback/source_health_store.dart';
+import 'package:infinity_loop/core/playback/source_health_store.dart';
 
 /// Playback health is the signal that catches a source which searches fine but
 /// can no longer produce a playable link — the common way a source rots.

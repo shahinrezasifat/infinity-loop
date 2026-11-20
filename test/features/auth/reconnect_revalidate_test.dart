@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/appwrite/appwrite_service.dart';
-import 'package:watch_app/core/supabase/supabase_service.dart';
-import 'package:watch_app/features/auth/auth_cubit.dart';
-import 'package:watch_app/features/auth/migration_bridge.dart';
+import 'package:infinity_loop/core/appwrite/appwrite_service.dart';
+import 'package:infinity_loop/core/supabase/supabase_service.dart';
+import 'package:infinity_loop/features/auth/auth_cubit.dart';
+import 'package:infinity_loop/features/auth/migration_bridge.dart';
 
 /// The startup session check cannot tell "your session expired" from "there was
 /// no network for a second", so a blink offline raises the Reconnect banner —

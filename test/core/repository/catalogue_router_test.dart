@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/episode.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_detail.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/models/video_source.dart';
-import 'package:watch_app/core/playback/source_health_store.dart';
-import 'package:watch_app/core/repository/catalogue_repository.dart';
-import 'package:watch_app/core/repository/catalogue_router.dart';
+import 'package:infinity_loop/core/models/episode.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_detail.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/models/video_source.dart';
+import 'package:infinity_loop/core/playback/source_health_store.dart';
+import 'package:infinity_loop/core/repository/catalogue_repository.dart';
+import 'package:infinity_loop/core/repository/catalogue_router.dart';
 
 /// Records which repo a call landed on. Every method not overridden throws,
 /// so an unexpected forward shows up as a failure, not a silent pass.

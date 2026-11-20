@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_filters.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_filters.dart';
 
 // A schema JSON that exercises all 8 filter types in a single payload.
 const _schema = '''

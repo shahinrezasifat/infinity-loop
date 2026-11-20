@@ -1,10 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/tv/tv_back_button.dart';
-import 'package:watch_app/core/tv/tv_list_focusable.dart';
-import 'package:watch_app/core/ui/settings_widgets.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/tv/tv_back_button.dart';
+import 'package:infinity_loop/core/tv/tv_list_focusable.dart';
+import 'package:infinity_loop/core/ui/settings_widgets.dart';
 
 void main() {
   tearDown(() async {

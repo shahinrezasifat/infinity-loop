@@ -9,7 +9,7 @@ import 'package:hive/src/binary/binary_writer_impl.dart';
 import 'package:hive/src/binary/frame.dart';
 // ignore: implementation_imports
 import 'package:hive/src/registry/type_registry_impl.dart';
-import 'package:watch_app/core/hive/hive_key.dart';
+import 'package:infinity_loop/core/hive/hive_key.dart';
 
 /// Hive writes a String key's length into a single byte, and the guard it
 /// ships for that is an `assert` — stripped from release builds, so only

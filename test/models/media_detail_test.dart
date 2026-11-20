@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/media_detail.dart';
-import 'package:watch_app/core/models/provider_info.dart';
+import 'package:infinity_loop/core/models/media_detail.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
 
 void main() {
   test('MediaDetail parses status, studios, and nested episodes', () {

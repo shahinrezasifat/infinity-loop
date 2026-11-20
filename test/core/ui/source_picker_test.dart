@@ -4,19 +4,19 @@ import 'package:dio/dio.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/di/injector.dart' show sl;
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/core/mode/content_mode_cubit.dart';
-import 'package:watch_app/core/playback/playback_prefs.dart';
-import 'package:watch_app/core/provider/cloudstream_provider.dart';
-import 'package:watch_app/core/provider/provider_downloader.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/provider/provider_registry.dart';
-import 'package:watch_app/core/provider/provider_repo_registry.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
-import 'package:watch_app/core/ui/source_switcher.dart';
-import 'package:watch_app/features/sources/zangetsu_sources_screen.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/di/injector.dart' show sl;
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/mode/content_mode_cubit.dart';
+import 'package:infinity_loop/core/playback/playback_prefs.dart';
+import 'package:infinity_loop/core/provider/cloudstream_provider.dart';
+import 'package:infinity_loop/core/provider/provider_downloader.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/provider/provider_registry.dart';
+import 'package:infinity_loop/core/provider/provider_repo_registry.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/core/ui/source_switcher.dart';
+import 'package:infinity_loop/features/sources/infinity_loop_sources_screen.dart';
 
 // ---------------------------------------------------------------------------
 // Stubs (same shape as test/features/sources/mode_filtered_sources_test.dart)
@@ -134,7 +134,7 @@ void main() {
               onChanged: (_) {},
               onInstallSources: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
-                  builder: (_) => const ZangetsuSourcesScreen(openToRepos: true),
+                  builder: (_) => const InfinityLoopSourcesScreen(openToRepos: true),
                 ),
               ),
             ),
@@ -180,7 +180,7 @@ void main() {
 
   testWidgets(
     'manga mode, nothing installed: tabs are All/Manga only, empty state '
-    'shows an install CTA that opens ZangetsuSourcesScreen on Repositories',
+    'shows an install CTA that opens InfinityLoopSourcesScreen on Repositories',
     (tester) async {
       // setMode's persistence is fire-and-forget real Hive I/O — without
       // runAsync here those writes dangle under FakeAsync and tearDown's
@@ -205,7 +205,7 @@ void main() {
       await tester.tap(ctaButton);
       await tester.pumpAndSettle();
 
-      final screen = tester.widget<ZangetsuSourcesScreen>(find.byType(ZangetsuSourcesScreen));
+      final screen = tester.widget<InfinityLoopSourcesScreen>(find.byType(InfinityLoopSourcesScreen));
       expect(screen.openToRepos, isTrue);
     },
   );

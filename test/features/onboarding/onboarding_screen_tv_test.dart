@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/features/onboarding/onboarding_screen_tv.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/features/onboarding/onboarding_screen_tv.dart';
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
 //

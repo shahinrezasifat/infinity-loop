@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/zmode/zmode_prefs.dart';
+import 'package:infinity_loop/core/zmode/zmode_prefs.dart';
 
 void main() {
   late Directory dir;

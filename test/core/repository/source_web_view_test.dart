@@ -9,10 +9,10 @@
 // translation, so a repository is registered here to pin that directly.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/di/injector.dart' show sl;
-import 'package:watch_app/core/repository/source_actions.dart' as source_actions;
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/di/injector.dart' show sl;
+import 'package:infinity_loop/core/repository/source_actions.dart' as source_actions;
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 /// Minimal [SourceRepository] stub — only [baseUrlFor] is used by
 /// [source_actions.webViewUrlFor], the rest just isn't called from these tests.

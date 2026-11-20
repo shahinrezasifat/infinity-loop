@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/environment.dart';
-import 'package:watch_app/core/share/pair_link.dart';
+import 'package:infinity_loop/core/environment.dart';
+import 'package:infinity_loop/core/share/pair_link.dart';
 
 void main() {
   const code = 'ABCD2345';

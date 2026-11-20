@@ -20,28 +20,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/anilist/anilist_service.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/appwrite/appwrite_service.dart';
-import 'package:watch_app/core/download/download_prefs.dart';
-import 'package:watch_app/core/mihon/mihon_manager.dart';
-import 'package:watch_app/core/playback/playback_prefs.dart';
-import 'package:watch_app/core/playback/search_prefs.dart';
-import 'package:watch_app/core/provider/cloudstream_provider.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/provider/provider_registry.dart';
-import 'package:watch_app/core/provider/provider_repo_registry.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
-import 'package:watch_app/core/supabase/supabase_service.dart';
-import 'package:watch_app/core/theme/theme_controller.dart';
-import 'package:watch_app/core/torrent/torrent_prefs.dart';
-import 'package:watch_app/core/tracker/mal_service.dart';
-import 'package:watch_app/core/tracker/simkl_service.dart';
-import 'package:watch_app/features/auth/auth_cubit.dart';
-import 'package:watch_app/features/auth/migration_bridge.dart';
-import 'package:watch_app/features/settings/settings_screen.dart';
-import 'package:watch_app/features/sources/providers_hub_screen.dart';
-import 'package:watch_app/features/sources/zangetsu_sources_screen.dart';
+import 'package:infinity_loop/core/anilist/anilist_service.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/appwrite/appwrite_service.dart';
+import 'package:infinity_loop/core/download/download_prefs.dart';
+import 'package:infinity_loop/core/mihon/mihon_manager.dart';
+import 'package:infinity_loop/core/playback/playback_prefs.dart';
+import 'package:infinity_loop/core/playback/search_prefs.dart';
+import 'package:infinity_loop/core/provider/cloudstream_provider.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/provider/provider_registry.dart';
+import 'package:infinity_loop/core/provider/provider_repo_registry.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/core/supabase/supabase_service.dart';
+import 'package:infinity_loop/core/theme/theme_controller.dart';
+import 'package:infinity_loop/core/torrent/torrent_prefs.dart';
+import 'package:infinity_loop/core/tracker/mal_service.dart';
+import 'package:infinity_loop/core/tracker/simkl_service.dart';
+import 'package:infinity_loop/features/auth/auth_cubit.dart';
+import 'package:infinity_loop/features/auth/migration_bridge.dart';
+import 'package:infinity_loop/features/settings/settings_screen.dart';
+import 'package:infinity_loop/features/sources/providers_hub_screen.dart';
+import 'package:infinity_loop/features/sources/infinity_loop_sources_screen.dart';
 
 // ---------------------------------------------------------------------------
 // Shared fakes
@@ -75,7 +75,7 @@ class _FakeProviderRegistry implements ProviderRegistry {
   @override
   String? typeOf(String sourceId) => _types[sourceId];
 
-  // SourcesBloc (built when ZangetsuSourcesScreen is pushed) subscribes to
+  // SourcesBloc (built when InfinityLoopSourcesScreen is pushed) subscribes to
   // this on construction.
   @override
   Stream<BoxEvent> watch() => const Stream<BoxEvent>.empty();
@@ -148,7 +148,7 @@ void main() {
         (tester) async {
       await pump(tester);
 
-      expect(find.text('Zangetsu Manga'), findsNothing);
+      expect(find.text('Infinity Loop Manga'), findsNothing);
       expect(find.text('MANGA & NOVEL'), findsNothing);
     });
 
@@ -158,7 +158,7 @@ void main() {
       (tester) async {
         await pump(tester);
 
-        expect(find.text('Zangetsu'), findsOneWidget);
+        expect(find.text('Infinity Loop'), findsOneWidget);
         expect(find.text('Built-in JS providers'), findsOneWidget);
         expect(find.text('3 sources'), findsOneWidget); // all 3, unfiltered
       },
@@ -191,7 +191,7 @@ void main() {
         // reduces to here.
         expect(find.text('ACTIVE'), findsOneWidget);
         final activeY = tester.getTopLeft(find.text('ACTIVE')).dy;
-        final zangetsuY = tester.getTopLeft(find.text('Zangetsu')).dy;
+        final zangetsuY = tester.getTopLeft(find.text('Infinity Loop')).dy;
         expect((activeY - zangetsuY).abs(), lessThan(30));
       },
     );
@@ -217,16 +217,16 @@ void main() {
     );
 
     // scopeToReading is still live production behavior of
-    // ZangetsuSourcesScreen — just no longer reachable from this hub. It's
+    // InfinityLoopSourcesScreen — just no longer reachable from this hub. It's
     // still reachable from Settings → Manga & Novel (untouched), so this
     // pins the behavior directly rather than losing coverage of it.
     testWidgets(
-      'ZangetsuSourcesScreen(scopeToReading: true) scopes the Installed tab '
+      'InfinityLoopSourcesScreen(scopeToReading: true) scopes the Installed tab '
       'to reading providers, with a Show all escape hatch back to everything',
       (tester) async {
         await tester.pumpWidget(
           const MaterialApp(
-            home: ZangetsuSourcesScreen(scopeToReading: true),
+            home: InfinityLoopSourcesScreen(scopeToReading: true),
           ),
         );
         await tester.pumpAndSettle();
@@ -254,7 +254,7 @@ void main() {
       (tester) async {
         await pump(tester);
 
-        await tester.tap(find.text('Zangetsu'));
+        await tester.tap(find.text('Infinity Loop'));
         await tester.pumpAndSettle();
 
         expect(find.text('Anime One'), findsOneWidget);

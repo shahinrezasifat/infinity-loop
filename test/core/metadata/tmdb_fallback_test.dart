@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/metadata/tmdb.dart';
-import 'package:watch_app/core/metadata/tmdb_fallback.dart';
+import 'package:infinity_loop/core/metadata/tmdb.dart';
+import 'package:infinity_loop/core/metadata/tmdb_fallback.dart';
 
 /// Indian ISPs hijack the DNS for [Tmdb.host]: it resolves to a local IP that
 /// swallows the connection, so every TMDB call times out and the app reported

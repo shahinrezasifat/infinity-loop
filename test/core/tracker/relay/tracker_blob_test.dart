@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/tracker/relay/tracker_blob.dart';
+import 'package:infinity_loop/core/tracker/relay/tracker_blob.dart';
 
 void main() {
   test('encode → decode round-trips trackers verbatim', () {

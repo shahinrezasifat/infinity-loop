@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/app_mode.dart';
+import 'package:infinity_loop/core/app_mode.dart';
 
 void main() {
   test('AppMode exposes the injected isTv value', () {

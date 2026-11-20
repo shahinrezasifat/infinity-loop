@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:watch_app/core/lnreader/lnreader_runtime.dart';
+import 'package:infinity_loop/core/lnreader/lnreader_runtime.dart';
 
 const _fakePlugin = '''
 exports.default = {

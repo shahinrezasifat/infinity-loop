@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/backup/backup_payload.dart';
+import 'package:infinity_loop/core/backup/backup_payload.dart';
 
 void main() {
   test('wrap then unwrap round-trips the selected bundles', () {

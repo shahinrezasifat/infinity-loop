@@ -4,13 +4,13 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/download/chapter_download.dart';
-import 'package:watch_app/core/download/chapter_download_store.dart';
-import 'package:watch_app/core/download/chapter_downloader.dart';
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/core/models/episode.dart';
-import 'package:watch_app/core/models/page_content.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/download/chapter_download.dart';
+import 'package:infinity_loop/core/download/chapter_download_store.dart';
+import 'package:infinity_loop/core/download/chapter_downloader.dart';
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/models/episode.dart';
+import 'package:infinity_loop/core/models/page_content.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
 
 /// Fetching hangs forever, on purpose. These tests are about the queue, and a
 /// fetch that never resolves keeps the first chapter parked in the downloader

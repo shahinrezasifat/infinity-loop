@@ -1,9 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:watch_app/core/notify/subscription_store.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/features/notify/subscriptions_screen_tv.dart';
+import 'package:infinity_loop/core/notify/subscription_store.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/features/notify/subscriptions_screen_tv.dart';
 
 // ── Minimal fakes ─────────────────────────────────────────────────────────────
 

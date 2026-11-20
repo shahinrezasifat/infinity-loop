@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/models/watch_status.dart';
-import 'package:watch_app/core/tracker/tracker.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/models/watch_status.dart';
+import 'package:infinity_loop/core/tracker/tracker.dart';
 
 /// Simkl has no single-item status read, so fetchEntry filters the library.
 /// It used to match only on MAL id, so a film or series — which carries none —

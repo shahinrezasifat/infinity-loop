@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_mapping.dart';
-import 'package:watch_app/core/playback/source_selection.dart';
-import 'package:watch_app/core/models/video_source.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_mapping.dart';
+import 'package:infinity_loop/core/playback/source_selection.dart';
+import 'package:infinity_loop/core/models/video_source.dart';
 
 /// Aniyomi has no sub/dub parameter — `getVideoList(episode)` takes an episode
 /// and nothing else. A source carrying both cuts says so in each video's OWN

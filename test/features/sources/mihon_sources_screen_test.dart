@@ -21,14 +21,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_repo.dart';
-import 'package:watch_app/core/mihon/mihon_extension_service.dart';
-import 'package:watch_app/core/mihon/mihon_manager.dart';
-import 'package:watch_app/core/mihon/mihon_provider.dart';
-import 'package:watch_app/core/mihon/mihon_update.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
-import 'package:watch_app/features/sources/mihon_repo_tab.dart';
-import 'package:watch_app/features/sources/mihon_sources_screen.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_repo.dart';
+import 'package:infinity_loop/core/mihon/mihon_extension_service.dart';
+import 'package:infinity_loop/core/mihon/mihon_manager.dart';
+import 'package:infinity_loop/core/mihon/mihon_provider.dart';
+import 'package:infinity_loop/core/mihon/mihon_update.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/features/sources/mihon_repo_tab.dart';
+import 'package:infinity_loop/features/sources/mihon_sources_screen.dart';
 
 MihonProvider _prov({
   int id = 1,

@@ -116,7 +116,7 @@ class _CsTvViewState extends State<_CsTvView> {
                 ],
               ),
             ),
-            // Tabs and search on separate rows — see zangetsu_sources_screen_tv.
+            // Tabs and search on separate rows — see infinity_loop_sources_screen_tv.
             Padding(
               padding: const EdgeInsets.fromLTRB(40, 0, 40, 12),
               child: Row(
@@ -143,7 +143,7 @@ class _CsTvViewState extends State<_CsTvView> {
                 onChanged: (q) => setState(() => _query = q),
               ),
             ),
-            // Add-repo above the list — see zangetsu_sources_screen_tv.
+            // Add-repo above the list — see infinity_loop_sources_screen_tv.
             if (_tab == 1 && !widget.adultOnly)
               Padding(
                 padding: const EdgeInsets.fromLTRB(40, 0, 40, 12),
@@ -768,7 +768,7 @@ class _CsScreenTvRepoSectionState extends State<_CsScreenTvRepoSection> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // ── Repo header row ─────────────────────────────────────────────
-          // Full-width expand target — see zangetsu_sources_screen_tv.
+          // Full-width expand target — see infinity_loop_sources_screen_tv.
           Padding(
             padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
             child: Column(

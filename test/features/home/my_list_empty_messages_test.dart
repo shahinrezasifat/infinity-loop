@@ -8,9 +8,9 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/features/home/my_list_screen.dart';
-import 'package:watch_app/l10n/app_localizations.dart';
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/features/home/my_list_screen.dart';
+import 'package:infinity_loop/l10n/app_localizations.dart';
 
 AppLocalizations get _l10n =>
     lookupAppLocalizations(const Locale('en'));

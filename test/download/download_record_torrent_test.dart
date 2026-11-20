@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/download/download_record.dart';
+import 'package:infinity_loop/core/download/download_record.dart';
 
 void main() {
   DownloadRecord base() => const DownloadRecord(

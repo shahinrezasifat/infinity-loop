@@ -6,13 +6,13 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_detail.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/zmode/metadata_filters.dart';
-import 'package:watch_app/core/zmode/video_catalogue.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_detail.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/zmode/metadata_filters.dart';
+import 'package:infinity_loop/core/zmode/video_catalogue.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 class _Video implements VideoCatalogue {
   String? lastRowId;

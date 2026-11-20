@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/zmode/source_order_prefs.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
-import 'package:watch_app/l10n/app_localizations_en.dart';
+import 'package:infinity_loop/core/zmode/source_order_prefs.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/l10n/app_localizations_en.dart';
 
 void main() {
   late Directory dir;

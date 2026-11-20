@@ -4,10 +4,10 @@
 // recipient has no way to install.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/share/share_link.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/share/share_link.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 MediaItem _zItem(String canonical, {ZKind kind = ZKind.anime}) {
   final c = ZCanonical(kind, canonical);

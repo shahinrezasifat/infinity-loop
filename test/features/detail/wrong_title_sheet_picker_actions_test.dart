@@ -11,20 +11,20 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/picker_deps.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/provider/cf_solve_needed.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/media_detail.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/playback/title_prefs.dart';
-import 'package:watch_app/core/repository/catalogue_repository.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/zmode/match_store.dart';
-import 'package:watch_app/core/zmode/zmode_source_prefs.dart';
-import 'package:watch_app/core/zmode/source_matcher.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
-import 'package:watch_app/features/detail/cubit/detail_cubit.dart';
-import 'package:watch_app/features/detail/wrong_title_sheet.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/provider/cf_solve_needed.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/media_detail.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/playback/title_prefs.dart';
+import 'package:infinity_loop/core/repository/catalogue_repository.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/zmode/match_store.dart';
+import 'package:infinity_loop/core/zmode/zmode_source_prefs.dart';
+import 'package:infinity_loop/core/zmode/source_matcher.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/features/detail/cubit/detail_cubit.dart';
+import 'package:infinity_loop/features/detail/wrong_title_sheet.dart';
 
 class _Src implements SourceRepository {
   _Src(this.bySource);

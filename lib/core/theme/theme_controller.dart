@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
 import 'package:hive/hive.dart';
 
 import 'app_colors.dart';

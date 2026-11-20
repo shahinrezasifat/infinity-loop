@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/schedule/coming_soon_service.dart';
-import 'package:watch_app/core/schedule/schedule_models.dart';
-import 'package:watch_app/core/zmode/simkl_catalogue.dart';
+import 'package:infinity_loop/core/schedule/coming_soon_service.dart';
+import 'package:infinity_loop/core/schedule/schedule_models.dart';
+import 'package:infinity_loop/core/zmode/simkl_catalogue.dart';
 
 void main() {
   setUp(SimklCatalogue.resetIdCache);

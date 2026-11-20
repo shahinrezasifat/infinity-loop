@@ -28,4 +28,5 @@ plugins {
     id("com.google.firebase.crashlytics") version "3.0.2" apply false
 }
 
+rootProject.name = "Infinity Loop"
 include(":app")

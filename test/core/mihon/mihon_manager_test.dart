@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_repo.dart';
-import 'package:watch_app/core/mihon/mihon_manager.dart';
-import 'package:watch_app/core/mihon/mihon_provider.dart';
-import 'package:watch_app/core/mihon/mihon_source_info.dart';
-import 'package:watch_app/core/mihon/mihon_update.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_repo.dart';
+import 'package:infinity_loop/core/mihon/mihon_manager.dart';
+import 'package:infinity_loop/core/mihon/mihon_provider.dart';
+import 'package:infinity_loop/core/mihon/mihon_source_info.dart';
+import 'package:infinity_loop/core/mihon/mihon_update.dart';
 
 MihonProvider _src(int id, String pkg, int code) => MihonProvider(
       info: MihonSourceInfo(

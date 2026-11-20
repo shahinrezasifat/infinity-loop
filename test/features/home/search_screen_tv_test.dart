@@ -3,22 +3,22 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/playback/search_history.dart';
-import 'package:watch_app/core/playback/search_prefs.dart';
-import 'package:watch_app/core/playback/search_scope.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/search/title_suggestion_service.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/playback/search_history.dart';
+import 'package:infinity_loop/core/playback/search_prefs.dart';
+import 'package:infinity_loop/core/playback/search_scope.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/search/title_suggestion_service.dart';
 import 'package:get_it/get_it.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/core/tv/tv_list_focusable.dart';
-import 'package:watch_app/core/tv/tv_text_field.dart';
-import 'package:watch_app/core/zmode/metadata_repository.dart';
-import 'package:watch_app/features/home/search_screen_tv.dart';
-import 'package:watch_app/features/search/bloc/search_bloc.dart';
-import 'package:watch_app/features/search/bloc/search_state.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/core/tv/tv_list_focusable.dart';
+import 'package:infinity_loop/core/tv/tv_text_field.dart';
+import 'package:infinity_loop/core/zmode/metadata_repository.dart';
+import 'package:infinity_loop/features/home/search_screen_tv.dart';
+import 'package:infinity_loop/features/search/bloc/search_bloc.dart';
+import 'package:infinity_loop/features/search/bloc/search_state.dart';
 
 // ── Minimal stubs ─────────────────────────────────────────────────────────────
 

@@ -4,8 +4,8 @@
 // than on to chapter 2.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/episode.dart';
-import 'package:watch_app/core/reading/chapter_nav.dart';
+import 'package:infinity_loop/core/models/episode.dart';
+import 'package:infinity_loop/core/reading/chapter_nav.dart';
 
 Episode _c(double n, String? group) => Episode(
   id: '$n-$group',

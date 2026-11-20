@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/schedule/airing_service.dart';
-import 'package:watch_app/core/schedule/coming_soon_service.dart';
-import 'package:watch_app/core/schedule/schedule_models.dart';
-import 'package:watch_app/core/playback/my_list.dart';
-import 'package:watch_app/features/schedule/schedule_cubit.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/schedule/airing_service.dart';
+import 'package:infinity_loop/core/schedule/coming_soon_service.dart';
+import 'package:infinity_loop/core/schedule/schedule_models.dart';
+import 'package:infinity_loop/core/playback/my_list.dart';
+import 'package:infinity_loop/features/schedule/schedule_cubit.dart';
 
 class _FakeAiring implements AiringService {
   @override

@@ -9,11 +9,11 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/app_config.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/environment.dart';
-import 'package:watch_app/core/zmode/simkl_catalogue.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/app_config.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/environment.dart';
+import 'package:infinity_loop/core/zmode/simkl_catalogue.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 /// Records every URL asked for and answers from [respond].
 class _Adapter implements HttpClientAdapter {

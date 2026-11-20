@@ -31,7 +31,6 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
 /coverage/
 
 # Symbolication related
@@ -55,8 +54,6 @@ banner/
 poster/
 secrets.json
 
-# Aniyomi loader test fixture APK — on-device validated instead of committed
-android/app/src/test/resources/aniyomi/*.apk
 
 # Supabase local env (service_role key is secret — never commit)
 .env
@@ -64,8 +61,6 @@ android/app/src/test/resources/aniyomi/*.apk
 *.local
 supabase/.env
 
-# Android Gradle build output (was accidentally tracked)
-/android/build/
 
 # Supabase CLI deploy scratch
 supabase/.temp/
@@ -77,3 +72,14 @@ supabase/.temp/
 
 # Wrangler local scratch (dev cache, telemetry state) — never commit
 **/.wrangler/
+
+# Signing files, local configuration, and build artifacts
+*.jks
+*.keystore
+key.properties
+local.properties
+google-services.json
+.gradle/
+build/
+*.apk
+.kotlin/

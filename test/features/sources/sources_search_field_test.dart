@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/features/sources/sources_search_field.dart';
+import 'package:infinity_loop/features/sources/sources_search_field.dart';
 
 void main() {
   test('sourceSearchMatches: name substring, case-insensitive', () {

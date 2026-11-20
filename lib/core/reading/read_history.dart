@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
-import 'package:watch_app/core/hive/hive_key.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/hive_key.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../models/provider_info.dart';

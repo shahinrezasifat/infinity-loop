@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'models/repository_model.dart';
 
-/// Manages all user-configured repositories for Sifat's Player.
+/// Manages all user-configured repositories for Infinity Loop.
 ///
 /// Responsibilities:
 /// - Add, edit, delete, enable, disable repositories

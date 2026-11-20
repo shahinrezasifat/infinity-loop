@@ -5,13 +5,13 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/provider/provider_downloader.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/provider/provider_registry.dart';
-import 'package:watch_app/core/provider/provider_repo_registry.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/features/sources/zangetsu_sources_screen.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/provider/provider_downloader.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/provider/provider_registry.dart';
+import 'package:infinity_loop/core/provider/provider_repo_registry.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/features/sources/infinity_loop_sources_screen.dart';
 
 // ── Fakes (mirrors test/provider/provider_registry_test.dart) ────────────────
 
@@ -82,12 +82,12 @@ void main() {
   });
 
   testWidgets(
-    'ZangetsuSourcesScreen (TV) exposes semantics labels for its tab chips, '
+    'InfinityLoopSourcesScreen (TV) exposes semantics labels for its tab chips, '
     'Back button and Add-repo action — with no duplicate-text nodes',
     (tester) async {
       final handle = tester.ensureSemantics();
 
-      await tester.pumpWidget(const MaterialApp(home: ZangetsuSourcesScreen()));
+      await tester.pumpWidget(const MaterialApp(home: InfinityLoopSourcesScreen()));
       await tester.pumpAndSettle();
 
       // Installed tab chip: autofocused, so this is where the D-pad lands.

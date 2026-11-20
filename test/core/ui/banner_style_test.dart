@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/ui/banner_style.dart';
+import 'package:infinity_loop/core/ui/banner_style.dart';
 
 /// The whole point of this pref is that picking nothing changes nothing: every
 /// install that never opens the picker must keep the banner it already has.

@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_extension_service.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_extension_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

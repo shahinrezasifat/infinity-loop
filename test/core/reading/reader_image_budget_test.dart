@@ -1,6 +1,6 @@
 import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/reading/reader_image_budget.dart';
+import 'package:infinity_loop/core/reading/reader_image_budget.dart';
 
 /// The app-wide image budget is 80MB, sized for covers. A manga page keeps its
 /// full aspect (ResizeImage caps width only), so one slice can run to tens of

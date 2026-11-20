@@ -1,8 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/core/zmode/zmode_prefs.dart';
-import 'package:watch_app/features/shell/mode_bar.dart';
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/zmode/zmode_prefs.dart';
+import 'package:infinity_loop/features/shell/mode_bar.dart';
 
 void main() {
   testWidgets('shows exactly four content modes and reports the pick', (t) async {

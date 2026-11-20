@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/reading/read_store.dart';
+import 'package:infinity_loop/core/reading/read_store.dart';
 
 /// Marking a chapter read by hand, from the chapter list's long-press menu.
 

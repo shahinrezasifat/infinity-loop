@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/repository/source_actions.dart';
+import 'package:infinity_loop/core/repository/source_actions.dart';
 
 /// "Open in browser" shows ONE page — the chapter you're on — on the source's
 /// own site.

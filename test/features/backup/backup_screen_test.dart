@@ -5,20 +5,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/appwrite/appwrite_service.dart';
-import 'package:watch_app/core/backup/backup_service.dart';
-import 'package:watch_app/core/backup/library_backup.dart';
-import 'package:watch_app/core/backup/settings_backup.dart';
-import 'package:watch_app/core/backup/sources_backup.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/provider/provider_registry.dart';
-import 'package:watch_app/core/provider/provider_repo_registry.dart';
-import 'package:watch_app/core/supabase/supabase_service.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/features/auth/auth_cubit.dart';
-import 'package:watch_app/features/auth/migration_bridge.dart';
-import 'package:watch_app/features/backup/backup_screen.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/appwrite/appwrite_service.dart';
+import 'package:infinity_loop/core/backup/backup_service.dart';
+import 'package:infinity_loop/core/backup/library_backup.dart';
+import 'package:infinity_loop/core/backup/settings_backup.dart';
+import 'package:infinity_loop/core/backup/sources_backup.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/provider/provider_registry.dart';
+import 'package:infinity_loop/core/provider/provider_repo_registry.dart';
+import 'package:infinity_loop/core/supabase/supabase_service.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/features/auth/auth_cubit.dart';
+import 'package:infinity_loop/features/auth/migration_bridge.dart';
+import 'package:infinity_loop/features/backup/backup_screen.dart';
 
 MigrationBridge _fakeBridge() => MigrationBridge(
       invoke: (_, _) async => const {'ok': false},

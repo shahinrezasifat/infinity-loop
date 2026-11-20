@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
 
 /// Which source languages to show in an install catalog. One instance per
 /// content type (manga/anime), each backed by its own tiny Hive box.

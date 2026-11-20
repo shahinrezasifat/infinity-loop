@@ -1,12 +1,12 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/appwrite/appwrite_service.dart';
-import 'package:watch_app/core/supabase/supabase_service.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/features/auth/auth_cubit.dart';
-import 'package:watch_app/features/auth/auth_screens_tv.dart';
-import 'package:watch_app/features/auth/migration_bridge.dart';
+import 'package:infinity_loop/core/appwrite/appwrite_service.dart';
+import 'package:infinity_loop/core/supabase/supabase_service.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/features/auth/auth_cubit.dart';
+import 'package:infinity_loop/features/auth/auth_screens_tv.dart';
+import 'package:infinity_loop/features/auth/migration_bridge.dart';
 
 // ── Minimal fakes ─────────────────────────────────────────────────────────────
 

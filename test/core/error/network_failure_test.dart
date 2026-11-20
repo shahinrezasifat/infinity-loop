@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/error/network_failure.dart';
+import 'package:infinity_loop/core/error/network_failure.dart';
 
 void main() {
   final req = RequestOptions(path: '/x');

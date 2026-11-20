@@ -3,9 +3,9 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/episode.dart';
-import 'package:watch_app/features/detail/chapter_meta.dart';
-import 'package:watch_app/l10n/app_localizations.dart';
+import 'package:infinity_loop/core/models/episode.dart';
+import 'package:infinity_loop/features/detail/chapter_meta.dart';
+import 'package:infinity_loop/l10n/app_localizations.dart';
 
 Episode chapter({String? date, String? scanlator}) => Episode(
       id: 'c1',

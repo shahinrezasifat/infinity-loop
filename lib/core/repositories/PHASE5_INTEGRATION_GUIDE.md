@@ -418,7 +418,7 @@ BlocListener<RepositoryBloc, RepositoryState>(
 
 ## Summary
 
-Phase 5 transforms Sifat's Player into a true multi-repository streaming app:
+Phase 5 transforms Infinity Loop into a true multi-repository streaming app:
 
 ✅ Users can add multiple content sources
 ✅ One-click repository switching

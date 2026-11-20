@@ -8,9 +8,9 @@
 // distinguishes the two.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/media_detail.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/models/media_detail.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 MediaDetail _detail(String sourceId) => MediaDetail(
   id: 'x',

@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'dart:io';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/playback/playback_prefs.dart';
-import 'package:watch_app/core/ui/poster_card.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/playback/playback_prefs.dart';
+import 'package:infinity_loop/core/ui/poster_card.dart';
 
 Widget _wrap(Widget child) =>
     MaterialApp(home: Scaffold(body: Center(child: child)));

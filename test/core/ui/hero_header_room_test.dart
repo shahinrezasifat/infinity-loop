@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/ui/featured_hero.dart';
+import 'package:infinity_loop/core/ui/featured_hero.dart';
 
 /// The room above the hero artwork used to be a flat 90 — status bar plus the
 /// floating header. The header lives in a SafeArea, so on a phone with a tall

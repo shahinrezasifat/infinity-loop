@@ -7,12 +7,12 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/playback/search_history.dart';
-import 'package:watch_app/core/playback/search_prefs.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/search/title_suggestion_service.dart';
-import 'package:watch_app/features/search/bloc/search_bloc.dart';
-import 'package:watch_app/features/search/bloc/search_state.dart';
+import 'package:infinity_loop/core/playback/search_history.dart';
+import 'package:infinity_loop/core/playback/search_prefs.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/search/title_suggestion_service.dart';
+import 'package:infinity_loop/features/search/bloc/search_bloc.dart';
+import 'package:infinity_loop/features/search/bloc/search_state.dart';
 
 /// Fake prefs whose sortName is fixed at construction — models whatever an
 /// older build already wrote to the Hive box before this run starts.

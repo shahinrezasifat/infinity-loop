@@ -7,8 +7,9 @@ import 'package:crypto/crypto.dart' as crypto;
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
 
+import '../app_config.dart';
 import '../di/injector.dart';
 import '../logging/app_logger.dart';
 import '../mode/content_mode.dart';
@@ -26,8 +27,8 @@ import 'download_prefs.dart';
 /// once every page is on disk, so a run that dies can't leave a half chapter
 /// reading as complete. Publishing puts it where the "Saving to" line on the
 /// Downloads screen says it goes:
-///   `Zangetsu/<Show>/<Chapter>.cbz` (manga — a zip of the pages)
-///   `Zangetsu/<Show>/<Chapter>/text.html` (novel)
+///   `Infinity Loop/<Show>/<Chapter>.cbz` (manga — a zip of the pages)
+///   `Infinity Loop/<Show>/<Chapter>/text.html` (novel)
 ///
 /// Manga is packed into a `.cbz` rather than left as loose images for two
 /// reasons: the gallery scanner picks up loose pages and floods the user's
@@ -216,7 +217,7 @@ class ChapterDownloadStore {
       ..sort((a, b) => a.path.compareTo(b.path));
     if (files.isEmpty) return d;
 
-    final show = 'Zangetsu/${safeName(d.showTitle)}';
+    final show = '$kSharedExportFolder/${safeName(d.showTitle)}';
     final chapter = safeName(d.chapterTitle);
     // Manga leaves as one archive; a novel is a single html file already.
     final packed = d.mode == ContentMode.novel

@@ -1,14 +1,14 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/playback/playback_prefs.dart';
-import 'package:watch_app/core/provider/base_provider.dart';
-import 'package:watch_app/core/provider/cloudstream_provider.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/provider/provider_registry.dart';
-import 'package:watch_app/features/search/browse_sources_screen.dart';
-import 'package:watch_app/features/search/browse_sources_screen_tv.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/playback/playback_prefs.dart';
+import 'package:infinity_loop/core/provider/base_provider.dart';
+import 'package:infinity_loop/core/provider/cloudstream_provider.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/provider/provider_registry.dart';
+import 'package:infinity_loop/features/search/browse_sources_screen.dart';
+import 'package:infinity_loop/features/search/browse_sources_screen_tv.dart';
 
 class _FakeProviderRegistry implements ProviderRegistry {
   @override

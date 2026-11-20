@@ -1,7 +1,7 @@
 // test/core/cast/cast_controller_test.dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/cast/cast_controller.dart';
-import 'package:watch_app/core/models/video_source.dart';
+import 'package:infinity_loop/core/cast/cast_controller.dart';
+import 'package:infinity_loop/core/models/video_source.dart';
 
 void main() {
   test('castSubtitleMaps sends format=vtt and drops ASS', () {

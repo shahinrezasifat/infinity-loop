@@ -11,8 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/playback/playback_prefs.dart';
-import 'package:watch_app/features/player/subtitle_font_service.dart';
+import 'package:infinity_loop/core/playback/playback_prefs.dart';
+import 'package:infinity_loop/features/player/subtitle_font_service.dart';
 
 void main() {
   late Directory dir;

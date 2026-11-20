@@ -1,9 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/playback/watch_history.dart';
-import 'package:watch_app/features/home/continue_section.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/playback/watch_history.dart';
+import 'package:infinity_loop/features/home/continue_section.dart';
 
 HistoryEntry _row(String title, String showUrl) => HistoryEntry(
   sourceId: showUrl.startsWith('zm://') ? 'zm' : 'cs:HDHub4U',

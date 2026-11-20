@@ -3,16 +3,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/lnreader/lnreader_extension_service.dart';
-import 'package:watch_app/core/lnreader/lnreader_manager.dart';
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/playback/playback_prefs.dart';
-import 'package:watch_app/core/provider/cloudstream_provider.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
-import 'package:watch_app/core/ui/source_switcher.dart';
+import 'package:infinity_loop/core/lnreader/lnreader_extension_service.dart';
+import 'package:infinity_loop/core/lnreader/lnreader_manager.dart';
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/playback/playback_prefs.dart';
+import 'package:infinity_loop/core/provider/cloudstream_provider.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/core/ui/source_switcher.dart';
 
 /// Task 6's isolation net: proves a `lnr:` novel source is wired end-to-end
 /// (type resolution, mode filtering, `SourceRepository` registration) WITHOUT

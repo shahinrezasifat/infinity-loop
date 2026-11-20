@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
 
 import '../../core/di/injector.dart';
 import '../../core/ui/source_icon_tile.dart';

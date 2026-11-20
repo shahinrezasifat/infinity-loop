@@ -5,7 +5,7 @@ part 'repository_model.g.dart';
 
 /// Represents a single content repository (source/provider).
 ///
-/// A repository is an external source of streaming content that Sifat's Player
+/// A repository is an external source of streaming content that Infinity Loop
 /// can connect to. Examples: an anime repository, a movie repository, a custom
 /// source, etc.
 ///
@@ -23,7 +23,7 @@ class RepositoryModel extends Equatable {
   /// User-friendly name for the repository.
   final String name;
 
-  /// Repository URL/endpoint (where Sifat's Player fetches content from).
+  /// Repository URL/endpoint (where Infinity Loop fetches content from).
   /// Must be a valid HTTPS URL.
   final String url;
 

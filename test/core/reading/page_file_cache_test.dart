@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/reading/page_file_cache.dart';
+import 'package:infinity_loop/core/reading/page_file_cache.dart';
 
 void main() {
   late Directory dir;

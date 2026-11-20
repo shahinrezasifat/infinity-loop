@@ -4,9 +4,9 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/reading/reader_prefs.dart';
-import 'package:watch_app/features/reader/reader_comfort.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/reading/reader_prefs.dart';
+import 'package:infinity_loop/features/reader/reader_comfort.dart';
 
 /// Nothing but the mixin — both readers get fullscreen from here, so testing
 /// the mixin tests both.

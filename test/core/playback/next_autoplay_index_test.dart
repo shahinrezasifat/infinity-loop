@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/episode.dart';
-import 'package:watch_app/core/playback/filler_service.dart';
+import 'package:infinity_loop/core/models/episode.dart';
+import 'package:infinity_loop/core/playback/filler_service.dart';
 
 Episode _unaired(int n) => Episode(
       id: 'e$n',

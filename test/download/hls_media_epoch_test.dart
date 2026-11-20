@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/download/hls_downloader.dart';
+import 'package:infinity_loop/core/download/hls_downloader.dart';
 
 Uint8List _encodePts(int pts) {
   final pts3230 = (pts >> 30) & 0x7;

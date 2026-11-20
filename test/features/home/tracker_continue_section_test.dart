@@ -1,14 +1,14 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/models/watch_status.dart';
-import 'package:watch_app/core/tracker/tracker.dart';
-import 'package:watch_app/core/ui/continue_card.dart';
-import 'package:watch_app/core/ui/poster_card.dart';
-import 'package:watch_app/features/home/tracker_continue_section.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/models/watch_status.dart';
+import 'package:infinity_loop/core/tracker/tracker.dart';
+import 'package:infinity_loop/core/ui/continue_card.dart';
+import 'package:infinity_loop/core/ui/poster_card.dart';
+import 'package:infinity_loop/features/home/tracker_continue_section.dart';
 
 // The tracker-driven home rows render what the cubit sliced — titles, progress
 // badges, reading relabels, taps — without fetching anything of their own.

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/tracker/simkl_service.dart';
+import 'package:infinity_loop/core/tracker/simkl_service.dart';
 
 /// `/sync/all-items?extended=full` returns the whole library. A shared log
 /// (ref MXW8BS) caught it fetching 1024 items 37 times in two hours — three of

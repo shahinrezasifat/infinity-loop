@@ -214,7 +214,7 @@ class _BackupScreenState extends State<BackupScreen> {
   }
 
   /// Friendly label for a backup file, parsed from its
-  /// `zangetsu-backup-YYYYMMDD-HHMM.json` name (falls back to the raw name).
+  /// `infinity-loop-backup-YYYYMMDD-HHMM.json` name (falls back to the raw name).
   String _backupLabel(File f) {
     final name = f.uri.pathSegments.last;
     final m = RegExp(r'(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})').firstMatch(name);
@@ -325,7 +325,7 @@ class _BackupScreenState extends State<BackupScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
                 child: Text(
                   'Save your sources, list and settings — to a file on your '
-                  'device or to your Zangetsu account. Restoring only adds '
+                  'device or to your Infinity Loop account. Restoring only adds '
                   'things back; it never deletes what you already have.',
                   style: AppText.caption,
                 ),

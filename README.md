@@ -1,142 +1,67 @@
 <div align="center">
-
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:FF4D57,100:1a1a2e&height=220&section=header&text=Infinity%20Loop&fontSize=70&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Advanced%20Movie%20%26%20Anime%20Streaming%2C%20Downloader%20%26%20Reader&descAlignY=58&descSize=20" />
-
-<img src="assets/icon/app_icon.png" width="120" alt="Infinity Loop" />
-
-### A modern, open-source streaming app & offline downloader for movies, anime, manga & light novels — Android, TV and iOS
-
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&pause=1200&color=FF4D57&center=true&vCenter=true&width=600&lines=Watch+movies+%26+anime+in+HD+%F0%9F%8E%AC;Multi-threaded+offline+downloader+%E2%9A%A1;Track+history+%26+progress+%F0%9F%93%88;Read+manga+%26+novels+%F0%9F%93%9A;Crafted+with+passion+%E2%9D%A4%EF%B8%8F" alt="Typing SVG" />
-
-<br/>
-
-[![Developer](https://img.shields.io/badge/Developer-S.%20M.%20Shahin%20Reza%20Sifat-FF4D57?style=for-the-badge&logo=github&logoColor=white)](https://github.com/shahinrezasifat1999)
-[![Organization](https://img.shields.io/badge/Organization-Motion%20Work-0078D4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://motionwork-tali.top)
-[![Platform](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/shahinrezasifat1999)
-[![Platform](https://img.shields.io/badge/Android_TV-FF4D57?style=for-the-badge&logo=youtube&logoColor=white)](https://github.com/shahinrezasifat1999)
-[![Built with](https://img.shields.io/badge/Built%20with-Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
-
-<br/>
-
-<a href="https://github.com/shahinrezasifat1999">
-  <img src="https://img.shields.io/badge/⬇️_EXPLORE_PROJECTS-FF4D57?style=for-the-badge&logo=github&logoColor=white&labelColor=1a1a2e" alt="Explore Projects" height="42"/>
-</a>
-&nbsp;
-<a href="https://wa.me/8801766522499">
-  <img src="https://img.shields.io/badge/💬_WHATSAPP_CONTACT-25D366?style=for-the-badge&logo=whatsapp&logoColor=white&labelColor=1a1a2e" alt="WhatsApp" height="42"/>
-</a>
-
-<br/><br/>
-
-<p align="center">
-  <a href="#-features"><b>Features</b></a> ·
-  <a href="#-screenshots"><b>Screenshots</b></a> ·
-  <a href="#-tech-stack"><b>Tech Stack</b></a> ·
-  <a href="#-developer--contact"><b>Developer</b></a> ·
-  <a href="#-license"><b>License</b></a>
-</p>
-
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&color=0:FF4D57,100:1a1a2e&height=4" />
-
+  <img src=".github/assets/logo.png" alt="Infinity Loop Logo" width="130" />
+  <h1>Infinity Loop</h1>
+  <p><strong>Android streaming app and Android TV app for anime, movies, TV series, manga, and light novels.</strong></p>
+  <p>
+    <a href="https://github.com/shahinrezasifat1999/infinity-loop/releases/latest"><img src="https://img.shields.io/github/v/release/shahinrezasifat1999/infinity-loop?label=Latest%20Release" alt="Latest release" /></a>
+    <a href="https://github.com/shahinrezasifat1999/infinity-loop/releases"><img src="https://img.shields.io/github/downloads/shahinrezasifat1999/infinity-loop/total?label=Total%20Downloads" alt="Total downloads" /></a>
+    <a href="#installation"><img src="https://img.shields.io/badge/Platform-Android%20%26%20Android%20TV-3DDC84?logo=android&amp;logoColor=white" alt="Android and Android TV" /></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue" alt="GNU GPL v3.0 license" /></a>
+    <a href="https://github.com/shahinrezasifat1999/infinity-loop/stargazers"><img src="https://img.shields.io/github/stars/shahinrezasifat1999/infinity-loop?label=GitHub%20Stars" alt="GitHub stars" /></a>
+  </p>
+  <p>
+    <a href="https://github.com/shahinrezasifat1999/infinity-loop/releases/latest"><img src="https://img.shields.io/badge/Download%20Latest%20APK-2563EB?style=for-the-badge&amp;logo=android&amp;logoColor=white" alt="Download Latest APK" /></a>
+  </p>
 </div>
 
-## 🎬 Features
+Infinity Loop is an open-source Zangetsu fork that combines a video player, an offline download manager, and dedicated manga and light novel readers. Watch supported streams, save media for offline use, and add your own streams or M3U playlists through Link Repo. On Android TV, browse and control playback with a D-pad remote.
 
-* **High Performance Streaming & Player:** Powered by ExoPlayer and MediaKit with full hardware decoding, custom subtitle styling, playback speed control, and swipe gestures.
-* **Smart Offline Downloader:** 
-  * Direct movie downloads without redundant episode wrappers.
-  * Real-time network speed monitor (`MB/s` / `KB/s`), downloaded vs total file size, and dynamic ETA.
-  * Multi-connection HLS & MP4 segmented downloading with instant pause and resume checkpoints.
-  * One-touch Pause, Resume, and Cancel buttons directly on download cards.
-  * Long-press multi-selection mode with batch deletion.
-* **Manga & Novel Reader:** Dedicated reader interface with continuous vertical scroll, chapter bookmarking, and offline caching.
-* **Android TV Ready:** Dedicated 10-foot remote D-Pad navigation UI built from the ground up for big screens.
-* **Rich Personalization & Theming:** Custom app icons, splash animation selector, custom image uploads, pure AMOLED black mode, and customizable accent colors.
-* **Watch History & Sync:** Automatic progress tracking, resume markers, and cross-source metadata integration.
+## Screenshots
 
----
-
-## 📸 Screenshots
+These captures show the phone interface before the Infinity Loop rebrand.
 
 <div align="center">
-
 <table>
-<tr>
-<td align="center">
-<img src=".github/screenshots/home.png" width="185" alt="Home"/>
-<br/><b>🏠 Home</b>
-</td>
-<td align="center">
-<img src=".github/screenshots/search.png" width="185" alt="Search"/>
-<br/><b>🔍 Search</b>
-</td>
-<td align="center">
-<img src=".github/screenshots/detail.png" width="185" alt="Detail"/>
-<br/><b>📄 Details</b>
-</td>
-<td align="center">
-<img src=".github/screenshots/my-list.png" width="185" alt="My List"/>
-<br/><b>📋 My List</b>
-</td>
-</tr>
+  <tr>
+    <td align="center"><img src=".github/screenshots/home.png" alt="Home screen with featured movies and latest episodes" width="210" /><br /><strong>Home</strong></td>
+    <td align="center"><img src=".github/screenshots/search.png" alt="Search screen for finding titles and filtering results" width="210" /><br /><strong>Search</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src=".github/screenshots/detail.png" alt="Title details screen with viewing options" width="210" /><br /><strong>Details</strong></td>
+    <td align="center"><img src=".github/screenshots/my-list.png" alt="My List screen for saved titles and watch status" width="210" /><br /><strong>My List</strong></td>
+  </tr>
 </table>
-
 </div>
 
----
+## Features
 
-## 🛠️ Tech Stack
+| Feature | What you can do |
+| --- | --- |
+| **Streaming** | Browse and search movies, TV series, and anime from enabled sources. Open title details, choose an episode or stream, and resume from your saved position. |
+| **Smart video player** | Choose available quality, audio, and subtitles. Adjust speed and subtitle styling, use picture-in-picture or Cast on supported devices, and skip anime openings, recaps, endings, or filler when skip data is available. |
+| **Offline download manager** | Download supported movies and episodes, see progress, speed, and estimated time remaining, and pause, resume, or cancel from the download card. Select multiple downloads for deletion and play completed downloads offline. |
+| **M3U playlists and Link Repo** | Save your own direct streams, M3U playlists, and website links. Open compatible media links in the built-in player. |
+| **Manga and light novel reader** | Switch between dedicated reading modes, adjust layout or typography, track chapter progress, and download supported chapters. Export downloaded novel chapters to EPUB. |
+| **Watch Party** | Sign in to host a room or join with a code and follow the host's playback. |
+| **Library and trackers** | Organize titles in My List, revisit your watch history, and connect AniList, MyAnimeList, Simkl, or MangaBaka to sync supported activity. |
+| **Appearance and personalization** | Set an AMOLED black theme, choose accent colors and fonts, change the app icon and splash animation, and arrange Home rows and navigation tabs. |
+| **Backup and Incognito** | Back up supported app data to a file or to your signed-in account. Use Incognito to pause search and watch history recording and tracker updates. |
+| **Android TV interface** | Navigate Home, Search, title details, downloads, and playback with a D-pad remote on the dedicated TV interface. |
 
-* **Framework:** Flutter (Dart 3.x)
-* **Media Playback:** ExoPlayer (Android Native) & MediaKit
-* **State Management:** BLoC / Cubit & ValueNotifier
-* **Storage:** Hive (NoSQL Local Database) & PathProvider
-* **Networking:** Dio, Http, Custom Segment Downloader
-* **Image Caching:** CachedNetworkImage
+Available titles, streams, subtitles, and download options depend on the enabled source. See the [source repository guide](REPOSITORIES.md) for provider setup.
 
----
+## Infinity Loop customizations
 
-## 👨‍💻 Developer & Contact
+S. M. Shahin Reza Sifat maintains this fork under **Motion Work**. Infinity Loop adds its own launcher icon, startup visuals and developer profile, a Link Repo for user-supplied media links, and an updated download interface with on-card controls, transfer statistics, and resume checkpoints.
 
-Developed and maintained by **S. M. Shahin Reza Sifat** (Founder of Motion Work).
+## Installation
 
-<div align="center">
+1. Open [Latest Release](https://github.com/shahinrezasifat1999/infinity-loop/releases/latest) and download the APK listed under **Assets**.
+2. Open the APK on your Android phone or transfer it to your Android TV and open it with a file manager. If prompted, allow that installer to install from its source.
+3. Launch Infinity Loop, choose **Streaming**, **Manga**, or **Novel**, and configure a supported source or add a media link.
 
-<img src="https://github.com/shahinrezasifat1999.png" width="130" style="border-radius: 50%; border: 3px solid #FF4D57; box-shadow: 0 4px 18px rgba(255, 77, 87, 0.4);" alt="S. M. Shahin Reza Sifat" />
+## Credits and license
 
-### **S. M. Shahin Reza Sifat**
-*Software Developer & Founder of Motion Work*
+Infinity Loop is based on [Zangetsu](https://github.com/Spyou/Zangetsu) by Krishna Vishwakarma (Spyou) and its contributors. The app is built with Flutter and uses Android Media3 (ExoPlayer) and MediaKit for playback. See [NOTICE.md](NOTICE.md) for upstream and third-party attributions.
 
-<br/>
-
-[![Website](https://img.shields.io/badge/Website-motionwork--tali.top-0078D4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://motionwork-tali.top)
-[![GitHub](https://img.shields.io/badge/GitHub-shahinrezasifat1999-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/shahinrezasifat1999)
-[![Email](https://img.shields.io/badge/Email-motionworkofficial%40gmail.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:motionworkofficial@gmail.com)
-[![WhatsApp](https://img.shields.io/badge/WhatsApp-%2B8801766522499-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/8801766522499)
-[![Facebook](https://img.shields.io/badge/Facebook-Shahin.Reza.Sifat1997-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://www.facebook.com/Shahin.Reza.Sifat1997/)
-[![YouTube](https://img.shields.io/badge/YouTube-%40SHAHINREZASIFAT2025-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@SHAHINREZASIFAT2025)
-
-</div>
-
----
-
-## 📜 License
-
-Copyright © 2026 **S. M. Shahin Reza Sifat / Motion Work**
-
-Licensed under the **[GNU GPL-3.0](LICENSE)**. See the included license file for complete terms.
-
-<div align="center">
-
-<br/>
-
-<img src="assets/icon/app_icon.png" width="60" alt="Infinity Loop"/>
-
-### Infinity Loop
-*Crafted with ❤️ for entertainment lovers.*
-
-<br/>
-
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:1a1a2e,100:FF4D57&height=120&section=footer" />
-
-</div>
+Infinity Loop is distributed under the [GNU General Public License v3.0](LICENSE).

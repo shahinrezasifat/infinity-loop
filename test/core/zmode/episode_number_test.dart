@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/episode.dart';
-import 'package:watch_app/core/zmode/episode_number.dart';
+import 'package:infinity_loop/core/models/episode.dart';
+import 'package:infinity_loop/core/zmode/episode_number.dart';
 
 // Asking a source for "episode 5" by taking its 5th entry breaks the moment it
 // slips a recap into the list — every episode after shifts, and the tracker is

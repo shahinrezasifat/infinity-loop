@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/metadata/metadata_enrichment.dart';
+import 'package:infinity_loop/core/metadata/metadata_enrichment.dart';
 
 // Proves the guard that promotes a movie-typed title to anime: it fires ONLY on
 // an exact normalized title match AND a year within ±1. Anything looser is

@@ -3,9 +3,9 @@
 // stop working the moment the switch goes off.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/zmode/anilist_catalogue.dart';
-import 'package:watch_app/core/zmode/metadata_filters.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/zmode/anilist_catalogue.dart';
+import 'package:infinity_loop/core/zmode/metadata_filters.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 void main() {
   late List<String> sent;

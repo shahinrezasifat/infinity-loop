@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/metadata/streaming_providers.dart';
+import 'package:infinity_loop/core/metadata/streaming_providers.dart';
 
 /// One fake TMDB transport. Records the calls so the test can assert the region
 /// actually reached the wire — a provider list for the wrong country is the

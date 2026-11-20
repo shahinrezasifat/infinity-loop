@@ -9,16 +9,16 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/models/watch_status.dart';
-import 'package:watch_app/core/playback/list_status_store.dart';
-import 'package:watch_app/core/playback/my_list.dart';
-import 'package:watch_app/core/tracker/tracker.dart';
-import 'package:watch_app/core/tracker/tracker_hub.dart';
-import 'package:watch_app/core/ui/list_status_sheet.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/models/watch_status.dart';
+import 'package:infinity_loop/core/playback/list_status_store.dart';
+import 'package:infinity_loop/core/playback/my_list.dart';
+import 'package:infinity_loop/core/tracker/tracker.dart';
+import 'package:infinity_loop/core/tracker/tracker_hub.dart';
+import 'package:infinity_loop/core/ui/list_status_sheet.dart';
 
 /// Minimal in-memory [MyListStore] stand-in — no Hive box needed.
 class _FakeMyListStore implements MyListStore {

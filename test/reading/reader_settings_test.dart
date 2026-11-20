@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/reading/reader_settings.dart';
+import 'package:infinity_loop/core/reading/reader_settings.dart';
 
 void main() {
   group('readerDecodeWidth', () {

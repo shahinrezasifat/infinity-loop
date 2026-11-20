@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/ui/route_observer.dart';
+import 'package:infinity_loop/core/ui/route_observer.dart';
 
 /// Mirrors exactly how the detail hero trailer uses [appRouteObserver]: subscribe
 /// in didChangeDependencies, pause when another screen is pushed on top

@@ -363,7 +363,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       return;
     }
     await SharePlus.instance.share(
-      ShareParams(files: [XFile(file.path)], subject: 'Zangetsu logs'),
+      ShareParams(files: [XFile(file.path)], subject: 'Infinity Loop logs'),
     );
   }
 

@@ -5,20 +5,20 @@ import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_provider.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_source_info.dart';
-import 'package:watch_app/core/mihon/mihon_manager.dart';
-import 'package:watch_app/core/mihon/mihon_provider.dart';
-import 'package:watch_app/core/mihon/mihon_source_info.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/playback/playback_prefs.dart';
-import 'package:watch_app/core/playback/source_health_store.dart';
-import 'package:watch_app/core/provider/cloudstream_provider.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_provider.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_source_info.dart';
+import 'package:infinity_loop/core/mihon/mihon_manager.dart';
+import 'package:infinity_loop/core/mihon/mihon_provider.dart';
+import 'package:infinity_loop/core/mihon/mihon_source_info.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/playback/playback_prefs.dart';
+import 'package:infinity_loop/core/playback/source_health_store.dart';
+import 'package:infinity_loop/core/provider/cloudstream_provider.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
 
 /// M7 wiring net for `SourceRepository`: proves a `mihon:` id actually routes
 /// to its [MihonProvider], and proves the anime (`ani:`) routing next to it is

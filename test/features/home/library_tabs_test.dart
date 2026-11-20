@@ -8,11 +8,11 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/models/watch_status.dart';
-import 'package:watch_app/features/home/cubit/my_list_cubit.dart';
-import 'package:watch_app/features/home/library_tabs.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/models/watch_status.dart';
+import 'package:infinity_loop/features/home/cubit/my_list_cubit.dart';
+import 'package:infinity_loop/features/home/library_tabs.dart';
 
 LibraryTab _tab(String id) => LibraryTab(
   id: id,

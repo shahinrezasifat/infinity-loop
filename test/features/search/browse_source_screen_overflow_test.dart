@@ -8,11 +8,11 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/di/injector.dart' show sl;
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
-import 'package:watch_app/features/search/browse_source_screen.dart';
+import 'package:infinity_loop/core/di/injector.dart' show sl;
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/features/search/browse_source_screen.dart';
 
 class _FakeRepo implements SourceRepository {
   _FakeRepo({this.baseUrls = const {}});

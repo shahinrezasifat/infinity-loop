@@ -6,9 +6,9 @@
 // (MihonFilters vs AniyomiFilters), never the other one.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_filters.dart';
-import 'package:watch_app/core/mihon/mihon_filters.dart';
-import 'package:watch_app/features/search/bloc/search_state.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_filters.dart';
+import 'package:infinity_loop/core/mihon/mihon_filters.dart';
+import 'package:infinity_loop/features/search/bloc/search_state.dart';
 
 void main() {
   group('SearchState.mihonFiltersBySource', () {

@@ -10,7 +10,7 @@
 // script marker cannot be the thing that decides.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
 
 // Trimmed from a real kwik.cx 403 captured over HTTP/1.1.
 const _blockPage = '''

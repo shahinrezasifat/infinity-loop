@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/provider/provider_downloader.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/provider/provider_registry.dart';
+import 'package:infinity_loop/core/provider/provider_downloader.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/provider/provider_registry.dart';
 
 /// [ProviderRegistry.revision] is what lets SourceRepository cache
 /// `pickableSources` — a getter that reads and JSON-parses every registry

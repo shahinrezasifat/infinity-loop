@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/playback/playback_prefs.dart';
+import 'package:infinity_loop/core/playback/playback_prefs.dart';
 
 /// The EXACT expression `resolveHwdec` replaced, which named Android's decoder
 /// on every platform. Kept here so "Android is unchanged" is checked against

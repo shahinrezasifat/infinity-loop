@@ -1,6 +1,6 @@
 // test/watch_together/room_state_test.dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/features/watch_together/model/room_state.dart';
+import 'package:infinity_loop/features/watch_together/model/room_state.dart';
 
 void main() {
   test('RoomState survives a map round-trip', () {

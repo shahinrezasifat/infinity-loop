@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:watch_app/core/hive/safe_box.dart';
-import 'package:watch_app/core/hive/source_icon_store.dart';
-import 'package:watch_app/core/lnreader/novel_cloudflare.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/source_icon_store.dart';
+import 'package:infinity_loop/core/lnreader/novel_cloudflare.dart';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
@@ -71,7 +71,7 @@ import '../metadata/people_service.dart';
 import '../app_config.dart';
 import '../environment.dart';
 import '../metadata/tmdb.dart';
-import 'package:watch_app/core/metadata/tmdb_fallback.dart';
+import 'package:infinity_loop/core/metadata/tmdb_fallback.dart';
 import '../metadata/title_logo_service.dart';
 import '../mode/content_mode_cubit.dart';
 import '../trailer/trailer_service.dart';
@@ -221,7 +221,7 @@ Future<void> _seedExistingProviderEcosystems(
 Future<void> Function()? _deferredAppleTvBoot;
 
 /// Runs work queued by [initDependencies] on TV. Call only after the splash
-/// gate ([WatchApp._boot]) has completed.
+/// gate ([InfinityLoopApp._boot]) has completed.
 Future<void> runDeferredAppleTvBootTasks() async {
   final task = _deferredAppleTvBoot;
   _deferredAppleTvBoot = null;

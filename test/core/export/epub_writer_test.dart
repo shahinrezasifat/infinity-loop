@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:archive/archive_io.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xml/xml.dart';
-import 'package:watch_app/core/export/epub_writer.dart';
+import 'package:infinity_loop/core/export/epub_writer.dart';
 
 /// Parses with a REAL XML parser, which is the only check worth making here:
 /// an e-reader rejects the WHOLE file over one unescaped `&` or mismatched

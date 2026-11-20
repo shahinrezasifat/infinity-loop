@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/backup/backup_payload.dart';
-import 'package:watch_app/core/backup/backup_service.dart';
-import 'package:watch_app/core/backup/library_backup.dart';
-import 'package:watch_app/core/backup/settings_backup.dart';
-import 'package:watch_app/core/backup/sources_backup.dart';
+import 'package:infinity_loop/core/backup/backup_payload.dart';
+import 'package:infinity_loop/core/backup/backup_service.dart';
+import 'package:infinity_loop/core/backup/library_backup.dart';
+import 'package:infinity_loop/core/backup/settings_backup.dart';
+import 'package:infinity_loop/core/backup/sources_backup.dart';
 
 // ── Fakes ──────────────────────────────────────────────────────────────────────
 

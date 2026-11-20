@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/watch_status.dart';
-import 'package:watch_app/core/tracker/simkl_service.dart';
-import 'package:watch_app/core/tracker/tracker.dart';
-import 'package:watch_app/core/tracker/tracker_hub.dart';
+import 'package:infinity_loop/core/models/watch_status.dart';
+import 'package:infinity_loop/core/tracker/simkl_service.dart';
+import 'package:infinity_loop/core/tracker/tracker.dart';
+import 'package:infinity_loop/core/tracker/tracker_hub.dart';
 
 /// Records the [MediaKind] it was called with, for every kind-aware method.
 class _FakeTracker extends ChangeNotifier implements Tracker {

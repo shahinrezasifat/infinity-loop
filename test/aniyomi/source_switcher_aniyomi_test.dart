@@ -2,15 +2,15 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_provider.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_source_info.dart';
-import 'package:watch_app/core/di/injector.dart' show sl;
-import 'package:watch_app/core/playback/playback_prefs.dart';
-import 'package:watch_app/core/provider/cloudstream_provider.dart';
-import 'package:watch_app/core/provider/provider_downloader.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/provider/provider_registry.dart';
-import 'package:watch_app/core/ui/source_switcher.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_provider.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_source_info.dart';
+import 'package:infinity_loop/core/di/injector.dart' show sl;
+import 'package:infinity_loop/core/playback/playback_prefs.dart';
+import 'package:infinity_loop/core/provider/cloudstream_provider.dart';
+import 'package:infinity_loop/core/provider/provider_downloader.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/provider/provider_registry.dart';
+import 'package:infinity_loop/core/ui/source_switcher.dart';
 
 // ---------------------------------------------------------------------------
 // Stubs

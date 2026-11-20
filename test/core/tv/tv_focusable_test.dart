@@ -2,8 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/core/tv/tv_route_pop_guard.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/core/tv/tv_route_pop_guard.dart';
 
 void main() {
   testWidgets('TvFocusable fires onTap on OK key when focused', (tester) async {

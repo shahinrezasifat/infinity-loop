@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
 
 /// Persists the user's manual "this show = that tracker entry" corrections
 /// (the match-fixer), keyed by `sourceId|showUrl`. The value maps each

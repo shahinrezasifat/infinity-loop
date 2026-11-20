@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/metadata/episode_metadata_service.dart';
-import 'package:watch_app/core/models/episode.dart';
+import 'package:infinity_loop/core/metadata/episode_metadata_service.dart';
+import 'package:infinity_loop/core/models/episode.dart';
 
 void main() {
   test('copyWith fills extras, preserves untouched fields', () {

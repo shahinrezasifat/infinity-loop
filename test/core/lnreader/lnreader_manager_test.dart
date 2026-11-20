@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/lnreader/lnreader_extension_service.dart';
-import 'package:watch_app/core/lnreader/lnreader_manager.dart';
+import 'package:infinity_loop/core/lnreader/lnreader_extension_service.dart';
+import 'package:infinity_loop/core/lnreader/lnreader_manager.dart';
 
 /// A stand-in repo index URL — LNReader ships no built-in catalog, so
 /// `fetchIndex` always takes a URL the caller supplies (a user-added repo in

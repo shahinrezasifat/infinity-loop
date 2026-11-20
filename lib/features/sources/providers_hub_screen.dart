@@ -25,7 +25,7 @@ import 'bloc/sources_state.dart';
 import 'cloudstream_sources_screen.dart';
 import 'lnreader_sources_screen.dart';
 import 'mihon_sources_screen.dart';
-import 'zangetsu_sources_screen.dart';
+import 'infinity_loop_sources_screen.dart';
 import '../../l10n/l10n.dart';
 
 const Widget _kChevron = Icon(
@@ -232,7 +232,7 @@ class _HubPhoneView extends StatelessWidget {
             // this is byte-identical to plain activeIsZangetsu, as before.
             active: activeIsZangetsu && !activeIsReading,
             updateCount: zUpdates,
-            onTap: () => open(const ZangetsuSourcesScreen()),
+            onTap: () => open(const InfinityLoopSourcesScreen()),
           ),
           if (showCs) ...[
             const SizedBox(height: 12),
@@ -722,7 +722,7 @@ class _HubTvViewState extends State<_HubTvView> {
                       title: context.l10n.zangetsuProviders,
                       subtitle: '$zangetsuCount installed',
                       tint: AppColors.accent,
-                      onTap: () => _open(const ZangetsuSourcesScreen()),
+                      onTap: () => _open(const InfinityLoopSourcesScreen()),
                     ),
                     if (showCs)
                       row(

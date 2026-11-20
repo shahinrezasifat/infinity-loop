@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_repo.dart';
-import 'package:watch_app/core/mihon/mihon_extension_service.dart';
-import 'package:watch_app/features/sources/mihon_repo_tab.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_repo.dart';
+import 'package:infinity_loop/core/mihon/mihon_extension_service.dart';
+import 'package:infinity_loop/features/sources/mihon_repo_tab.dart';
 
 /// Widget tests for the Mihon repo add/browse/install UI. Structural twin of
 /// `test/aniyomi/aniyomi_repo_ui_test.dart` — deliberately duplicated per

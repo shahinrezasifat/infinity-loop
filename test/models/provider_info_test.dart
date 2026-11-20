@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/provider_info.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
 
 void main() {
   test('ProviderInfo round-trips anime type', () {

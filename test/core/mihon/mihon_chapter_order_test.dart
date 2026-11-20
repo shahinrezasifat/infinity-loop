@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/mihon/mihon_provider.dart';
-import 'package:watch_app/core/models/episode.dart';
+import 'package:infinity_loop/core/mihon/mihon_provider.dart';
+import 'package:infinity_loop/core/models/episode.dart';
 
 Episode _ch(double n) => Episode(id: 'c$n', title: 'Ch $n', number: n, url: 'u$n');
 Episode _chNoNum(String u) => Episode(id: u, title: u, url: u);

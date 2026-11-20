@@ -1,13 +1,13 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/playback/my_list.dart';
-import 'package:watch_app/core/schedule/airing_service.dart';
-import 'package:watch_app/core/schedule/coming_soon_service.dart';
-import 'package:watch_app/core/schedule/schedule_models.dart';
-import 'package:watch_app/features/schedule/schedule_cubit.dart';
-import 'package:watch_app/features/schedule/schedule_screen.dart';
-import 'package:watch_app/l10n/app_localizations.dart';
+import 'package:infinity_loop/core/playback/my_list.dart';
+import 'package:infinity_loop/core/schedule/airing_service.dart';
+import 'package:infinity_loop/core/schedule/coming_soon_service.dart';
+import 'package:infinity_loop/core/schedule/schedule_models.dart';
+import 'package:infinity_loop/features/schedule/schedule_cubit.dart';
+import 'package:infinity_loop/features/schedule/schedule_screen.dart';
+import 'package:infinity_loop/l10n/app_localizations.dart';
 
 // A cubit we can seed with a fixed state, so no services/sl needed.
 class _StubCubit extends ScheduleCubit {

@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/ui/app_toast.dart';
-import 'package:watch_app/core/ui/global_messenger.dart';
+import 'package:infinity_loop/core/ui/app_toast.dart';
+import 'package:infinity_loop/core/ui/global_messenger.dart';
 
 /// The app's toast is drawn into the Overlay, and [showAppToast] finds that
 /// overlay with `Overlay.of(context)` — which searches a context's ANCESTORS.

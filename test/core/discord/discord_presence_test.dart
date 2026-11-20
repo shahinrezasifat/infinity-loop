@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/discord/discord_presence.dart';
-import 'package:watch_app/core/models/episode.dart';
+import 'package:infinity_loop/core/discord/discord_presence.dart';
+import 'package:infinity_loop/core/models/episode.dart';
 
 void main() {
   final now = DateTime.fromMillisecondsSinceEpoch(1_700_000_000_000);

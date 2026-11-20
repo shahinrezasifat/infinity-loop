@@ -1,5 +1,5 @@
 // Zangetsu sources — TV (D-pad) UI.
-part of 'zangetsu_sources_screen.dart';
+part of 'infinity_loop_sources_screen.dart';
 
 // ---------------------------------------------------------------------------
 // TV view

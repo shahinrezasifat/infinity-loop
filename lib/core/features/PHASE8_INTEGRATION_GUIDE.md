@@ -9,9 +9,9 @@ Complete checklist for integrating watch history, favorites, schedule, and profi
 Add to `main()` before `runApp()`:
 
 ```dart
-import 'package:sifats_player/core/watch_history/watch_history_di_setup.dart';
-import 'package:sifats_player/core/favorites/favorites_di_setup.dart';
-import 'package:sifats_player/core/download/download_di_setup.dart';
+import 'package:infinity_loop/core/watch_history/watch_history_di_setup.dart';
+import 'package:infinity_loop/core/favorites/favorites_di_setup.dart';
+import 'package:infinity_loop/core/download/download_di_setup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -245,7 +245,7 @@ BottomNavigationBarItem(
 ### Show Profile Screen
 
 ```dart
-import 'package:sifats_player/features/profile/profile_screen.dart';
+import 'package:infinity_loop/features/profile/profile_screen.dart';
 
 Navigator.push(
   context,

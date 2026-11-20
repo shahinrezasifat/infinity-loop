@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/playback/source_health_store.dart';
-import 'package:watch_app/features/settings/source_priority_screen.dart';
+import 'package:infinity_loop/core/playback/source_health_store.dart';
+import 'package:infinity_loop/features/settings/source_priority_screen.dart';
 
 void main() {
   // Locks the copy rule the screen's `_reasonFor` delegates to: dead beats a

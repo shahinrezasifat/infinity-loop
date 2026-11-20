@@ -736,7 +736,7 @@ abstract class AppLocalizations {
   /// No description provided for @logsShareSubject.
   ///
   /// In en, this message translates to:
-  /// **'Zangetsu logs'**
+  /// **'Infinity Loop logs'**
   String get logsShareSubject;
 
   /// No description provided for @signInSubtitle.
@@ -1768,7 +1768,7 @@ abstract class AppLocalizations {
   /// No description provided for @bootErrorTitle.
   ///
   /// In en, this message translates to:
-  /// **'Zangetsu didn\'t finish starting'**
+  /// **'Infinity Loop didn\'t finish starting'**
   String get bootErrorTitle;
 
   /// No description provided for @bootErrorBody.
@@ -1792,13 +1792,13 @@ abstract class AppLocalizations {
   /// No description provided for @resetAppDataBody.
   ///
   /// In en, this message translates to:
-  /// **'This clears what Zangetsu has saved on this device so it can start fresh.\n\nYour account and anything synced to the cloud are not touched — sign in again and your library comes back.'**
+  /// **'This clears what Infinity Loop has saved on this device so it can start fresh.\n\nYour account and anything synced to the cloud are not touched — sign in again and your library comes back.'**
   String get resetAppDataBody;
 
   /// No description provided for @resetAppDataDone.
   ///
   /// In en, this message translates to:
-  /// **'Close Zangetsu completely and open it again.'**
+  /// **'Close Infinity Loop completely and open it again.'**
   String get resetAppDataDone;
 
   /// No description provided for @detailsCopied.
@@ -2686,7 +2686,7 @@ abstract class AppLocalizations {
   /// No description provided for @downloadsZangetsu.
   ///
   /// In en, this message translates to:
-  /// **'Downloads › Zangetsu'**
+  /// **'Downloads › Infinity Loop'**
   String get downloadsZangetsu;
 
   /// No description provided for @removableDrive.
@@ -3965,7 +3965,7 @@ abstract class AppLocalizations {
   /// No description provided for @openZangetsuOnYourNphoneAndScan.
   ///
   /// In en, this message translates to:
-  /// **'Open Zangetsu on your\\nphone and scan'**
+  /// **'Open Infinity Loop on your\\nphone and scan'**
   String get openZangetsuOnYourNphoneAndScan;
 
   /// No description provided for @noApp.
@@ -4079,7 +4079,7 @@ abstract class AppLocalizations {
   /// No description provided for @onTheZangetsuAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR.
   ///
   /// In en, this message translates to:
-  /// **'On the Zangetsu app on your phone, open\\n\"Pair a TV\" and enter this code — or scan the QR.'**
+  /// **'On the Infinity Loop app on your phone, open\\n\"Pair a TV\" and enter this code — or scan the QR.'**
   String get onTheZangetsuAppOnYourPhoneOpenNPairATVAndEnterThisCodeOrScanTheQR;
 
   /// No description provided for @signingIn.
@@ -4127,7 +4127,7 @@ abstract class AppLocalizations {
   /// No description provided for @openZangetsuOnYourTVAndSignInWithYourPhoneToSeeIt.
   ///
   /// In en, this message translates to:
-  /// **'Open Zangetsu on your TV and sign in with your phone to see it.'**
+  /// **'Open Infinity Loop on your TV and sign in with your phone to see it.'**
   String get openZangetsuOnYourTVAndSignInWithYourPhoneToSeeIt;
 
   /// No description provided for @abcd2345.
@@ -4205,7 +4205,7 @@ abstract class AppLocalizations {
   /// No description provided for @reopenZangetsuToSeeRestoredLibrarySources.
   ///
   /// In en, this message translates to:
-  /// **'Reopen Zangetsu to see restored library & sources.'**
+  /// **'Reopen Infinity Loop to see restored library & sources.'**
   String get reopenZangetsuToSeeRestoredLibrarySources;
 
   /// No description provided for @saveToAFile.
@@ -4625,7 +4625,7 @@ abstract class AppLocalizations {
   /// No description provided for @zangetsuProviders.
   ///
   /// In en, this message translates to:
-  /// **'Zangetsu providers'**
+  /// **'Infinity Loop providers'**
   String get zangetsuProviders;
 
   /// No description provided for @addRepo.
@@ -4817,7 +4817,7 @@ abstract class AppLocalizations {
   /// No description provided for @addZangetsuRepo.
   ///
   /// In en, this message translates to:
-  /// **'Add Zangetsu repo'**
+  /// **'Add Infinity Loop repo'**
   String get addZangetsuRepo;
 
   /// No description provided for @theProviderWillBeRemovedFromYourInstalledSources.
@@ -6641,7 +6641,7 @@ abstract class AppLocalizations {
   /// No description provided for @appIconBlurb.
   ///
   /// In en, this message translates to:
-  /// **'The icon on your home screen. Zangetsu closes when you change it — Android has to swap the launcher entry.'**
+  /// **'The icon on your home screen. Infinity Loop closes when you change it — Android has to swap the launcher entry.'**
   String get appIconBlurb;
 
   /// No description provided for @useTheIcon.
@@ -6653,7 +6653,7 @@ abstract class AppLocalizations {
   /// No description provided for @useTheIconBody.
   ///
   /// In en, this message translates to:
-  /// **'Zangetsu will close so Android can apply the new icon. Open it again from your home screen afterwards.\n\nIf you have Zangetsu in a folder or dock, you may need to add it again.'**
+  /// **'Infinity Loop will close so Android can apply the new icon. Open it again from your home screen afterwards.\n\nIf you have Infinity Loop in a folder or dock, you may need to add it again.'**
   String get useTheIconBody;
 
   /// No description provided for @animRise.
@@ -6785,7 +6785,7 @@ abstract class AppLocalizations {
   /// No description provided for @savedToDownloadsZangetsu.
   ///
   /// In en, this message translates to:
-  /// **'Saved to Downloads › Zangetsu'**
+  /// **'Saved to Downloads › Infinity Loop'**
   String get savedToDownloadsZangetsu;
 
   /// No description provided for @restoreFailed.
@@ -6803,7 +6803,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupScreenBlurb.
   ///
   /// In en, this message translates to:
-  /// **'Save your sources, list and settings — to a file on your device or to your Zangetsu account. Restoring only adds things back; it never deletes what you already have.'**
+  /// **'Save your sources, list and settings — to a file on your device or to your Infinity Loop account. Restoring only adds things back; it never deletes what you already have.'**
   String get backupScreenBlurb;
 
   /// No description provided for @includeInTheBackup.
@@ -6905,7 +6905,7 @@ abstract class AppLocalizations {
   /// No description provided for @couldnTOpenInstaller.
   ///
   /// In en, this message translates to:
-  /// **'Couldn\'t open the installer. Enable \"Install unknown apps\" for Zangetsu in system settings, then try again.'**
+  /// **'Couldn\'t open the installer. Enable \"Install unknown apps\" for Infinity Loop in system settings, then try again.'**
   String get couldnTOpenInstaller;
 
   /// No description provided for @downloadFailedCheckConnection.
@@ -7163,7 +7163,7 @@ abstract class AppLocalizations {
   /// No description provided for @zangetsu.
   ///
   /// In en, this message translates to:
-  /// **'Zangetsu'**
+  /// **'Infinity Loop'**
   String get zangetsu;
 
   /// No description provided for @cloudStream.
@@ -9095,7 +9095,7 @@ abstract class AppLocalizations {
   /// No description provided for @keepDownloadsPrivateSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'New video downloads stay inside Zangetsu instead of the Downloads folder. They are deleted when you uninstall Zangetsu. Chapters and exports are unaffected.'**
+  /// **'New video downloads stay inside Infinity Loop instead of the Downloads folder. They are deleted when you uninstall Zangetsu. Chapters and exports are unaffected.'**
   String get keepDownloadsPrivateSubtitle;
 }
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Repository System is the core abstraction layer for Sifat's Player's multi-repository support. It manages user-configured content sources (repositories), allows switching between them, and maintains isolation between repository caches.
+The Repository System is the core abstraction layer for Infinity Loop's multi-repository support. It manages user-configured content sources (repositories), allows switching between them, and maintains isolation between repository caches.
 
 ## Architecture
 
@@ -98,7 +98,7 @@ void main() async {
   // Initialize repository system
   await setupRepositoryDependencies(sl); // sl is GetIt instance
   
-  runApp(const SifatsPlayer());
+  runApp(const InfinityLoopApp());
 }
 ```
 
@@ -326,4 +326,4 @@ blocTest<RepositoryBloc, RepositoryState>(
 
 ## License
 
-This system is part of Sifat's Player, licensed under GNU GPL-3.0 (inherited from Zangetsu base).
+This system is part of Infinity Loop, licensed under GNU GPL-3.0 (inherited from Zangetsu base).

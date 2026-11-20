@@ -7,8 +7,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/zmode/simkl_catalogue.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/zmode/simkl_catalogue.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 /// Answers `/redirect` the way Simkl does — a 301 whose Location carries the
 /// id — and serves the record for everything else.

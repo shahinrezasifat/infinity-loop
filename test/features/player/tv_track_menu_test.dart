@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/features/player/tv_track_menu.dart';
+import 'package:infinity_loop/features/player/tv_track_menu.dart';
 
 void main() {
   testWidgets('renders section titles and options', (tester) async {

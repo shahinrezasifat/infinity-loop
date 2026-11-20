@@ -1,12 +1,12 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:watch_app/core/anilist/anilist_service.dart';
-import 'package:watch_app/core/tracker/mal_service.dart';
-import 'package:watch_app/core/tracker/relay/tracker_relay.dart';
-import 'package:watch_app/core/tracker/simkl_service.dart';
-import 'package:watch_app/features/auth/send_trackers_to_tv_screen.dart';
-import 'package:watch_app/features/auth/tv_pairing_service.dart';
+import 'package:infinity_loop/core/anilist/anilist_service.dart';
+import 'package:infinity_loop/core/tracker/mal_service.dart';
+import 'package:infinity_loop/core/tracker/relay/tracker_relay.dart';
+import 'package:infinity_loop/core/tracker/simkl_service.dart';
+import 'package:infinity_loop/features/auth/send_trackers_to_tv_screen.dart';
+import 'package:infinity_loop/features/auth/tv_pairing_service.dart';
 
 // ── Fakes (same pattern as test/features/shell/root_shell_tv_test.dart) ────
 

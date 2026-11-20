@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/reading/tiles/tile_decoder.dart';
-import 'package:watch_app/core/reading/tiles/tile_pyramid.dart';
+import 'package:infinity_loop/core/reading/tiles/tile_decoder.dart';
+import 'package:infinity_loop/core/reading/tiles/tile_pyramid.dart';
 
 const _tileChannel = MethodChannel('zangetsu/tiles');
 

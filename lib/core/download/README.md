@@ -1,6 +1,6 @@
 # Download System (Phase 7)
 
-Comprehensive offline download management for Sifat's Player.
+Comprehensive offline download management for Infinity Loop.
 
 ## Features
 
@@ -63,7 +63,7 @@ Comprehensive offline download management for Sifat's Player.
 
 1. Initialize DI in `main.dart`:
 ```dart
-import 'package:sifats_player/core/download/download_di_setup.dart';
+import 'package:infinity_loop/core/download/download_di_setup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

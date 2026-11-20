@@ -6,8 +6,8 @@
 // kind is what makes the number mean anything.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
-import 'package:watch_app/features/detail/open_related.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/features/detail/open_related.dart';
 
 void main() {
   test('a manga id resolves against the manga catalogue', () {

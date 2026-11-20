@@ -7,7 +7,7 @@ Complete integration checklist for adding the download system to existing UI scr
 Add to `main()` before `runApp()`:
 
 ```dart
-import 'package:sifats_player/core/download/download_di_setup.dart';
+import 'package:infinity_loop/core/download/download_di_setup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
 
 Add import:
 ```dart
-import 'package:sifats_player/features/downloads/download_indicator.dart';
+import 'package:infinity_loop/features/downloads/download_indicator.dart';
 ```
 
 Add indicator to episode tiles:
@@ -144,7 +144,7 @@ void _downloadEpisode(BuildContext context, Episode episode) async {
 On your PlayerScreen/VideoPlayer:
 
 ```dart
-import 'package:sifats_player/features/downloads/download_indicator.dart';
+import 'package:infinity_loop/features/downloads/download_indicator.dart';
 
 // In player UI, add badge in top-right
 Positioned(
@@ -164,7 +164,7 @@ Positioned(
 In your settings screen or bottom navigation:
 
 ```dart
-import 'package:sifats_player/features/downloads/downloads_screen.dart';
+import 'package:infinity_loop/features/downloads/downloads_screen.dart';
 
 // In settings menu or navigation
 ListTile(

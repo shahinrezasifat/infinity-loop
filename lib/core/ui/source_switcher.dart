@@ -434,7 +434,7 @@ ecosystemTabs(
   ];
   return [
     if (linkRepo.isNotEmpty) (title: 'Link Repo', rows: linkRepo),
-    if (zangetsu.isNotEmpty) (title: 'Zangetsu', rows: zangetsu),
+    if (zangetsu.isNotEmpty) (title: 'Infinity Loop', rows: zangetsu),
     if (cs.isNotEmpty) (title: 'CloudStream', rows: cs),
     if (ani.isNotEmpty) (title: 'Aniyomi', rows: ani),
   ];

@@ -10,22 +10,22 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/core/models/episode.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_detail.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/notify/subscription_checker.dart';
-import 'package:watch_app/core/notify/subscription_store.dart';
-import 'package:watch_app/core/repository/catalogue_router.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/zmode/anilist_catalogue.dart';
-import 'package:watch_app/core/zmode/match_store.dart';
-import 'package:watch_app/core/zmode/metadata_repository.dart';
-import 'package:watch_app/core/zmode/source_matcher.dart';
-import 'package:watch_app/core/zmode/tmdb_catalogue.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
-import 'package:watch_app/core/zmode/zmode_source_prefs.dart';
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/models/episode.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_detail.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/notify/subscription_checker.dart';
+import 'package:infinity_loop/core/notify/subscription_store.dart';
+import 'package:infinity_loop/core/repository/catalogue_router.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/zmode/anilist_catalogue.dart';
+import 'package:infinity_loop/core/zmode/match_store.dart';
+import 'package:infinity_loop/core/zmode/metadata_repository.dart';
+import 'package:infinity_loop/core/zmode/source_matcher.dart';
+import 'package:infinity_loop/core/zmode/tmdb_catalogue.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/zmode/zmode_source_prefs.dart';
 
 /// The source that actually owns the episodes. Everything above this is real.
 class _Src implements SourceRepository {

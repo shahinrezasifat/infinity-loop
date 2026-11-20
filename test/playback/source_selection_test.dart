@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/video_source.dart';
-import 'package:watch_app/core/playback/source_selection.dart';
+import 'package:infinity_loop/core/models/video_source.dart';
+import 'package:infinity_loop/core/playback/source_selection.dart';
 
 VideoSource _s(String q, AudioKind k) =>
     VideoSource(url: 'https://x/$q', quality: q, container: SourceContainer.hls, kind: k);

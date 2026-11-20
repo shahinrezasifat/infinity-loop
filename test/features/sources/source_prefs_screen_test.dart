@@ -6,8 +6,8 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/source_pref.dart';
-import 'package:watch_app/features/sources/source_prefs_screen.dart';
+import 'package:infinity_loop/core/models/source_pref.dart';
+import 'package:infinity_loop/features/sources/source_prefs_screen.dart';
 
 void main() {
   final writes = <(String, Object?)>[];

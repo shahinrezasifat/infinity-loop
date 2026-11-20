@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/mihon/mihon_extension_service.dart';
-import 'package:watch_app/core/provider/cf_solve_needed.dart';
+import 'package:infinity_loop/core/mihon/mihon_extension_service.dart';
+import 'package:infinity_loop/core/provider/cf_solve_needed.dart';
 
 /// The native ecosystems (CloudStream, Aniyomi, Mihon) all solve Cloudflare
 /// through [MihonExtensionService.solveCloudflare]. It used to leave the

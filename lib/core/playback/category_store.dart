@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
-import 'package:watch_app/core/hive/hive_key.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/hive_key.dart';
 
 import '../models/media_item.dart';
 import '../supabase/supabase_service.dart';

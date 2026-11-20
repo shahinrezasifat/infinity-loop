@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/ui/dock_visibility.dart';
+import 'package:infinity_loop/core/ui/dock_visibility.dart';
 
 /// A scroll of [delta] pixels at [pixels] on a vertical (or [axis]) view.
 /// Positive [delta] is scrolling DOWN — the offset grows.

@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/playback/watch_history.dart';
-import 'package:watch_app/core/supabase/supabase_service.dart';
+import 'package:infinity_loop/core/playback/watch_history.dart';
+import 'package:infinity_loop/core/supabase/supabase_service.dart';
 
 /// In-memory fake for [HistoryRemote] so the store's throttle/flush logic can
 /// be tested without a live Supabase project.

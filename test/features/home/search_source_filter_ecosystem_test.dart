@@ -7,7 +7,7 @@
 // pumping the sheet.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/features/home/search_screen.dart';
+import 'package:infinity_loop/features/home/search_screen.dart';
 
 void main() {
   group('sourceFilterEcosystemOf', () {

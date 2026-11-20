@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/reading/reader_prefs.dart';
-import 'package:watch_app/features/reader/novel_reader_screen.dart';
+import 'package:infinity_loop/core/reading/reader_prefs.dart';
+import 'package:infinity_loop/features/reader/novel_reader_screen.dart';
 
 /// Stands in for ReaderPrefs so these can run without Hive.
 class _Prefs implements ReaderPrefs {

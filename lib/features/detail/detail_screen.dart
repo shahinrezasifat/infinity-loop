@@ -96,7 +96,7 @@ import '../../core/tv/tv_list_focusable.dart';
 import '../../core/zmode/metadata_repository.dart';
 import '../../core/zmode/source_matcher.dart';
 import '../../core/ui/source_switcher.dart';
-import '../sources/zangetsu_sources_screen.dart';
+import '../sources/infinity_loop_sources_screen.dart';
 import '../../core/zmode/match_store.dart';
 import '../../core/zmode/zmode_ids.dart';
 import '../../core/aniyomi/aniyomi_image_provider.dart';
@@ -928,7 +928,7 @@ class _DetailViewState extends State<_DetailView>
       onChanged: (_) {},
       onInstallSources: () => Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (_) => const ZangetsuSourcesScreen(openToRepos: true),
+          builder: (_) => const InfinityLoopSourcesScreen(openToRepos: true),
         ),
       ),
     ).showPicker(

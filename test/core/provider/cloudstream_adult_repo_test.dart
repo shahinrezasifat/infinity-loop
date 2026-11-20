@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/provider/cloudstream_provider.dart';
+import 'package:infinity_loop/core/provider/cloudstream_provider.dart';
 
 void main() {
   test('classifies existing and CloudStream Wiki adult repos', () {

@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/error/exceptions.dart';
-import 'package:watch_app/core/provider/js_engine.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/error/exceptions.dart';
+import 'package:infinity_loop/core/provider/js_engine.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
 
 /// The runtime moved off the UI isolate on Android (see [JsEngine]). These
 /// pin the seam that move went through: `load` became async, and it still has

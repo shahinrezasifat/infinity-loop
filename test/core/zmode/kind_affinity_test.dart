@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/provider/provider_registry.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
-import 'package:watch_app/core/zmode/zmode_module.dart';
+import 'package:infinity_loop/core/provider/provider_registry.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/zmode/zmode_module.dart';
 
 import '../../support/picker_deps.dart';
 

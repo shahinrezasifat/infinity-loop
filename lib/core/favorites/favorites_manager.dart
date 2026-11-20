@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../repositories/models/repository_model.dart';
 import 'favorites_model.dart';
 
-/// Manages favorites/bookmarks for Sifat's Player.
+/// Manages favorites/bookmarks for Infinity Loop.
 ///
 /// Features:
 /// - Add/remove favorite items

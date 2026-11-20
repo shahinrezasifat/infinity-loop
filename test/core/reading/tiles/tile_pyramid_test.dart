@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/reading/tiles/tile_pyramid.dart';
+import 'package:infinity_loop/core/reading/tiles/tile_pyramid.dart';
 
 void main() {
   group('TilePyramid', () {

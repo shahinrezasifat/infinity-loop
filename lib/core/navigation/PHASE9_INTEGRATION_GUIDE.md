@@ -9,7 +9,7 @@ Complete checklist for integrating custom navigation into existing app.
 Add to `main()` before `runApp()`:
 
 ```dart
-import 'package:sifats_player/core/navigation/navigation_di_setup.dart';
+import 'package:infinity_loop/core/navigation/navigation_di_setup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,7 +67,7 @@ BottomNavigationBar(
 ### New (CustomNavigationBar)
 
 ```dart
-import 'package:sifats_player/features/navigation/custom_nav_bar.dart';
+import 'package:infinity_loop/features/navigation/custom_nav_bar.dart';
 
 return Scaffold(
   body: child,
@@ -90,7 +90,7 @@ return Scaffold(
 ### Wrap Screens in TVFocusTraversalGroup
 
 ```dart
-import 'package:sifats_player/core/navigation/tv_focus_support.dart';
+import 'package:infinity_loop/core/navigation/tv_focus_support.dart';
 
 @override
 Widget build(BuildContext context) {

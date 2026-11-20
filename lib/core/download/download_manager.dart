@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:watch_app/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -12,6 +12,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../app_config.dart';
 import '../logging/app_logger.dart';
 import '../models/episode.dart';
 import '../models/video_source.dart';
@@ -65,7 +66,7 @@ class DownloadManager extends ChangeNotifier {
   Timer? _speedPollTimer;
 
   static const String boxName = 'downloads';
-  static const String _sharedDir = 'Zangetsu';
+  static const String _sharedDir = kSharedExportFolder;
 
   static Future<void> init() async {
     if (!Hive.isBoxOpen(boxName)) {
@@ -1240,7 +1241,7 @@ class DownloadManager extends ChangeNotifier {
     }
     // Delete the actual media file on disk. Two cases:
     //  • SAF custom folder → a content:// URI, removed via UriUtils.
-    //  • Default download (public Download/Zangetsu) → a plain file path the
+    //  • Default download (public Download/Infinity Loop) → a plain file path the
     //    app owns. Previously ONLY the content:// case was handled, so default
     //    downloads left the file on disk (the "still in the folder" bug). Delete
     //    it directly; if scoped storage blocks the raw delete, fall back to the
@@ -1598,7 +1599,7 @@ class DownloadManager extends ChangeNotifier {
 
   /// Delete a downloaded media file. Two cases:
   ///  • SAF custom folder → a content:// URI, removed via UriUtils.
-  ///  • Default download (public Download/Zangetsu) → a plain file path the
+  ///  • Default download (public Download/Infinity Loop) → a plain file path the
   ///    app owns. Previously ONLY the content:// case was handled, so default
   ///    downloads left the file on disk (the "still in the folder" bug). Delete
   ///    it directly; if scoped storage blocks the raw delete, fall back to the

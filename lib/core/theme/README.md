@@ -131,7 +131,7 @@ JungleGradients.card = [
 ### Apply Theme to App
 
 ```dart
-import 'package:sifats_player/core/theme/jungle_theme_data.dart';
+import 'package:infinity_loop/core/theme/jungle_theme_data.dart';
 
 void main() {
   runApp(const MyApp());
@@ -143,7 +143,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Sifat's Player",
+      title: "Infinity Loop",
       theme: JungleThemeData.light,
       darkTheme: JungleThemeData.dark,
       themeMode: ThemeMode.system,
@@ -209,7 +209,7 @@ TextField(
 Use the preview screen to test theme:
 
 ```dart
-import 'package:sifats_player/features/theme/theme_preview_screen.dart';
+import 'package:infinity_loop/features/theme/theme_preview_screen.dart';
 
 // Navigate to preview
 Navigator.push(

@@ -4,8 +4,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/download/download_prefs.dart';
-import 'package:watch_app/features/settings/download_location_screen.dart';
+import 'package:infinity_loop/core/download/download_prefs.dart';
+import 'package:infinity_loop/features/settings/download_location_screen.dart';
 
 void main() {
   late Directory dir;

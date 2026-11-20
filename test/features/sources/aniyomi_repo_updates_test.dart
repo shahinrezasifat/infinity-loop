@@ -1,9 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_repo.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_update.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/features/sources/aniyomi_repo_tab.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_repo.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_update.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/features/sources/aniyomi_repo_tab.dart';
 
 AniyomiRepoEntry _entry(String pkg, int code) => AniyomiRepoEntry(
       name: pkg, pkg: pkg, apk: '$pkg.apk', lang: 'en',

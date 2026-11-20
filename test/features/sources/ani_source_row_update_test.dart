@@ -1,12 +1,12 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_provider.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_source_info.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_repo.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_update.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
-import 'package:watch_app/features/sources/sources_screen.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_provider.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_source_info.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_repo.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_update.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/features/sources/sources_screen.dart';
 
 AniyomiProvider _prov() => AniyomiProvider(
       info: const AniyomiSourceInfo(

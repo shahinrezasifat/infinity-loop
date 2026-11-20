@@ -5,8 +5,8 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_repo.dart';
-import 'package:watch_app/core/mihon/mihon_repo.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_repo.dart';
+import 'package:infinity_loop/core/mihon/mihon_repo.dart';
 
 /// Both fixtures were downloaded from the live keiyoushi repo on 2026-08-05
 /// and are committed verbatim:

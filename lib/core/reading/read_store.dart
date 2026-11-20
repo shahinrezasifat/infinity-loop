@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
-import 'package:watch_app/core/hive/hive_key.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/hive_key.dart';
 
 import '../privacy/incognito_mode.dart';
 

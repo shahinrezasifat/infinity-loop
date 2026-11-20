@@ -2,16 +2,16 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/di/injector.dart' show sl;
-import 'package:watch_app/core/lnreader/lnreader_extension_service.dart';
-import 'package:watch_app/core/lnreader/lnreader_manager.dart';
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/core/playback/playback_prefs.dart';
-import 'package:watch_app/core/provider/cloudstream_provider.dart';
-import 'package:watch_app/core/provider/provider_downloader.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/provider/provider_registry.dart';
-import 'package:watch_app/core/ui/source_switcher.dart';
+import 'package:infinity_loop/core/di/injector.dart' show sl;
+import 'package:infinity_loop/core/lnreader/lnreader_extension_service.dart';
+import 'package:infinity_loop/core/lnreader/lnreader_manager.dart';
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/playback/playback_prefs.dart';
+import 'package:infinity_loop/core/provider/cloudstream_provider.dart';
+import 'package:infinity_loop/core/provider/provider_downloader.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/provider/provider_registry.dart';
+import 'package:infinity_loop/core/ui/source_switcher.dart';
 
 /// Task 6's fix: `categorizedSources()` enumerated ProviderRegistry,
 /// CloudStreamManager, AniyomiManager, and MihonManager, but never

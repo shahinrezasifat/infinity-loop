@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_provider.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_source_info.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_repo.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_update.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_provider.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_source_info.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_repo.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_update.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
 
 AniyomiProvider _prov(int id, String pkg, int code) => AniyomiProvider(
       info: AniyomiSourceInfo(

@@ -1,9 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_repo.dart';
-import 'package:watch_app/core/mihon/mihon_manager.dart';
-import 'package:watch_app/core/mihon/mihon_update.dart';
-import 'package:watch_app/features/sources/mihon_repo_tab.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_repo.dart';
+import 'package:infinity_loop/core/mihon/mihon_manager.dart';
+import 'package:infinity_loop/core/mihon/mihon_update.dart';
+import 'package:infinity_loop/features/sources/mihon_repo_tab.dart';
 
 /// Structural twin of `test/features/sources/aniyomi_repo_updates_test.dart`
 /// — deliberately duplicated per spec Decision 3.

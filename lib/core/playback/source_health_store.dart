@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:watch_app/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
 import 'package:hive/hive.dart';
 
 /// The reliability state of a single source, derived from search/probe outcomes.

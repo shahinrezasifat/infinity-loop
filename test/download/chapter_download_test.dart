@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/download/chapter_download.dart';
-import 'package:watch_app/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/download/chapter_download.dart';
+import 'package:infinity_loop/core/mode/content_mode.dart';
 
 ChapterDownload rec({
   ChapterDownloadStatus status = ChapterDownloadStatus.done,

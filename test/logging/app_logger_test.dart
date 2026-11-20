@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/logging/app_logger.dart';
+import 'package:infinity_loop/core/logging/app_logger.dart';
 
 void main() {
   test('ring buffer keeps only the most recent lines', () {

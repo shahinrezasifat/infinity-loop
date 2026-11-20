@@ -4,12 +4,12 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/di/injector.dart' show sl;
-import 'package:watch_app/core/provider/provider_registry.dart';
-import 'package:watch_app/core/state/active_source_cubit.dart';
-import 'package:watch_app/core/ui/source_switcher.dart';
-import 'package:watch_app/core/zmode/zmode_prefs.dart';
-import 'package:watch_app/features/home/home_screen.dart';
+import 'package:infinity_loop/core/di/injector.dart' show sl;
+import 'package:infinity_loop/core/provider/provider_registry.dart';
+import 'package:infinity_loop/core/state/active_source_cubit.dart';
+import 'package:infinity_loop/core/ui/source_switcher.dart';
+import 'package:infinity_loop/core/zmode/zmode_prefs.dart';
+import 'package:infinity_loop/features/home/home_screen.dart';
 
 /// [SourceSwitcher]'s closed-chip render (this suite never taps it open)
 /// only touches [ProviderRegistry.entryFor] for an unprefixed id — a bare

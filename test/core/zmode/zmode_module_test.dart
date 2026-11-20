@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
-import 'package:watch_app/core/zmode/zmode_module.dart';
-import 'package:watch_app/core/zmode/zmode_prefs.dart';
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/zmode/zmode_module.dart';
+import 'package:infinity_loop/core/zmode/zmode_prefs.dart';
 
 class _Repo implements SourceRepository {
   @override

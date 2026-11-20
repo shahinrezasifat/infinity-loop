@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/features/search/browse_sources_list.dart';
+import 'package:infinity_loop/features/search/browse_sources_list.dart';
 
 // The Sources tab floats pinned sources into one group at the top, matching
 // the source switcher. Pure ordering, so it needs neither Hive nor a widget

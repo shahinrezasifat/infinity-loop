@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/i18n/source_languages.dart';
+import 'package:infinity_loop/core/i18n/source_languages.dart';
 
 /// The installed list is a MANAGEMENT list — it is where you uninstall, open
 /// settings and sign in. So it filters by language like everywhere else, but

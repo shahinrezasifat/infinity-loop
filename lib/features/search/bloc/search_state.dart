@@ -169,7 +169,7 @@ const String kAllSources = '__all__';
 /// default "no filter" tab, not a real ecosystem.
 enum SearchEcosystem {
   all('All'),
-  zangetsu('Zangetsu'),
+  zangetsu('Infinity Loop'),
   cloudstream('CloudStream'),
   aniyomi('Aniyomi'),
   mihon('Mihon'),

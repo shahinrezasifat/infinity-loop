@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/hive/hive_key.dart';
+import 'package:infinity_loop/core/hive/hive_key.dart';
 
 /// Backs up the user's library — My List, watch history, and manga/novel
 /// reading progress — and merges it back in on restore. Never deletes:

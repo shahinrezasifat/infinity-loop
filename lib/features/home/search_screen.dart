@@ -48,7 +48,7 @@ import '../mihon/mihon_filter_sheet.dart';
 import '../auth/auth_screens.dart';
 import '../detail/detail_screen.dart';
 import '../player/player_screen.dart';
-import '../sources/zangetsu_sources_screen.dart';
+import '../sources/infinity_loop_sources_screen.dart';
 import 'search_screen_tv.dart';
 import 'see_all_screen.dart';
 import '../search/bloc/search_bloc.dart';
@@ -3107,7 +3107,7 @@ class _SearchFilterSheet extends StatelessWidget {
   /// switches/"turn all on/off" behaviour as before, just moved off the main
   /// sheet. [filterSheetContext] is the MAIN sheet's context, kept so the
   /// empty-state's install CTA can close both sheets and push
-  /// [ZangetsuSourcesScreen], same as it always has.
+  /// [InfinityLoopSourcesScreen], same as it always has.
   void _openSourcesSheet(
     BuildContext filterSheetContext,
     List<({String title, List<({String id, String label, String? repo, String? icon})> rows})>
@@ -3160,7 +3160,7 @@ class _SearchFilterSheet extends StatelessWidget {
                             Navigator.of(filterSheetContext).pop();
                             Navigator.of(filterSheetContext).push(
                               MaterialPageRoute<void>(
-                                builder: (_) => const ZangetsuSourcesScreen(
+                                builder: (_) => const InfinityLoopSourcesScreen(
                                   openToRepos: true,
                                 ),
                               ),

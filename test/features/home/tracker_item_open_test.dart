@@ -3,9 +3,9 @@
 // be opened directly — search is only for an entry with nothing to go on.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 /// Mirrors `_canonicalOf` — the mapping is the part worth pinning, and it is
 /// pure.

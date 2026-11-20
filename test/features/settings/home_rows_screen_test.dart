@@ -4,20 +4,20 @@ import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/repository/catalogue_repository.dart';
-import 'package:watch_app/core/tracker/tracker.dart';
-import 'package:watch_app/core/tracker/tracker_hub.dart';
-import 'package:watch_app/core/ui/home_rows_prefs.dart';
-import 'package:watch_app/core/zmode/anilist_catalogue.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
-import 'package:watch_app/core/zmode/zmode_prefs.dart';
-import 'package:watch_app/features/home/cubit/home_cubit.dart';
-import 'package:watch_app/features/settings/home_rows_screen.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/repository/catalogue_repository.dart';
+import 'package:infinity_loop/core/tracker/tracker.dart';
+import 'package:infinity_loop/core/tracker/tracker_hub.dart';
+import 'package:infinity_loop/core/ui/home_rows_prefs.dart';
+import 'package:infinity_loop/core/zmode/anilist_catalogue.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/zmode/zmode_prefs.dart';
+import 'package:infinity_loop/features/home/cubit/home_cubit.dart';
+import 'package:infinity_loop/features/settings/home_rows_screen.dart';
 
 // The editor edits the CURRENT layout through the same composer the cubit
 // merges with (pure functions covered by home_rows_composer_test). These pump

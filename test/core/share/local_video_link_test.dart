@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/share/local_video_link.dart';
+import 'package:infinity_loop/core/share/local_video_link.dart';
 
 // "Open with" support puts a new check at the FRONT of OpenLinkService._onLink,
 // ahead of the tracker-OAuth and share-link handlers that have always been

@@ -1,11 +1,11 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/core/zmode/metadata_filters.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
-import 'package:watch_app/features/search/meta_filter_dialog_tv.dart';
-import 'package:watch_app/l10n/app_localizations.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/core/zmode/metadata_filters.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/features/search/meta_filter_dialog_tv.dart';
+import 'package:infinity_loop/l10n/app_localizations.dart';
 
 /// Holds the value popped from the dialog after Apply / dismiss.
 class _Picked {

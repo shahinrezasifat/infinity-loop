@@ -8,7 +8,7 @@
 // glow is the one that blurs.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/features/player/subtitle_style.dart';
+import 'package:infinity_loop/features/player/subtitle_style.dart';
 
 void main() {
   const w = 2.0;

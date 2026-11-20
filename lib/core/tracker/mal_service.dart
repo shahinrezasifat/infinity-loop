@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:watch_app/core/hive/safe_box.dart';
+import 'package:infinity_loop/core/hive/safe_box.dart';
 import 'dart:math';
 
 import 'package:app_links/app_links.dart';

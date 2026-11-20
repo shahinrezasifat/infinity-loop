@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../app_config.dart';
 import '../platform/apple_tv.dart';
 import 'download_prefs.dart';
 import 'hls_downloader.dart';
@@ -22,8 +23,9 @@ class DownloadService {
   static FlutterBackgroundService get instance => _service;
 
   static const String channelId = 'zangetsu_downloads';
-  static const String sharedDir = 'Zangetsu';
-  static const String resultsDirName = '.results';
+  static const String sharedDir = kSharedExportFolder;
+  // Keep the internal completion-marker path readable across app updates.
+  static const String _resultsPath = 'Zangetsu/.results';
 
   /// Configure the service once at app start (does not start it).
   ///
@@ -41,7 +43,7 @@ class DownloadService {
           autoStartOnBoot: false,
           // Leave notificationChannelId null so the plugin creates + uses its own
           // default channel (it only auto-creates one when this is null).
-          initialNotificationTitle: 'Zangetsu',
+          initialNotificationTitle: kAppName,
           initialNotificationContent: 'Preparing downloads…',
           foregroundServiceTypes: [AndroidForegroundType.dataSync],
         ),
@@ -59,7 +61,7 @@ class DownloadService {
   /// Directory where the background isolate drops completion markers.
   static Future<Directory> resultsDir() async {
     final docs = await getApplicationDocumentsDirectory();
-    return Directory('${docs.path}/$sharedDir/$resultsDirName');
+    return Directory('${docs.path}/$_resultsPath');
   }
 }
 
@@ -266,10 +268,7 @@ Future<void> _writeResult(
   String? sharedSubDir,
 }) async {
   try {
-    final docs = await getApplicationDocumentsDirectory();
-    final dir = Directory(
-      '${docs.path}/${DownloadService.sharedDir}/${DownloadService.resultsDirName}',
-    );
+    final dir = await DownloadService.resultsDir();
     await dir.create(recursive: true);
     final f = File('${dir.path}/$id.json');
     await f.writeAsString(

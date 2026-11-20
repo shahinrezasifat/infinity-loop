@@ -9,7 +9,7 @@ Complete checklist for integrating Jungle Theme into existing app.
 Replace existing ThemeData with JungleThemeData:
 
 ```dart
-import 'package:sifats_player/core/theme/jungle_theme_data.dart';
+import 'package:infinity_loop/core/theme/jungle_theme_data.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Sifat's Player",
+      title: "Infinity Loop",
       theme: JungleThemeData.light,
       darkTheme: JungleThemeData.dark,
       themeMode: ThemeMode.system,
@@ -50,7 +50,7 @@ Container(
 ### New (Jungle Theme Colors)
 
 ```dart
-import 'package:sifats_player/core/theme/jungle_theme.dart';
+import 'package:infinity_loop/core/theme/jungle_theme.dart';
 
 Container(
   color: JungleColors.primary,
@@ -128,7 +128,7 @@ Container(
 ### New (Jungle Gradients)
 
 ```dart
-import 'package:sifats_player/core/theme/jungle_gradients.dart';
+import 'package:infinity_loop/core/theme/jungle_gradients.dart';
 
 Container(
   decoration: BoxDecoration(

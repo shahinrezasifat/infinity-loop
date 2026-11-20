@@ -45,7 +45,7 @@ Bookmark and organize favorite content with categories.
 ### Setup (main.dart)
 
 ```dart
-import 'package:sifats_player/core/favorites/favorites_di_setup.dart';
+import 'package:infinity_loop/core/favorites/favorites_di_setup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -135,7 +135,7 @@ await manager.removeCategory('watch_later');
 Use the `FavoritesScreen` widget:
 
 ```dart
-import 'package:sifats_player/features/favorites/favorites_screen.dart';
+import 'package:infinity_loop/features/favorites/favorites_screen.dart';
 
 // In navigation
 Navigator.push(
@@ -151,7 +151,7 @@ Navigator.push(
 Display individual favorites:
 
 ```dart
-import 'package:sifats_player/features/favorites/favorites_tile.dart';
+import 'package:infinity_loop/features/favorites/favorites_tile.dart';
 
 FavoritesTile(
   favorite: favoriteItem,

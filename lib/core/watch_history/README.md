@@ -45,7 +45,7 @@ Track watched episodes with timestamps and resume from last position.
 ### Setup (main.dart)
 
 ```dart
-import 'package:sifats_player/core/watch_history/watch_history_di_setup.dart';
+import 'package:infinity_loop/core/watch_history/watch_history_di_setup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -142,7 +142,7 @@ manager.updateSettings(
 Use the `ContinueWatchingScreen` widget:
 
 ```dart
-import 'package:sifats_player/features/watch_history/continue_watching_screen.dart';
+import 'package:infinity_loop/features/watch_history/continue_watching_screen.dart';
 
 // In navigation
 Navigator.push(
@@ -158,7 +158,7 @@ Navigator.push(
 Use the `ScheduleScreen` widget:
 
 ```dart
-import 'package:sifats_player/features/schedule/schedule_screen.dart';
+import 'package:infinity_loop/features/schedule/schedule_screen.dart';
 
 final schedule = context.read<ScheduleService>().airingSchedule;
 
@@ -173,7 +173,7 @@ ScheduleScreen(
 Use the `FavoritesScreen` widget:
 
 ```dart
-import 'package:sifats_player/features/favorites/favorites_screen.dart';
+import 'package:infinity_loop/features/favorites/favorites_screen.dart';
 
 // Add to bottom navigation
 BottomNavigationBarItem(
@@ -187,7 +187,7 @@ BottomNavigationBarItem(
 Use the `ProfileScreen` widget:
 
 ```dart
-import 'package:sifats_player/features/profile/profile_screen.dart';
+import 'package:infinity_loop/features/profile/profile_screen.dart';
 
 // In settings menu
 ListTile(

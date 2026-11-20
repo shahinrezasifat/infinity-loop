@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/features/onboarding/boot_error_screen.dart';
+import 'package:infinity_loop/features/onboarding/boot_error_screen.dart';
 
 Future<void> _pump(
   WidgetTester tester, {

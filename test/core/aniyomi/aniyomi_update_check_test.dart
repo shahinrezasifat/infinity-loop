@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_extension_service.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_repo.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_extension_service.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_repo.dart';
 
 AniyomiRepoEntry _entry(String pkg, int code, String version) => AniyomiRepoEntry(
       name: pkg,

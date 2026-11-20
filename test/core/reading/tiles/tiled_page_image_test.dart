@@ -4,9 +4,9 @@ import 'dart:ui' as ui;
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/reading/tiles/tile_decoder.dart';
-import 'package:watch_app/core/reading/tiles/tile_pyramid.dart';
-import 'package:watch_app/core/reading/tiles/tiled_page_image.dart';
+import 'package:infinity_loop/core/reading/tiles/tile_decoder.dart';
+import 'package:infinity_loop/core/reading/tiles/tile_pyramid.dart';
+import 'package:infinity_loop/core/reading/tiles/tiled_page_image.dart';
 
 /// Records every spec it is asked to decode and always succeeds, with a
 /// tiny real [ui.Image] so the painter has something valid to hold. Lets the

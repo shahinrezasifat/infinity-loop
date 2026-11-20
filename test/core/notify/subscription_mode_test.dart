@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/core/notify/subscription_store.dart';
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/notify/subscription_store.dart';
 
 Subscription sub({ContentMode mode = ContentMode.anime}) => Subscription(
   sourceId: 'src',

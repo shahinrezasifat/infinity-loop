@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/ui/source_icon_tile.dart';
+import 'package:infinity_loop/core/ui/source_icon_tile.dart';
 
 /// [SourceIconTile] is the one tile every source list draws, so the rules it
 /// enforces — letter fallback, no plate under a real icon — only have to hold

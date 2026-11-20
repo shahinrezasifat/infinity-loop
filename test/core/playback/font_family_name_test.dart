@@ -8,9 +8,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/playback/font_family_name.dart';
-import 'package:watch_app/core/playback/playback_prefs.dart' show kBundledSubtitleFonts;
-import 'package:watch_app/core/playback/tv_track_helpers.dart' show subtitleFontFileName;
+import 'package:infinity_loop/core/playback/font_family_name.dart';
+import 'package:infinity_loop/core/playback/playback_prefs.dart' show kBundledSubtitleFonts;
+import 'package:infinity_loop/core/playback/tv_track_helpers.dart' show subtitleFontFileName;
 
 Uint8List _font(String name) =>
     File('assets/fonts/$name').readAsBytesSync();

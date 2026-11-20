@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/ui/jump_prompt.dart';
+import 'package:infinity_loop/core/ui/jump_prompt.dart';
 
 // The prompt exists to stop a look at another chapter/episode quietly moving
 // your place — and, jumping backwards, dragging the tracker count DOWN, since

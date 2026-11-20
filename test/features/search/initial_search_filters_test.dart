@@ -4,8 +4,8 @@
 // These pin the rule that replaced that.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/zmode/metadata_filters.dart';
-import 'package:watch_app/features/home/search_screen.dart';
+import 'package:infinity_loop/core/zmode/metadata_filters.dart';
+import 'package:infinity_loop/features/home/search_screen.dart';
 
 void main() {
   group('initialSearchFilters', () {

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/cast/cast_proxy.dart';
+import 'package:infinity_loop/core/cast/cast_proxy.dart';
 
 void main() {
   // Proxify wraps an absolute URL as /p?u=<url> (raw, not encoded — keeps the

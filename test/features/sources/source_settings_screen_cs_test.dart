@@ -5,11 +5,11 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/provider/provider_downloader.dart';
-import 'package:watch_app/core/provider/provider_manager.dart';
-import 'package:watch_app/core/provider/provider_registry.dart';
-import 'package:watch_app/core/repository/provider_settings_repository.dart';
-import 'package:watch_app/features/sources/source_settings_screen.dart';
+import 'package:infinity_loop/core/provider/provider_downloader.dart';
+import 'package:infinity_loop/core/provider/provider_manager.dart';
+import 'package:infinity_loop/core/provider/provider_registry.dart';
+import 'package:infinity_loop/core/repository/provider_settings_repository.dart';
+import 'package:infinity_loop/features/sources/source_settings_screen.dart';
 
 class _StubDownloader implements ProviderJsFetcher {
   @override

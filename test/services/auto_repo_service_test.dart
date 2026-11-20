@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/services/auto_repo_service.dart';
+import 'package:infinity_loop/services/auto_repo_service.dart';
 
 void main() {
   group('AutoRepoService URL validation', () {

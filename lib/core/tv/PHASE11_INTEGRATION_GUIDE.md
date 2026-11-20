@@ -89,10 +89,10 @@ Complete checklist for enabling Android TV support in existing app.
 ## 3. Import TV Components
 
 ```dart
-import 'package:sifats_player/core/tv/tv_ui_components.dart';
-import 'package:sifats_player/core/tv/tv_navigation_manager.dart';
-import 'package:sifats_player/core/tv/tv_theme_extensions.dart';
-import 'package:sifats_player/features/tv/tv_home_screen.dart';
+import 'package:infinity_loop/core/tv/tv_ui_components.dart';
+import 'package:infinity_loop/core/tv/tv_navigation_manager.dart';
+import 'package:infinity_loop/core/tv/tv_theme_extensions.dart';
+import 'package:infinity_loop/features/tv/tv_home_screen.dart';
 ```
 
 ---

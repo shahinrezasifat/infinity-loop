@@ -1,19 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_filters.dart';
-import 'package:watch_app/core/models/episode.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_detail.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/models/video_source.dart';
-import 'package:watch_app/core/playback/search_history.dart';
-import 'package:watch_app/core/playback/search_prefs.dart';
-import 'package:watch_app/core/playback/source_health_store.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/search/title_suggestion_service.dart';
-import 'package:watch_app/features/search/bloc/search_bloc.dart';
-import 'package:watch_app/features/search/bloc/search_event.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_filters.dart';
+import 'package:infinity_loop/core/models/episode.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_detail.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/models/video_source.dart';
+import 'package:infinity_loop/core/playback/search_history.dart';
+import 'package:infinity_loop/core/playback/search_prefs.dart';
+import 'package:infinity_loop/core/playback/source_health_store.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/search/title_suggestion_service.dart';
+import 'package:infinity_loop/features/search/bloc/search_bloc.dart';
+import 'package:infinity_loop/features/search/bloc/search_event.dart';
 
 // ---------------------------------------------------------------------------
 // Fakes — all use `extends`/`implements` to bypass native-plugin constructors

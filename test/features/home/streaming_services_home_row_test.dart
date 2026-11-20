@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/home_row.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
-import 'package:watch_app/features/home/cubit/home_rows_composer.dart';
+import 'package:infinity_loop/core/models/home_row.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/features/home/cubit/home_rows_composer.dart';
 
 void main() {
   // TMDB and Simkl share ZKind.movie, so the kind alone cannot tell them

@@ -9,8 +9,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/zmode/mal_catalogue.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/zmode/mal_catalogue.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 const _show = ZCanonical(ZKind.anime, 'mal:100');
 

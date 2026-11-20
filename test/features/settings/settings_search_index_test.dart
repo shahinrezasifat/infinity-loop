@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/features/settings/settings_search_index.dart';
-import 'package:watch_app/l10n/app_localizations_en.dart';
-import 'package:watch_app/l10n/app_localizations_fr.dart';
+import 'package:infinity_loop/features/settings/settings_search_index.dart';
+import 'package:infinity_loop/l10n/app_localizations_en.dart';
+import 'package:infinity_loop/l10n/app_localizations_fr.dart';
 
 /// Settings pages render their rows inline, so nothing links a new toggle to
 /// the search index automatically. This reads the sources and fails when a

@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/reading/reader_overrides.dart';
-import 'package:watch_app/core/reading/reader_prefs.dart';
+import 'package:infinity_loop/core/reading/reader_overrides.dart';
+import 'package:infinity_loop/core/reading/reader_prefs.dart';
 
 void main() {
   late Directory dir;

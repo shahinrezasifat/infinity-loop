@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/download/download_manager.dart';
-import 'package:watch_app/core/models/video_source.dart';
+import 'package:infinity_loop/core/download/download_manager.dart';
+import 'package:infinity_loop/core/models/video_source.dart';
 
 void main() {
   test('isTorrentSource is true only for the torrent container', () {

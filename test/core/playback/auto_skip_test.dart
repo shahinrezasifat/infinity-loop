@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/playback/skip_service.dart';
+import 'package:infinity_loop/core/playback/skip_service.dart';
 
 SkipInterval _iv(int startS, int endS, String type) => SkipInterval(
   start: Duration(seconds: startS),

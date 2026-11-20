@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/tracker/relay/tracker_relay_crypto.dart';
+import 'package:infinity_loop/core/tracker/relay/tracker_relay_crypto.dart';
 
 void main() {
   test('newNonce is a 32-byte base64url key and is random', () {

@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/core/tv/tv_poster_tile.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/core/tv/tv_poster_tile.dart';
 
 void main() {
   testWidgets(

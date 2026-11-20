@@ -1,6 +1,6 @@
 # 📦 Infinity Loop - Preloaded Repositories & Providers Catalog
 
-This document lists all **35 pre-installed repositories, provider sources, and extension manifests** integrated into **Infinity Loop (Sifat's Player)**.
+This document lists all **35 pre-installed repositories, provider sources, and extension manifests** integrated into **Infinity Loop**.
 
 ---
 

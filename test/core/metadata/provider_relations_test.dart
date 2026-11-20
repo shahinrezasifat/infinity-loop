@@ -9,11 +9,11 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/metadata/metadata_enrichment.dart';
-import 'package:watch_app/core/models/media_detail.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/zmode/metadata_provider_prefs.dart';
-import 'package:watch_app/core/zmode/simkl_catalogue.dart';
+import 'package:infinity_loop/core/metadata/metadata_enrichment.dart';
+import 'package:infinity_loop/core/models/media_detail.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/zmode/metadata_provider_prefs.dart';
+import 'package:infinity_loop/core/zmode/simkl_catalogue.dart';
 
 class _Adapter implements HttpClientAdapter {
   _Adapter(this.respond);

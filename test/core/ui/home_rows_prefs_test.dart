@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/ui/home_rows_prefs.dart';
+import 'package:infinity_loop/core/ui/home_rows_prefs.dart';
 
 // Dumb storage still has invariants worth pinning: a layout that was never
 // customized must read as null (so the caller falls back to the default

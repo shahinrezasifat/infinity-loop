@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/playback/hls.dart';
-import 'package:watch_app/core/playback/tv_track_helpers.dart';
+import 'package:infinity_loop/core/playback/hls.dart';
+import 'package:infinity_loop/core/playback/tv_track_helpers.dart';
 
 void main() {
   group('tvEpisodeUrl', () {

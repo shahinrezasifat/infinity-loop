@@ -3,18 +3,18 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/playback/search_history.dart';
-import 'package:watch_app/core/playback/search_prefs.dart';
-import 'package:watch_app/core/playback/search_scope.dart';
-import 'package:watch_app/core/playback/playback_prefs.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/search/title_suggestion_service.dart';
-import 'package:watch_app/features/home/search_screen_tv.dart';
-import 'package:watch_app/features/search/bloc/search_bloc.dart';
-import 'package:watch_app/features/search/bloc/search_event.dart';
-import 'package:watch_app/features/search/bloc/search_state.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/playback/search_history.dart';
+import 'package:infinity_loop/core/playback/search_prefs.dart';
+import 'package:infinity_loop/core/playback/search_scope.dart';
+import 'package:infinity_loop/core/playback/playback_prefs.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/search/title_suggestion_service.dart';
+import 'package:infinity_loop/features/home/search_screen_tv.dart';
+import 'package:infinity_loop/features/search/bloc/search_bloc.dart';
+import 'package:infinity_loop/features/search/bloc/search_event.dart';
+import 'package:infinity_loop/features/search/bloc/search_state.dart';
 
 // ── Minimal stubs (mirrors test/features/home/search_screen_tv_test.dart) ──
 

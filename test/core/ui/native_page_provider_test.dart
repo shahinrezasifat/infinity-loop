@@ -9,9 +9,9 @@
 // divert everything and every chapter loses Flutter's image cache.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/aniyomi/aniyomi_image_provider.dart';
-import 'package:watch_app/core/mihon/mihon_image_provider.dart';
-import 'package:watch_app/core/ui/native_page_provider.dart';
+import 'package:infinity_loop/core/aniyomi/aniyomi_image_provider.dart';
+import 'package:infinity_loop/core/mihon/mihon_image_provider.dart';
+import 'package:infinity_loop/core/ui/native_page_provider.dart';
 
 void main() {
   const url = 'https://example.test/chapter/1.jpg';

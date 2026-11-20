@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/ui/featured_carousel.dart';
+import 'package:infinity_loop/core/ui/featured_carousel.dart';
 
 /// The hero used to be a flat 540px. That is fine on a tall phone and far too
 /// much on a short one, where it swallowed the screen and the dock landed on

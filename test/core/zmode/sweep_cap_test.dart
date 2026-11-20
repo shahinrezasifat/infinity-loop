@@ -5,13 +5,13 @@
 // drive the real functions, through `sl`, the way production does.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/di/injector.dart' show sl;
-import 'package:watch_app/core/playback/source_health_store.dart';
-import 'package:watch_app/core/repository/source_repository.dart';
-import 'package:watch_app/core/zmode/source_order_prefs.dart';
-import 'package:watch_app/core/zmode/source_score_store.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
-import 'package:watch_app/core/zmode/zmode_module.dart';
+import 'package:infinity_loop/core/di/injector.dart' show sl;
+import 'package:infinity_loop/core/playback/source_health_store.dart';
+import 'package:infinity_loop/core/repository/source_repository.dart';
+import 'package:infinity_loop/core/zmode/source_order_prefs.dart';
+import 'package:infinity_loop/core/zmode/source_score_store.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/zmode/zmode_module.dart';
 
 // Ids with no `mihon:`/`lnr:` prefix land in the video pool `candidatesForKind`
 // builds for anime/movie/tv — matches every real installed streaming source.

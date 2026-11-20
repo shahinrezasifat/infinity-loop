@@ -5,11 +5,11 @@ import 'dart:typed_data';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/di/injector.dart' show sl;
-import 'package:watch_app/core/metadata/streaming_providers.dart';
-import 'package:watch_app/core/ui/streaming_prefs.dart';
-import 'package:watch_app/features/settings/streaming_services_screen.dart';
-import 'package:watch_app/l10n/app_localizations.dart';
+import 'package:infinity_loop/core/di/injector.dart' show sl;
+import 'package:infinity_loop/core/metadata/streaming_providers.dart';
+import 'package:infinity_loop/core/ui/streaming_prefs.dart';
+import 'package:infinity_loop/features/settings/streaming_services_screen.dart';
+import 'package:infinity_loop/l10n/app_localizations.dart';
 
 /// A 1x1 transparent GIF. `Image.network` in a widget test otherwise hits the
 /// real HttpClient, which never completes under the test binding and hangs

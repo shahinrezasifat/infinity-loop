@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/features/sources/aniyomi_sources_screen.dart';
-import 'package:watch_app/features/sources/cloudstream_sources_screen.dart';
-import 'package:watch_app/features/sources/lnreader_sources_screen.dart';
-import 'package:watch_app/features/sources/manage_source_route.dart';
-import 'package:watch_app/features/sources/mihon_sources_screen.dart';
-import 'package:watch_app/features/sources/zangetsu_sources_screen.dart';
+import 'package:infinity_loop/features/sources/aniyomi_sources_screen.dart';
+import 'package:infinity_loop/features/sources/cloudstream_sources_screen.dart';
+import 'package:infinity_loop/features/sources/lnreader_sources_screen.dart';
+import 'package:infinity_loop/features/sources/manage_source_route.dart';
+import 'package:infinity_loop/features/sources/mihon_sources_screen.dart';
+import 'package:infinity_loop/features/sources/infinity_loop_sources_screen.dart';
 
 /// The health screen offers "uninstall" by sending the user to the screen that
 /// owns the source. Sending them to the WRONG one is the failure that matters:
@@ -32,7 +32,7 @@ void main() {
       // JS provider ids carry no prefix, so this is the fallback. If a new
       // ecosystem ever ships an unprefixed id it would land here wrongly —
       // which is exactly why the prefixes above are pinned.
-      expect(manageSourceScreenFor('hianime'), isA<ZangetsuSourcesScreen>());
+      expect(manageSourceScreenFor('hianime'), isA<InfinityLoopSourcesScreen>());
     });
   });
 
@@ -59,7 +59,7 @@ void main() {
     // source would route to the Zangetsu screen.
     expect(
       manageSourceScreenFor('mihon:9'),
-      isNot(isA<ZangetsuSourcesScreen>()),
+      isNot(isA<InfinityLoopSourcesScreen>()),
     );
   });
 }

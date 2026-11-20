@@ -1,10 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/app_mode.dart';
-import 'package:watch_app/core/di/injector.dart';
-import 'package:watch_app/core/tv/tv_alert_dialog.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/core/app_mode.dart';
+import 'package:infinity_loop/core/di/injector.dart';
+import 'package:infinity_loop/core/tv/tv_alert_dialog.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
 
 /// Mirrors Settings-on-TV: a nested navigator sitting inside the shell
 /// content [FocusScopeNode]. Without hoisting the dialog to the root

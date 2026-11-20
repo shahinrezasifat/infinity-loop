@@ -1,14 +1,14 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/download/download_manager.dart';
-import 'package:watch_app/core/download/download_record.dart';
-import 'package:watch_app/core/models/episode.dart';
-import 'package:watch_app/core/models/video_source.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/features/downloads/downloads_screen.dart'
+import 'package:infinity_loop/core/download/download_manager.dart';
+import 'package:infinity_loop/core/download/download_record.dart';
+import 'package:infinity_loop/core/models/episode.dart';
+import 'package:infinity_loop/core/models/video_source.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/features/downloads/downloads_screen.dart'
     show DownloadTile;
-import 'package:watch_app/features/downloads/downloads_screen_tv.dart';
+import 'package:infinity_loop/features/downloads/downloads_screen_tv.dart';
 
 // ── Minimal fakes ─────────────────────────────────────────────────────────────
 

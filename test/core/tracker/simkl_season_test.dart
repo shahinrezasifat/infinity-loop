@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/episode.dart';
-import 'package:watch_app/core/tracker/simkl_service.dart';
+import 'package:infinity_loop/core/models/episode.dart';
+import 'package:infinity_loop/core/tracker/simkl_service.dart';
 
 /// Simkl keeps a series as ONE entry with seasons inside it, so an episode
 /// number on its own can't say which season — S3E3 and S1E3 are both "3".

@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/models/watch_status.dart';
-import 'package:watch_app/core/tracker/mal_service.dart';
-import 'package:watch_app/core/tracker/tracker.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/models/watch_status.dart';
+import 'package:infinity_loop/core/tracker/mal_service.dart';
+import 'package:infinity_loop/core/tracker/tracker.dart';
 
 // Golden strings: the EXACT path text mal_service.dart sent for anime before
 // this file existed — copied verbatim (not retyped) from the pre-refactor

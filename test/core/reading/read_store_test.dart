@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/reading/read_store.dart';
-import 'package:watch_app/core/privacy/incognito_mode.dart';
+import 'package:infinity_loop/core/reading/read_store.dart';
+import 'package:infinity_loop/core/privacy/incognito_mode.dart';
 
 void main() {
   late Directory dir;

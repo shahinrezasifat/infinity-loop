@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/episode.dart';
-import 'package:watch_app/features/detail/episode_filter.dart';
+import 'package:infinity_loop/core/models/episode.dart';
+import 'package:infinity_loop/features/detail/episode_filter.dart';
 
 Episode ep(String id, String title, double? number) =>
     Episode(id: id, title: title, number: number, url: 'u$id');

@@ -1,14 +1,14 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/playback/my_list.dart';
-import 'package:watch_app/core/schedule/airing_service.dart';
-import 'package:watch_app/core/schedule/coming_soon_service.dart';
-import 'package:watch_app/core/schedule/schedule_models.dart';
-import 'package:watch_app/core/tv/tv_focusable.dart';
-import 'package:watch_app/features/schedule/schedule_cubit.dart';
-import 'package:watch_app/features/schedule/schedule_screen_tv.dart';
-import 'package:watch_app/l10n/app_localizations.dart';
+import 'package:infinity_loop/core/playback/my_list.dart';
+import 'package:infinity_loop/core/schedule/airing_service.dart';
+import 'package:infinity_loop/core/schedule/coming_soon_service.dart';
+import 'package:infinity_loop/core/schedule/schedule_models.dart';
+import 'package:infinity_loop/core/tv/tv_focusable.dart';
+import 'package:infinity_loop/features/schedule/schedule_cubit.dart';
+import 'package:infinity_loop/features/schedule/schedule_screen_tv.dart';
+import 'package:infinity_loop/l10n/app_localizations.dart';
 
 class _StubCubit extends ScheduleCubit {
   _StubCubit(super.a, super.b, super.c, ScheduleState seed) { emit(seed); }

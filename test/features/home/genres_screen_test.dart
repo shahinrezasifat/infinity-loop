@@ -8,17 +8,17 @@
 import 'package:bloc/bloc.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/di/injector.dart' show sl;
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/core/mode/content_mode_cubit.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/zmode/metadata_filters.dart';
-import 'package:watch_app/core/zmode/metadata_repository.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
-import 'package:watch_app/features/home/genres_screen.dart';
-import 'package:watch_app/l10n/app_localizations.dart';
+import 'package:infinity_loop/core/di/injector.dart' show sl;
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/mode/content_mode_cubit.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/zmode/metadata_filters.dart';
+import 'package:infinity_loop/core/zmode/metadata_repository.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/features/home/genres_screen.dart';
+import 'package:infinity_loop/l10n/app_localizations.dart';
 
 class _FakeContentModeCubit extends Cubit<ContentMode>
     implements ContentModeCubit {

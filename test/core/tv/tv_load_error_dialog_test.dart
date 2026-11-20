@@ -1,8 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/core/tv/tv_load_error_dialog.dart';
-import 'package:watch_app/core/tv/tv_playback_failure.dart';
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/tv/tv_load_error_dialog.dart';
+import 'package:infinity_loop/core/tv/tv_playback_failure.dart';
 
 void main() {
   testWidgets('TV generic load-error dialog shows the change-sources message',

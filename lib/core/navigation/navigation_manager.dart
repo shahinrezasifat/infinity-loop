@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'navigation_model.dart';
 
-/// Manages navigation state for Sifat's Player.
+/// Manages navigation state for Infinity Loop.
 ///
 /// Features:
 /// - Custom bottom navigation bar

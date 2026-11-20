@@ -7,13 +7,13 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:watch_app/core/mode/content_mode.dart';
-import 'package:watch_app/core/models/episode.dart';
-import 'package:watch_app/core/models/home_section.dart';
-import 'package:watch_app/core/notify/subscription_checker.dart';
-import 'package:watch_app/core/notify/subscription_store.dart';
-import 'package:watch_app/core/repository/catalogue_repository.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/mode/content_mode.dart';
+import 'package:infinity_loop/core/models/episode.dart';
+import 'package:infinity_loop/core/models/home_section.dart';
+import 'package:infinity_loop/core/notify/subscription_checker.dart';
+import 'package:infinity_loop/core/notify/subscription_store.dart';
+import 'package:infinity_loop/core/repository/catalogue_repository.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 /// Stands in for the router: records what it was asked, and refuses ids the
 /// source registry would also refuse.

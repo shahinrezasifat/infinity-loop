@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/models/media_item.dart';
-import 'package:watch_app/core/models/provider_info.dart';
-import 'package:watch_app/core/tracker/tracker_item_url.dart';
-import 'package:watch_app/core/zmode/zmode_ids.dart';
+import 'package:infinity_loop/core/models/media_item.dart';
+import 'package:infinity_loop/core/models/provider_info.dart';
+import 'package:infinity_loop/core/tracker/tracker_item_url.dart';
+import 'package:infinity_loop/core/zmode/zmode_ids.dart';
 
 // A tracker entry opens Detail only if it can be re-keyed to a metadata
 // identity. Entries with no MAL id used to have none, so a tap fell back to

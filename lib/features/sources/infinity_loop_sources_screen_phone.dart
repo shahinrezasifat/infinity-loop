@@ -1,5 +1,5 @@
 // Zangetsu sources — phone UI.
-part of 'zangetsu_sources_screen.dart';
+part of 'infinity_loop_sources_screen.dart';
 
 // ---------------------------------------------------------------------------
 // Phone view
@@ -8,10 +8,10 @@ part of 'zangetsu_sources_screen.dart';
 class _ZPhoneView extends StatefulWidget {
   const _ZPhoneView({this.openToRepos = false, this.scopeToReading = false});
 
-  /// See [ZangetsuSourcesScreen.openToRepos].
+  /// See [InfinityLoopSourcesScreen.openToRepos].
   final bool openToRepos;
 
-  /// See [ZangetsuSourcesScreen.scopeToReading].
+  /// See [InfinityLoopSourcesScreen.scopeToReading].
   final bool scopeToReading;
 
   @override
@@ -23,7 +23,7 @@ class _ZPhoneViewState extends State<_ZPhoneView> {
   String _query = '';
 
   /// User-toggled escape hatch out of the reading-only scope. Only consulted
-  /// when [ZangetsuSourcesScreen.scopeToReading] is true; irrelevant (and
+  /// when [InfinityLoopSourcesScreen.scopeToReading] is true; irrelevant (and
   /// never surfaced) otherwise.
   bool _showAll = false;
 

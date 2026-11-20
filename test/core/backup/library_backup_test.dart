@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:hive/hive.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:watch_app/core/backup/library_backup.dart';
-import 'package:watch_app/core/hive/hive_key.dart';
+import 'package:infinity_loop/core/backup/library_backup.dart';
+import 'package:infinity_loop/core/hive/hive_key.dart';
 
 void main() {
   late Directory dir;
