@@ -3,14 +3,14 @@
   <h1>Infinity Loop</h1>
   <p><strong>Android streaming app and Android TV app for anime, movies, TV series, manga, and light novels.</strong></p>
   <p>
-    <a href="https://github.com/shahinrezasifat1999/infinity-loop/releases/latest"><img src="https://img.shields.io/github/v/release/shahinrezasifat1999/infinity-loop?label=Latest%20Release" alt="Latest release" /></a>
-    <a href="https://github.com/shahinrezasifat1999/infinity-loop/releases"><img src="https://img.shields.io/github/downloads/shahinrezasifat1999/infinity-loop/total?label=Total%20Downloads" alt="Total downloads" /></a>
+    <a href="https://github.com/shahinrezasifat/infinity-loop/releases/latest"><img src="https://img.shields.io/github/v/release/shahinrezasifat/infinity-loop?label=Latest%20Release" alt="Latest release" /></a>
+    <a href="https://github.com/shahinrezasifat/infinity-loop/releases"><img src="https://img.shields.io/github/downloads/shahinrezasifat/infinity-loop/total?label=Total%20Downloads" alt="Total downloads" /></a>
     <a href="#installation"><img src="https://img.shields.io/badge/Platform-Android%20%26%20Android%20TV-3DDC84?logo=android&amp;logoColor=white" alt="Android and Android TV" /></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue" alt="GNU GPL v3.0 license" /></a>
-    <a href="https://github.com/shahinrezasifat1999/infinity-loop/stargazers"><img src="https://img.shields.io/github/stars/shahinrezasifat1999/infinity-loop?label=GitHub%20Stars" alt="GitHub stars" /></a>
+    <a href="https://github.com/shahinrezasifat/infinity-loop/stargazers"><img src="https://img.shields.io/github/stars/shahinrezasifat/infinity-loop?label=GitHub%20Stars" alt="GitHub stars" /></a>
   </p>
   <p>
-    <a href="https://github.com/shahinrezasifat1999/infinity-loop/releases/latest"><img src="https://img.shields.io/badge/Download%20Latest%20APK-2563EB?style=for-the-badge&amp;logo=android&amp;logoColor=white" alt="Download Latest APK" /></a>
+    <a href="https://github.com/shahinrezasifat/infinity-loop/releases/latest"><img src="https://img.shields.io/badge/Download%20Latest%20APK-2563EB?style=for-the-badge&amp;logo=android&amp;logoColor=white" alt="Download Latest APK" /></a>
   </p>
 </div>
 
@@ -56,7 +56,7 @@ S. M. Shahin Reza Sifat maintains this fork under **Motion Work**. Infinity Loop
 
 ## Installation
 
-1. Open [Latest Release](https://github.com/shahinrezasifat1999/infinity-loop/releases/latest) and download the APK listed under **Assets**.
+1. Open [Latest Release](https://github.com/shahinrezasifat/infinity-loop/releases/latest) and download the APK listed under **Assets**.
 2. Open the APK on your Android phone or transfer it to your Android TV and open it with a file manager. If prompted, allow that installer to install from its source.
 3. Launch Infinity Loop, choose **Streaming**, **Manga**, or **Novel**, and configure a supported source or add a media link.
 
